@@ -1,0 +1,16 @@
+.title-wrapper {
+  position: relative;
+  margin: 12px 0 24px;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: var(--ant-color-text-0);
+  border-bottom: 1px solid var(--ant-border-color);
+
+  &::before {
+    position: absolute;
+    height: 0;
+    color: #aaa;
+    pointer-events: none;
+    content: attr(data-placeholder);
+  }
+}

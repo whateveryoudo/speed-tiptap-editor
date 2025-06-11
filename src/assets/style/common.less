@@ -1,0 +1,67 @@
+// 通用渐变背景
+.shadow-bg-wrapper {
+  min-width: 28px;
+  height: 28px;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  transition: all 0.2s;
+  &.ant-btn {
+    padding: 8px;
+    line-height: 20px;
+    outline: none;
+    border: none;
+  }
+  &:hover {
+    background-color: var(--ant-gray-bg) !important;
+  }
+  &.inline {
+    display: inline-flex;
+  }
+  .anticon {
+    font-size: 16px;
+  }
+  &.is-active {
+    background-color: var(--ant-color-fill-1);
+  }
+  &.select {
+    height: auto;
+  }
+  &.middle {
+    min-width: 20px;
+    width: 20px;
+  }
+  &.small {
+    min-width: 12px;
+    width: 12px;
+  }
+  &.disabled {
+    cursor: not-allowed;
+    color: var(--ant-color-disabled-text);
+  }
+}
+
+.ant-modal-content,
+.ant-modal,
+.ant-modal-header {
+  border-radius: 8px !important;
+}
+.fullscreen {
+  .ant-modal-content {
+    border-radius: 0px !important;
+  }
+  .ant-modal-body {
+    padding: 0;
+  }
+}
+.transition-bg {
+  transition: all 0.1s;
+  &:hover {
+    background-color: var(--ant-gray-bg);
+  }
+}
