@@ -51,30 +51,6 @@ async function prepareDeploy() {
 
   await fs.writeFile(path.resolve(deployDir, 'index.html'), indexHtml);
 
-  // 创建 example 目录的 index.html
-  const exampleIndexHtml = `
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Speed Tiptap Editor - Example</title>
-    <script>
-      // 获取当前路径
-      const path = window.location.pathname;
-      // 如果当前路径是 example 目录，重定向到 example/
-      if (path === '/speed-tiptap-editor/example/' || path === '/speed-tiptap-editor/example') {
-        window.location.href = '/speed-tiptap-editor/example/';
-      }
-    </script>
-  </head>
-  <body>
-    <p>If you are not redirected automatically, <a href="/speed-tiptap-editor/example/">click here</a>.</p>
-  </body>
-</html>
-  `.trim();
-
-  await fs.writeFile(path.resolve(deployDir, 'example/index.html'), exampleIndexHtml);
-
   console.log('Deploy files prepared successfully!');
 }
 
