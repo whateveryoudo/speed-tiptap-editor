@@ -61,14 +61,14 @@ async function prepareDeploy() {
     <script>
       // 获取当前路径
       const path = window.location.pathname;
-      // 如果当前路径是 example 目录，重定向到 example/index.html
+      // 如果当前路径是 example 目录，重定向到 example/
       if (path === '/speed-tiptap-editor/example/' || path === '/speed-tiptap-editor/example') {
-        window.location.href = '/speed-tiptap-editor/example/index.html';
+        window.location.href = '/speed-tiptap-editor/example/';
       }
     </script>
   </head>
   <body>
-    <p>If you are not redirected automatically, <a href="/speed-tiptap-editor/example/index.html">click here</a>.</p>
+    <p>If you are not redirected automatically, <a href="/speed-tiptap-editor/example/">click here</a>.</p>
   </body>
 </html>
   `.trim();
