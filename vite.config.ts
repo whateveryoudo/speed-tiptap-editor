@@ -10,6 +10,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
 export default defineConfig({
   root: 'example',
+  base: process.env.BUILD_MODE === 'lib' ? undefined : '/example/',
   plugins: [
     vue(),
     vueJsx(),

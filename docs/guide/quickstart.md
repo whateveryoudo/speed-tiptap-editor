@@ -8,14 +8,14 @@
 
 ```bash
 # npm
-npm install speed-components-ui
+npm install speed-tiptap-editor
 
 # pnpm
 
-pnpm add speed-components-ui
+pnpm add speed-tiptap-editor
 
 # yarn
-yarn add speed-components-ui
+yarn add speed-tiptap-editor
 ```
 
 ## 在 main.ts 中引入组件库：
