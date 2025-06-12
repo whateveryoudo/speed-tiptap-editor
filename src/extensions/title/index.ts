@@ -12,7 +12,7 @@ import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { getDatasetAttribute, getNodeAtPos, isInTitle, nodeAttrsToDataset } from '@/prose-utils';
 
-import Wrapper from './Wrapper.vue';
+import Wrapper from './wrapper1.vue';
 
 export interface TitleOptions {
   HTMLAttributes: Record<string, any>;
