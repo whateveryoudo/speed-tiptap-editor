@@ -13,7 +13,7 @@ import { VueNodeViewRenderer } from '@tiptap/vue-3'
 // import js from 'highlight.js/lib/languages/javascript'
 // import ts from 'highlight.js/lib/languages/typescript'
 // import html from 'highlight.js/lib/languages/xml'
-import Wrapper from './wrapper1.vue'
+import Wrapper from './Wrapper.vue'
 import { lowlight } from 'lowlight'
 
 // lowlight.registerLanguage('html', html)
