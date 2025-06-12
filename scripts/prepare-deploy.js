@@ -23,7 +23,7 @@ async function prepareDeploy() {
 
   // 复制示例到 example 目录
   await fs.copy(
-    path.resolve(__dirname, '../dist-example'),
+    path.resolve(__dirname, '../example/dist-example'),
     path.resolve(deployDir, 'example')
   );
 
@@ -33,11 +33,18 @@ async function prepareDeploy() {
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0;url=/docs/">
-    <link rel="canonical" href="/docs/">
+    <title>Speed Tiptap Editor</title>
+    <script>
+      // 获取当前路径
+      const path = window.location.pathname;
+      // 如果当前路径是根路径，重定向到 docs
+      if (path === '/' || path === '/speed-tiptap-editor/' || path === '/speed-tiptap-editor/index.html') {
+        window.location.href = '/speed-tiptap-editor/docs/';
+      }
+    </script>
   </head>
   <body>
-    <p>Redirecting to <a href="/docs/">documentation</a>...</p>
+    <p>If you are not redirected automatically, <a href="/speed-tiptap-editor/docs/">click here</a>.</p>
   </body>
 </html>
   `.trim();
@@ -50,11 +57,18 @@ async function prepareDeploy() {
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0;url=/example/index.html">
-    <link rel="canonical" href="/example/index.html">
+    <title>Speed Tiptap Editor - Example</title>
+    <script>
+      // 获取当前路径
+      const path = window.location.pathname;
+      // 如果当前路径是 example 目录，重定向到 example/index.html
+      if (path === '/speed-tiptap-editor/example/' || path === '/speed-tiptap-editor/example') {
+        window.location.href = '/speed-tiptap-editor/example/index.html';
+      }
+    </script>
   </head>
   <body>
-    <p>Redirecting to <a href="/example/index.html">example</a>...</p>
+    <p>If you are not redirected automatically, <a href="/speed-tiptap-editor/example/index.html">click here</a>.</p>
   </body>
 </html>
   `.trim();

@@ -15,7 +15,7 @@ const VITE_APP_BASE_PROXY_URL =
 
 // 根据环境判断 base 路径
 const base =
-  process.env.NODE_ENV === "production" ? "/speed-tiptap-editor/" : "/";
+  process.env.NODE_ENV === "production" ? "/speed-tiptap-editor/docs/" : "/";
 
 export default defineConfig({
   title: "Speed Tiptap Editor",
