@@ -32,17 +32,19 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  build: {
+  build: process.env.BUILD_MODE === 'lib' ? {
     lib: {
       entry: ['src/main.ts'],
+      name: 'SpeedTiptapEditor',
       fileName: (format, entryName) => `speed-tiptap-editor-${entryName}.${format}.js`,
-      cssFileName: 'speed-tiptap-editor-style',
     },
     rollupOptions: {
       output: {
         dir: 'dist'
       },
     },
+  } : {
+    outDir: 'dist-example'
   },
   server: {
     port: 3000,

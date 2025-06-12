@@ -8,24 +8,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ADivider: typeof import('ant-design-vue/es')['Divider']
-    ADropdown: typeof import('ant-design-vue/es')['Dropdown']
-    AEmpty: typeof import('ant-design-vue/es')['Empty']
-    AMenu: typeof import('ant-design-vue/es')['Menu']
-    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
-    APopover: typeof import('ant-design-vue/es')['Popover']
-    AProgress: typeof import('ant-design-vue/es')['Progress']
-    ASelect: typeof import('ant-design-vue/es')['Select']
     ASpace: typeof import('ant-design-vue/es')['Space']
-    ASpin: typeof import('ant-design-vue/es')['Spin']
-    ATooltip: typeof import('ant-design-vue/es')['Tooltip']
-    ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined']
     CaretUpOutlined: typeof import('@ant-design/icons-vue')['CaretUpOutlined']
-    CheckOutlined: typeof import('@ant-design/icons-vue')['CheckOutlined']
     CopyOutlined: typeof import('@ant-design/icons-vue')['CopyOutlined']
-    DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
-    RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']
-    UndoOutlined: typeof import('@ant-design/icons-vue')['UndoOutlined']
   }
 }

@@ -1,6 +1,4 @@
 <script setup>
-    import Basic from './Basic.vue'
-
 </script>
 
 
