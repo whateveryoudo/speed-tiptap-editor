@@ -8,12 +8,15 @@
 -->
 <template>
   <a-tooltip title="粗体">
-    <div
-      :class="['shadow-bg-wrapper', isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']"
       @click="toggleBold"
+      :disabled="isTitleActive"
     >
       <bold-outlined />
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 

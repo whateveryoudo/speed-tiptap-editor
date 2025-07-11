@@ -10,7 +10,7 @@
 <template>
   <a-tooltip title="背景颜色">
     <div :class="['bg-color-menu-wrapper', isTitleActive && 'menu-disabled']">
-      <span class="shadow-bg-wrapper middle" @click="setBackgroundColor(curColor)">
+      <a-button type="text" class="shadow-btn-wrapper small" :disabled="isTitleActive" @click="setBackgroundColor(curColor)">
         <span class="text-wrapper">
           <s-icon-font
             :size="17"
@@ -21,15 +21,15 @@
             :style="{ backgroundColor: curColor || '#fff' }"
           />
         </span>
-      </span>
+      </a-button>
       <color-picker
         :cur-color="curColor"
         :disabled="isTitleActive"
         @triggerColor="setBackgroundColor"
       >
-        <span class="shadow-bg-wrapper small dropdown-trigger">
+        <a-button type="text" class="shadow-btn-wrapper small" :disabled="isTitleActive">
           <caret-down-outlined />
-        </span>
+        </a-button>
       </color-picker>
     </div>
   </a-tooltip>

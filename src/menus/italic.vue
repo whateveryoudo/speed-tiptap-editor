@@ -8,12 +8,15 @@
 -->
 <template>
   <a-tooltip title="斜体">
-    <div
-      :class="['shadow-bg-wrapper', isItalicActive ? 'is-active' : '', isTitleActive && 'disabled']"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :class="[isItalicActive ? 'is-active' : '', isTitleActive && 'disabled']"
       @click="toggleItalic"
+      :disabled="isTitleActive"
     >
       <italic-outlined />
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 

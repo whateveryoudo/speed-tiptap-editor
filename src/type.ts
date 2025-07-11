@@ -9,6 +9,20 @@
 import { PropType, ExtractPropTypes } from "vue";
 export const collaborationEditorProps = {
   /**
+   * 场景
+   */
+  scene: {
+    type: String,
+    default: "simple",
+  },
+  /**
+   * 内容
+   */
+  content: {
+    type: String,
+    default: "",
+  },
+  /**
    * 文档 id
    */
   docId: {

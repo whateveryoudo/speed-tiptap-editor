@@ -8,19 +8,17 @@
 -->
 <template>
   <a-tooltip title="删除线">
-    <div
-      :class="['shadow-bg-wrapper', isStrikeActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      @click="toggleStrike"
-    >
-      <strikethrough-outlined />
-    </div>
+    <a-button type="text" class="shadow-btn-wrapper"
+      :class="[isStrikeActive ? 'is-active' : '', isTitleActive && 'disabled']" @click="toggleStrike"
+      :disabled="isTitleActive">
+      <StrikethroughOutlined />
+    </a-button>
   </a-tooltip>
 </template>
 
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { Editor } from '@tiptap/core'
-import { StrikethroughOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 

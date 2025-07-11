@@ -8,9 +8,13 @@
 -->
 <template>
   <a-tooltip title="重做">
-    <div class="shadow-bg-wrapper" @click="redo">
-      <RedoOutlined />
-    </div>
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      @click="redo"
+    >
+      <RedoOutlined class="text-[16px]"/>
+    </a-button>
   </a-tooltip>
 </template>
 

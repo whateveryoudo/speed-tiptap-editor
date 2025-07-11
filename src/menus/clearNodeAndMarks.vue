@@ -8,12 +8,13 @@
 -->
 <template>
   <a-tooltip title="格式刷">
-    <div
-      class="shadow-bg-wrapper"
+    <a-button
+      class="shadow-btn-wrapper"
       @click="clear"
+      type="text"
     >
-      <clear-outlined />
-    </div>
+      <clear-outlined class="text-[16px]"/>
+    </a-button>
   </a-tooltip>
 </template>
 

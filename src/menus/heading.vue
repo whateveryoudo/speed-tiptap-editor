@@ -7,24 +7,17 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\heading.vue
 -->
 <template>
-  <div class="select shadow-bg-wrapper">
-    <a-select
-      :value="current"
-      :disabled="isTitleActive"
-      dropdown-class-name="heading-dropdown"
-      :options="headingOptions"
-      @change="handleChange"
-    >
-      <template #option="{ value: val, label, style }">
-        <span class="place-check-icon">
-          <check-outlined v-if="current === val" />
-        </span>
-        <span :style="val === 'paragraph' ? { fontWeight: 'normal' } : style">
-          {{ label }}
-        </span>
-      </template>
-    </a-select>
-  </div>
+  <a-select class="w-[110px]" :value="current" :disabled="isTitleActive" dropdown-class-name="heading-dropdown"
+    :options="headingOptions" @change="handleChange">
+    <template #option="{ value: val, label, style }">
+      <span class="place-check-icon">
+        <check-outlined v-if="current === val" />
+      </span>
+      <span :style="val === 'paragraph' ? { fontWeight: 'normal' } : style">
+        {{ label }}
+      </span>
+    </template>
+  </a-select>
 </template>
 
 <script setup lang="ts">
@@ -89,10 +82,12 @@ const handleChange = (value: string) => {
   .ant-select-item {
     line-height: initial;
   }
+
   .ant-select-item-option .ant-select-item-option-content {
     display: flex;
     align-items: center;
     font-weight: 600;
+
     .place-check-icon {
       width: 15px;
       font-size: 14px;

@@ -128,7 +128,8 @@
     "speed-components-ui": "^0.1.7",
     "tippy.js": "^6.3.7",
     "toggle-selection": "^1.0.6",
-    "vitepress": "^1.0.0"
+    "vitepress": "^1.0.0",
+    "vue-router": "^4.5.1"
   },
   "repository": {
     "type": "git",

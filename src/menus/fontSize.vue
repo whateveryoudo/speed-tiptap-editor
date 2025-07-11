@@ -8,8 +8,8 @@
 -->
 
 <template>
-  <div class="select shadow-bg-wrapper">
     <a-select
+      class="w-[110px]"
       :value="currentFontSize"
       :disabled="isTitleActive"
       dropdown-class-name="font-size-dropdown"
@@ -23,7 +23,6 @@
         {{ label }}
       </template>
     </a-select>
-  </div>
 </template>
 
 <script setup lang="ts">

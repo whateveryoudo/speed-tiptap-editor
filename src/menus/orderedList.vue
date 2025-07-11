@@ -9,12 +9,10 @@
 
 <template>
   <a-tooltip title="有序列表">
-    <div
-      :class="['shadow-bg-wrapper', isOrderedListActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      @click="toggleOrderedList"
-    >
-    <ordered-list-outlined />
-    </div>
+    <a-button type="text" :class="['shadow-btn-wrapper', isOrderedListActive ? 'is-active' : '']"
+      @click="toggleOrderedList" :disabled="isTitleActive">
+      <ordered-list-outlined />
+    </a-button>
   </a-tooltip>
 </template>
 <script setup lang="ts">

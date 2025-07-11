@@ -45,7 +45,20 @@
     color: var(--ant-color-disabled-text);
   }
 }
-
+// 用于一些带有背景的容器
+.shadow-btn-wrapper {
+  padding:5px;
+  display: flex;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  &.is-active {
+    background-color: var(--ant-color-fill-1);
+  }
+  &.small {
+    padding: 5px 3px;
+  }
+}
 .ant-modal-content,
 .ant-modal,
 .ant-modal-header {

@@ -7,43 +7,35 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\moreText.vue
 -->
 <template>
-  <a-popover
-    v-if="!isTitleActive"
-    overlay-class-name="text-popover-wrapper"
-    trigger="click"
-    placement="bottom">
+  <a-popover v-if="!isTitleActive" overlay-class-name="text-popover-wrapper" trigger="click" placement="bottom">
     <template #content>
       <a-space>
         <ul class="text-list-wrapper">
-          <li
-            v-for="item in textItems"
-            :key="item.key"
-            :class="[
-              'shadow-bg-wrapper',
-              'list-item',
-              selectItem && selectItem.key === item.key && 'is-active',
-            ]"
-            @click="item.action">
-            <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
-            {{ item.name }}
+          <li v-for="item in textItems" :key="item.key" class="list-item">
+            <a-button type="text" class="shadow-btn-wrapper"
+              :class="selectItem && selectItem.key === item.key && 'is-active'" @click="item.action"
+              style="width: 100%; text-align: left;">
+              <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
+              {{ item.name }}
+            </a-button>
           </li>
         </ul>
       </a-space>
     </template>
     <a-tooltip>
       <template #title> 更多文本样式 </template>
-      <div class="shadow-bg-wrapper">
-        <s-icon-font :size="17" type="icon-kl-text" style="margin-right: 3px" />
+      <a-button type="text" class="shadow-btn-wrapper">
+        <s-icon-font :size="16" type="icon-kl-text" />
         <caret-down-outlined class="dropdown-trigger" />
-      </div>
+      </a-button>
     </a-tooltip>
   </a-popover>
-  <a-tooltip v-else class="menu-disabled">
+  <a-tooltip v-else>
     <template #title> 更多文本样式 </template>
-    <div class="shadow-bg-wrapper">
-      <s-icon-font :size="17" type="icon-kl-text" style="margin-right: 3px" />
+    <a-button type="text" class="shadow-btn-wrapper" disabled>
+      <s-icon-font :size="16" type="icon-kl-text" />
       <caret-down-outlined class="dropdown-trigger" />
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 
@@ -142,20 +134,24 @@ const textItems = ref<TextItem[]>([
   .ant-popover-inner {
     border-radius: 4px;
   }
+
   .ant-popover-inner-content {
     padding: 0;
   }
+
   .text-list-wrapper {
     padding: 4px 0;
     margin: 0;
     width: 120px;
+
     .list-item {
       padding: 0 10px;
       display: flex;
       align-items: center;
       height: 35px;
       justify-content: flex-start;
-      & > span {
+
+      &>span {
         margin-right: 5px;
         position: relative;
         top: 1px;

@@ -16,28 +16,31 @@
   >
     <a-space :size="5">
       <a-tooltip title="访问链接">
-        <div
-          :class="['shadow-bg-wrapper']"
+        <a-button
+          type="text"
+          class="shadow-btn-wrapper"
           @click="visitLink"
         >
           <share-alt-outlined />
-        </div>
+        </a-button>
       </a-tooltip>
       <a-tooltip title="编辑链接">
-        <div
-          :class="['shadow-bg-wrapper']"
+        <a-button
+          type="text"
+          class="shadow-btn-wrapper"
           @click="openEditLinkModal"
         >
           <edit-outlined />
-        </div>
+        </a-button>
       </a-tooltip>
       <a-tooltip title="去除链接">
-        <div
-          :class="['shadow-bg-wrapper']"
+        <a-button
+          type="text"
+          class="shadow-btn-wrapper"
           @click="unsetLink"
         >
           <disconnect-outlined />
-        </div>
+        </a-button>
       </a-tooltip>
     </a-space>
   </BaseBubbleMenu>

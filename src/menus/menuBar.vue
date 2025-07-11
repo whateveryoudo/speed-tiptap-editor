@@ -8,7 +8,7 @@
 -->
 <template>
   <header class="menu-header-wrapper">
-    <a-space :size="5" wrap>
+    <a-space>
       <InsertPopover :editor="editor" />
       <a-divider type="vertical" />
       <Undo :editor="editor" />
@@ -80,13 +80,13 @@ defineProps({
 
 <style scoped lang="less">
 .menu-header-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid var(--ant-border-color);
-  border-top: 1px solid var(--ant-border-color);
-  background: #fff;
-  padding: 0 30px;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // border-bottom: 1px solid var(--ant-border-color);
+  // border-top: 1px solid var(--ant-border-color);
+  // background: #fff;
+  // padding: 0 30px;
   :deep(.ant-divider) {
     color: #585a5a;
     margin: 0;

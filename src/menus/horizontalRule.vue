@@ -8,9 +8,14 @@
 -->
 <template>
   <a-tooltip title="插入分割线">
-    <div :class="['shadow-bg-wrapper', isTitleActive && 'disabled']" @click="setHorizontalRule">
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :disabled="isTitleActive"
+      @click="setHorizontalRule"
+    >
       <s-icon-font type="icon-kl-line" :size="18"></s-icon-font>
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 <script setup lang="ts">

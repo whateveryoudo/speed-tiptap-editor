@@ -1,11 +1,11 @@
 # 介绍
 
-Speed Components 是一个基于 Ant Design Vue 的组件库，提供了一系列高质量的 Vue 组件，帮助开发者快速构建企业级应用。
+Speed Tiptap Editor  是一个基于 [tiptap](https://tiptap.dev/docs){target="_blank"} 二次封装的富文本组件，可用于常用富文本，也可用于快速搭建知识库。
 
 ## 特性
 
-- 🚀 基于 Vue 3 和 Ant Design Vue 4
-- 📦 开箱即用的高质量组件
+- 🚀 基于 tiptap
+- 📦 内置UI采用antd v4
 - 🔍 完整的 TypeScript 支持
 - 🔧 详细的文档和示例
 
@@ -25,4 +25,4 @@ Speed Components 是一个基于 Ant Design Vue 的组件库，提供了一系�
 
 ## 许可证
 
-[MIT](https://github.com/your-org/speed-components/blob/main/LICENSE) 
+[MIT](https://github.com/whateveryoudo/speed-tiptap-editor/blob/main/LICENSE){target="_blank"} 

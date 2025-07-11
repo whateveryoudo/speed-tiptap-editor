@@ -8,28 +8,18 @@
 -->
 <template>
   <a-tooltip title="字体颜色">
-    <div :class="['text-color-menu-wrapper', isTitleActive && 'menu-disabled']">
-      <span
-        style="margin-top:-1px"
-        class="shadow-bg-wrapper middle"
-        @click="setColor(curColor)"
-      >
-        <span class="text-wrapper">A
-          <span
-            class="under-line"
-            :style="{ backgroundColor: curColor || 'transparent' }"
-          />
+    <div :class="['text-color-menu-wrapper']">
+      <a-button type="text" class="shadow-btn-wrapper middle" style="margin-top:-1px" :disabled="isTitleActive"
+        @click="setColor(curColor)">
+        <span class="text-wrapper" :style="{ color: isTitleActive ? 'rgba(0, 0, 0, 0.25)' : '#000' }">A
+          <span class="under-line"
+            :style="{ backgroundColor: isTitleActive ? 'rgba(0, 0, 0, 0.25)' : curColor || 'transparent' }" />
         </span>
-      </span>
-      <color-picker
-        :cur-color="curColor"
-        show-default
-        :disabled="isTitleActive"
-        @triggerColor="setColor"
-      >
-        <span class="shadow-bg-wrapper small dropdown-trigger">
+      </a-button>
+      <color-picker :cur-color="curColor" show-default :disabled="isTitleActive" @triggerColor="setColor">
+        <a-button type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="isTitleActive">
           <caret-down-outlined />
-        </span>
+        </a-button>
       </color-picker>
     </div>
   </a-tooltip>
@@ -66,12 +56,13 @@ const setColor = (color: ColorType) => {
 .text-color-menu-wrapper {
   display: flex;
   justify-items: center;
+
   .text-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
-    color: #000;
     font-size: 16px;
+
     .under-line {
       position: absolute;
       bottom: 3px;
@@ -80,6 +71,6 @@ const setColor = (color: ColorType) => {
       margin-left: -15%;
     }
   }
- 
+
 }
 </style>

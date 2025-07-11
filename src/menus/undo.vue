@@ -8,12 +8,13 @@
 -->
 <template>
   <a-tooltip title="撤销">
-    <div
-      class="shadow-bg-wrapper"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
       @click="undo"
     >
-    <UndoOutlined />
-    </div>
+      <UndoOutlined class="text-[16px]"/>
+    </a-button>
   </a-tooltip>
 </template>
 

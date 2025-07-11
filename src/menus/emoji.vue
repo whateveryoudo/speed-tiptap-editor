@@ -8,9 +8,9 @@
 <template>
   <a-tooltip title="插入表情">
     <emoji-picker @triggerEmoji="setEmoji">
-      <span :class="['shadow-bg-wrapper', isTitleActive && 'disabled']">
+      <a-button type="text" class="shadow-btn-wrapper" :disabled="isTitleActive">
         <s-icon-font type="icon-kl-emoji" :size="18" />
-      </span>
+      </a-button>
     </emoji-picker>
   </a-tooltip>
 </template>

@@ -9,12 +9,15 @@
 
 <template>
   <a-tooltip title="插入引用">
-    <div
-      :class="['shadow-bg-wrapper', isBlockquoteActive ? 'is-active' : '', isTitleActive && 'disabled']"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :class="[isBlockquoteActive ? 'is-active' : '', isTitleActive && 'disabled']"
       @click="toggleBlockquote"
+      :disabled="isTitleActive"
     >
-    <s-icon-font type="icon-kl-quote1"></s-icon-font>
-    </div>
+      <s-icon-font type="icon-kl-quote1"></s-icon-font>
+    </a-button>
   </a-tooltip>
 </template>
 <script setup lang="ts">

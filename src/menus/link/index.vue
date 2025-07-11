@@ -8,12 +8,15 @@
 -->
 <template>
   <a-tooltip title="插入链接">
-    <div
-      :class="['shadow-bg-wrapper', isLinkActive ? 'is-active' : '', isTitleActive && 'disabled']"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :class="[isLinkActive ? 'is-active' : '', isTitleActive && 'disabled']"
       @click="createOrToggleLink"
+      :disabled="isTitleActive"
     >
       <link-outlined />
-    </div>
+    </a-button>
   </a-tooltip>
   <!-- bubble气泡 -->
   <link-bubble

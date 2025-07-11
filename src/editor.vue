@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\editor.vue
 -->
 <template>
-  <div class="wrap">
+  <div :class="['wrap', scene]">
     <!-- 工具栏 -->
     <menu-bar v-if="menubar && editor && !isPreview" class="header" :editor="editor" />
     <!-- 扩展modal显示-mind -->
@@ -19,19 +19,21 @@
       @triggerData="(data: any) => handleUpdateMindState('data', data)"
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
     <main>
-      <div :class="['content-wrap', 'is-standard-width']">
-        <editor-content :editor="editor" class="pb-20" />
+      <div :class="['content-wrap']" v-if="scene === 'knowledge'">
+        <editor-content :editor="editor" />
       </div>
+      <editor-content :editor="editor" v-else />
     </main>
+
 
     <!-- <ShortcutGuideModal v-if="editor?.isEditable && !isPreview" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, PropType } from 'vue'
 import MenuBar from './menus/menuBar.vue'
-import { CollaborationKit } from './extensions/kit'
+import { knowledgeKit, defauktKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
@@ -52,7 +54,52 @@ onKeyStroke(e => {
     return false
   }
 })
-const props = defineProps(collaborationEditorProps)
+defineOptions({
+  name: 'SpeedTiptapEditor',
+})
+const props = withDefaults(defineProps<{
+  /**
+   * 场景:支持富文本和知识库两种场景
+   */
+  scene?: 'default' | 'knowledge'
+  /**
+   * 内容
+   */
+  content?: string
+  /**
+   * 文档 id
+   */
+  docId?: string
+  /**
+   * 类型
+   */
+  docType?: "document" | "template"
+  /**
+   * 是否可编辑
+   */
+  editable?: boolean
+  /**
+   * 是否需要菜单
+   */
+  menubar?: boolean
+  /**
+   * 是否隐藏评论功能
+   */
+  hideComment?: boolean
+  /**
+   * hocuspocusProvider
+   */
+  hocuspocusProvider?: Record<string, any>
+}>(), {
+  scene: "default",
+  content: "",
+  docType: "document",
+  editable: true,
+  menubar: true,
+  hideComment: true,
+})
+
+
 const emit = defineEmits(['onTitleUpdate'])
 
 watch(
@@ -62,6 +109,7 @@ watch(
   },
 )
 console.log(props?.hocuspocusProvider)
+console.log(props.scene)
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
@@ -76,15 +124,16 @@ const editor = useEditor({
       emit(
         'onTitleUpdate',
         title ||
-          (props.docType === 'document' ? baseConfig.EMPTY_DOC_TITLE : baseConfig.EMPTY_TPL_TITLE),
+        (props.docType === 'document' ? baseConfig.EMPTY_DOC_TITLE : baseConfig.EMPTY_TPL_TITLE),
       )
     } catch (e) {
       //
     }
   },
+
   extensions: [
     StarterKit.configure({ document: false, paragraph: false, codeBlock: false }),
-    ...CollaborationKit,
+    ...(props.scene === 'knowledge' ? knowledgeKit : defauktKit),
     // Collaboration.configure({
     //   document: props?.hocuspocusProvider?.document ?? {},
     // }),
@@ -102,46 +151,65 @@ console.log(editor.value)
 
 <style scoped lang="less">
 .wrap {
-  display: flex;
   width: 100%;
   height: 100%;
   min-height: 240px;
-  overflow: hidden;
+  display: flex;
   flex-direction: column;
+  overflow: hidden;
 
-  > header {
-    z-index: 110;
-    display: flex;
-    justify-content: center;
-    padding: 0 24px;
-    overflow: hidden;
-    background-color: var(--ant-color-nav-bg);
-    align-items: center;
-    border-bottom: 1px solid var(--ant-border-color);
-    user-select: none;
+  &.knowledge {
+    &>header {
+      justify-content: center;
+      border: none;
+      border-bottom: 1px solid var(--ant-color-border);
+    }
+
+
+    &>main {
+      justify-content: center;
+      display: flex;
+      .content-wrap {
+        max-width: 750px;
+
+      }
+
+      border: none;
+    }
   }
 
-  > main {
-    position: relative;
+  >header {
+    z-index: 110;
     display: flex;
-    overflow: auto;
-    /* stylelint-disable-next-line */
-    overflow: overlay;
+    padding: 0 10px;
+    height: 40px;
+    overflow: hidden;
+    background-color: var(--ant-color-bg-base);
+    align-items: center;
+    border: 1px solid var(--ant-color-border);
+    user-select: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  >main {
     flex: 1;
-    justify-content: center;
-    flex-wrap: nowrap;
-    scroll-behavior: smooth;
+    width: 100%;
+    border: 1px solid var(--ant-color-border);
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    overflow-y: auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+   
 
     .content-wrap {
       width: 100%;
-
-      & > div {
+      &>div {
         position: relative; // 无结构的style??
       }
 
-      &.is-standard-width {
-        max-width: 750px;
-      }
 
       &.isFullWidth {
         max-width: 100%;
@@ -152,10 +220,7 @@ console.log(editor.value)
         border-top: 1px solid var(--ant-border-color);
       }
     }
-
-    .tocsWrap {
-      position: relative;
-    }
   }
+
 }
 </style>

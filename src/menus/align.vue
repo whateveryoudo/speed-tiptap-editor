@@ -7,30 +7,17 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\align.vue
 -->
 <template>
-  <a-popover
-    v-if="!isTitleActive"
-    overlay-class-name="align-popover-wrapper"
-    trigger="click"
-    placement="bottom"
-  >
+  <a-popover v-if="!isTitleActive" overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
     <template #content>
       <a-space class="align-list-wrapper">
-        <a-tooltip
-          v-for="item in alignButtons"
-          :key="item.key"
-        >
+        <a-tooltip v-for="item in alignButtons" :key="item.key">
           <template #title>
             {{ item.tip }}
           </template>
-          <div
-            :class="['shadow-bg-wrapper', selectButton.key === item.key && 'is-active']"
-            @click="item.action"
-          >
-            <s-icon-font
-              v-if="item.iconRender"
-              :icon-render="item.iconRender"
-            />
-          </div>
+          <a-button type="text" class="shadow-btn-wrapper" :class="selectButton.key === item.key && 'is-active'"
+            @click="item.action">
+            <s-icon-font v-if="item.iconRender" :icon-render="item.iconRender" />
+          </a-button>
         </a-tooltip>
       </a-space>
     </template>
@@ -38,31 +25,20 @@
       <template #title>
         对齐方式
       </template>
-      <div class="shadow-bg-wrapper">
-        <s-icon-font
-          v-if="selectButton.iconRender"
-          style="margin-right: 5px"
-          :icon-render="selectButton.iconRender"
-        />
+      <a-button type="text" class="shadow-btn-wrapper">
+        <s-icon-font v-if="selectButton.iconRender" :icon-render="selectButton.iconRender" />
         <caret-down-outlined class="dropdown-trigger" />
-      </div>
+      </a-button>
     </a-tooltip>
   </a-popover>
-  <a-tooltip
-    v-else
-    class="menu-disabled"
-  >
+  <a-tooltip v-else class="menu-disabled">
     <template #title>
       对齐方式
     </template>
-    <div class="shadow-bg-wrapper">
-      <s-icon-font
-        v-if="selectButton.iconRender"
-        style="margin-right: 5px"
-        :icon-render="selectButton.iconRender"
-      />
+    <a-button type="text" class="shadow-btn-wrapper" disabled>
+      <s-icon-font v-if="selectButton.iconRender" :icon-render="selectButton.iconRender" />
       <caret-down-outlined class="dropdown-trigger" />
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 
@@ -143,9 +119,11 @@ const alignButtons = ref<AlignButton[]>([
   .ant-popover-inner {
     border-radius: 4px;
   }
+
   .ant-popover-inner-content {
     padding: 3px 10px;
   }
+
   .align-list-wrapper {
     display: flex;
   }

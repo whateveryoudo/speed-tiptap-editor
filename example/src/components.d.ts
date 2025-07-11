@@ -8,9 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
     ADivider: typeof import('ant-design-vue/es')['Divider']
     ADropdown: typeof import('ant-design-vue/es')['Dropdown']
     AEmpty: typeof import('ant-design-vue/es')['Empty']
+    AFlex: typeof import('ant-design-vue/es')['Flex']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     APopover: typeof import('ant-design-vue/es')['Popover']
@@ -23,6 +25,10 @@ declare module 'vue' {
     CheckOutlined: typeof import('@ant-design/icons-vue')['CheckOutlined']
     DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
     RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
+    StrikeOutlined: typeof import('@ant-design/icons-vue')['StrikeOutlined']
+    StrikethroughOutlined: typeof import('@ant-design/icons-vue')['StrikethroughOutlined']
     UndoOutlined: typeof import('@ant-design/icons-vue')['UndoOutlined']
   }
 }

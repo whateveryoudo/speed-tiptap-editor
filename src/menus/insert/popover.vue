@@ -17,9 +17,9 @@
     </template>
     <a-tooltip>
       <template #title> 插入 </template>
-      <div class="shadow-bg-wrapper">
+      <a-button type="text" class="shadow-btn-wrapper">
         <plus-circle-filled class="tip-icon" />
-      </div>
+      </a-button>
     </a-tooltip>
   </a-popover>
 </template>

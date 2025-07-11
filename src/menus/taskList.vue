@@ -9,12 +9,15 @@
 
 <template>
   <a-tooltip title="任务列表">
-    <div
-      :class="['shadow-bg-wrapper', isTaskListActive ? 'is-active' : '', isTitleActive && 'disabled']"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :class="[isTaskListActive ? 'is-active' : '', isTitleActive && 'disabled']"
       @click="toggleTaskList"
+      :disabled="isTitleActive"
     >
-    <s-icon-font type="icon-kl-task"></s-icon-font>
-    </div>
+      <s-icon-font type="icon-kl-task"></s-icon-font>
+    </a-button>
   </a-tooltip>
 </template>
 <script setup lang="ts">

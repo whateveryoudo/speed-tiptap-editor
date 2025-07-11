@@ -8,12 +8,10 @@
 -->
 <template>
   <a-tooltip title="无序列表">
-    <div
-      :class="['shadow-bg-wrapper', isBulletListActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      @click="toggleBulletList"
-    >
+    <a-button type="text" :class="['shadow-btn-wrapper', isBulletListActive ? 'is-active' : '']"
+      @click="toggleBulletList" :disabled="isTitleActive">
       <unordered-list-outlined />
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 

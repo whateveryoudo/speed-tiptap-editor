@@ -8,16 +8,15 @@
 -->
 <template>
   <a-tooltip title="下划线">
-    <div
-      :class="[
-        'shadow-bg-wrapper',
-        isUnderlineActive ? 'is-active' : '',
-        isTitleActive && 'disabled',
-      ]"
+    <a-button
+      type="text"
+      class="shadow-btn-wrapper"
+      :class="[isUnderlineActive ? 'is-active' : '', isTitleActive && 'disabled']"
       @click="toggleUnderline"
+      :disabled="isTitleActive"
     >
       <underline-outlined />
-    </div>
+    </a-button>
   </a-tooltip>
 </template>
 

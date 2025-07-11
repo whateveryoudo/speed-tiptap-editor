@@ -7,13 +7,12 @@
  */
 import type { App, Component } from "vue";
 import { computed, ref } from "vue";
-import SpeedTiptapEditor from './editor.vue'
+import SpeedTiptapEditor from "./editor.vue";
+import SpeedComponents from "speed-components-ui/components";
 import { useAntdCssVars } from "speed-components-ui/hooks";
 import "./assets/style/index.less";
 // 组件列表
-const components: Component[] = [
-    SpeedTiptapEditor
-];
+const components: Component[] = [SpeedTiptapEditor];
 
 // AJAX 方法类型
 type AjaxMethod = (params?: any) => Promise<any>;
@@ -23,11 +22,15 @@ export interface GlobalConfig {
   apis?: {
     [key: string]: AjaxMethod;
   };
+  registerGlobal?: boolean;
+  iconfontUrl?: string;
 }
 
 // 默认配置
 const defaultConfig: GlobalConfig = {
   apis: {},
+  registerGlobal: true,
+  iconfontUrl: "",
 };
 
 // 使用 ref 创建响应式配置
@@ -58,7 +61,10 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   }
   // 注入响应式配置
   app.provide("speed-tiptap-config", currentConfig);
-
+  // 注册SpeedComponents
+  app.use(SpeedComponents, {
+    iconfontUrl: "//at.alicdn.com/t/c/font_3786040_pt7e6ck7v9.js",
+  });
   // 使用 Ant Design Vue CSS 变量
   const cleanup = useAntdCssVars();
 
