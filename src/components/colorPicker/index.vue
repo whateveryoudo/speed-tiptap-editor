@@ -93,7 +93,7 @@ const handleOpen = () => {
 <style lang="less">
 .color-board-popover-wrapper {
   width: 240px;
-  .ant-popover-inner-content {
+  .ant-popover-inner {
     padding: 0;
   }
   .color-board-wrapper {

@@ -16,7 +16,7 @@
       @click="toggleTaskList"
       :disabled="isTitleActive"
     >
-      <s-icon-font type="icon-kl-task"></s-icon-font>
+    <s-icon-font type="icon-kl-task"></s-icon-font>
     </a-button>
   </a-tooltip>
 </template>

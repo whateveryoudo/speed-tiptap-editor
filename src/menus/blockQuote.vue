@@ -16,7 +16,7 @@
       @click="toggleBlockquote"
       :disabled="isTitleActive"
     >
-      <s-icon-font type="icon-kl-quote1"></s-icon-font>
+    <s-icon-font type="icon-kl-quote1"></s-icon-font>
     </a-button>
   </a-tooltip>
 </template>

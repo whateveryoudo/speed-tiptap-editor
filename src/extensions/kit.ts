@@ -13,7 +13,7 @@ import { Document as BaseDocument } from "./document";
 import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 import { Attachment } from "./attachment";
-import { Placeholder } from "./placeholder";
+import { Placeholder } from "@tiptap/extensions";
 import type { Node } from "prosemirror-model";
 import Focus from "@tiptap/extension-focus";
 import type { Editor } from "@tiptap/core";
@@ -48,7 +48,6 @@ import table from "./table";
 import tableRow from "./tableRow";
 import tableCell from "./tableCell";
 import tableHeader from "./tableHeader";
-console.log(BaseDocument)
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
 });
@@ -67,6 +66,7 @@ export const defauktKit = [
   Placeholder.configure({
     placeholder: ({ node, editor }: { node: Node; editor: Editor }) => {
       if (node.type.name === "title") {
+        console.log(editor.isEditable);
         return editor.isEditable ? "请输入标题" : "未命名文档";
       }
       if (node.type.name === "codeBlock") {
@@ -75,8 +75,8 @@ export const defauktKit = [
 
       if (!editor.isEditable) return "";
 
-      // return placeholders[~~(Math.random() * placeholders.length)]
-      return placeholders[0];
+      return placeholders[~~(Math.random() * placeholders.length)]
+      // return placeholders[0];
     },
     showOnlyCurrent: false,
     showOnlyWhenEditable: false,

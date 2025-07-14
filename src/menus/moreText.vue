@@ -12,8 +12,9 @@
       <a-space>
         <ul class="text-list-wrapper">
           <li v-for="item in textItems" :key="item.key" class="list-item">
-            <a-button type="text" class="shadow-btn-wrapper"
-              :class="selectItem && selectItem.key === item.key && 'is-active'" @click="item.action"
+            <s-icon-font v-if="selectItem && selectItem.key === item.key" type="icon-kl-gouxuan" class="absolute top-[50%] translate-y-[-50%] left-[13px]" />
+
+            <a-button type="text" class="shadow-btn-wrapper" @click="item.action"
               style="width: 100%; text-align: left;">
               <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
               {{ item.name }}
@@ -133,11 +134,10 @@ const textItems = ref<TextItem[]>([
 .text-popover-wrapper {
   .ant-popover-inner {
     border-radius: 4px;
+    padding: 0;
+
   }
 
-  .ant-popover-inner-content {
-    padding: 0;
-  }
 
   .text-list-wrapper {
     padding: 4px 0;
@@ -145,17 +145,12 @@ const textItems = ref<TextItem[]>([
     width: 120px;
 
     .list-item {
+      position: relative;
       padding: 0 10px;
       display: flex;
       align-items: center;
       height: 35px;
       justify-content: flex-start;
-
-      &>span {
-        margin-right: 5px;
-        position: relative;
-        top: 1px;
-      }
     }
   }
 }

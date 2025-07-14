@@ -4,12 +4,13 @@ import { useRoute, useRouter } from "vue-router";
 import { message } from 'ant-design-vue'
 const route = useRoute();
 const router = useRouter();
-const content = ref("<p>欢迎使用 Speed Tiptap Editor！</p>");
+const content = ref("");
 
 const onUpdate = (content) => {
   console.log(content);
 };
 const currentDemo = ref();
+const title = ref("");
 const demos = [
   {
     name: "simple",
@@ -69,13 +70,14 @@ watch(
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2">
-    <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-if="currentDemo === 'simple'" />
-    <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'knowledge'"
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'" />
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" />
-    <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'collaboration'"
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
       scene="collaboration" />
     <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'ai'" scene="ai" />
   </div>
+  <div><a-space>标题:<a-input v-model:value="title" /></a-space>{{ content }}</div>
 
 </template>
 

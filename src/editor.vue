@@ -9,7 +9,7 @@
 <template>
   <div :class="['wrap', scene]">
     <!-- 工具栏 -->
-    <menu-bar v-if="menubar && editor && !isPreview" class="header" :editor="editor" />
+    <menu-bar v-if="menubar && editor" class="header" :editor="editor" />
     <!-- 扩展modal显示-mind -->
     <!-- <extend-mind-modal
       v-if="editor"
@@ -67,6 +67,10 @@ const props = withDefaults(defineProps<{
    */
   content?: string
   /**
+   * 标题
+   */
+  title?: string
+  /**
    * 文档 id
    */
   docId?: string
@@ -100,7 +104,7 @@ const props = withDefaults(defineProps<{
 })
 
 
-const emit = defineEmits(['onTitleUpdate'])
+const emit = defineEmits(['update:title', 'update:content'])
 
 watch(
   () => props.hocuspocusProvider,
@@ -113,18 +117,23 @@ console.log(props.scene)
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
+  content: props.content, // 初始化时设置内容
   editorProps: {
     attributes: {
       class: 'is-withauthor is-editable',
     },
   },
-  onUpdate({ transaction }) {
+  onUpdate({ editor }) {
+    // 编辑器内容变化时，同步到外部
+    const html = editor.getHTML()
+    emit('update:content', html)
+
+    // 原有的标题更新逻辑
     try {
-      const title = transaction?.doc?.content?.firstChild?.content.firstChild?.textContent
+      const title = editor.state.doc?.content?.firstChild?.content.firstChild?.textContent
       emit(
-        'onTitleUpdate',
-        title ||
-        (props.docType === 'document' ? baseConfig.EMPTY_DOC_TITLE : baseConfig.EMPTY_TPL_TITLE),
+        'update:title',
+        title,
       )
     } catch (e) {
       //
@@ -146,6 +155,43 @@ const editor = useEditor({
     // }),
   ],
 })
+
+// 监听 content 变化，同步到编辑器
+watch(
+  () => props.content,
+  (newContent) => {
+    if (editor.value && newContent !== editor.value.getHTML()) {
+      editor.value.commands.setContent(newContent, false)
+    }
+  }
+)
+
+
+// 监听 title 变化，同步到编辑器标题
+watch(
+  () => props.title,
+  (newTitle) => {
+    if (editor.value && newTitle) {
+      const { state } = editor.value
+      const { doc } = state
+      const firstChild = doc.firstChild
+      
+      // 检查当前标题是否已经相同，避免循环
+      const currentTitle = firstChild?.type.name === 'title' ? firstChild.textContent : ''
+      if (currentTitle === newTitle) {
+        return // 如果标题相同，不执行更新
+      }
+      
+      if (firstChild && firstChild.type.name === 'title') {
+        // 使用 insertContentAt 替换标题内容
+        editor.value.commands.insertContentAt(
+          { from: 0, to: firstChild.nodeSize }, 
+          newTitle
+        )
+      }
+    }
+  }
+)
 console.log(editor.value)
 </script>
 
@@ -169,6 +215,7 @@ console.log(editor.value)
     &>main {
       justify-content: center;
       display: flex;
+
       .content-wrap {
         max-width: 750px;
 
@@ -202,10 +249,11 @@ console.log(editor.value)
     overflow-y: auto;
     padding: 0 10px;
     box-sizing: border-box;
-   
+
 
     .content-wrap {
       width: 100%;
+
       &>div {
         position: relative; // 无结构的style??
       }

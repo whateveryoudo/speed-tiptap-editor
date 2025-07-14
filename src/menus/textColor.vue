@@ -3,7 +3,7 @@
  * @Date: 2022-11-15 16:34:49
  * @LastEditTime: 2022-12-15 15:19:16
  * @LastEditors: your name
- * @Description: 颜色选择
+ * @Description: 颜色选择（TODO:渐变支持）
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\textColor.vue
 -->
 <template>
