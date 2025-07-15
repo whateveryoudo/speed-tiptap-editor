@@ -10,6 +10,7 @@ import { computed, ref } from "vue";
 import SpeedTiptapEditor from "./editor.vue";
 import SpeedComponents from "speed-components-ui/components";
 import { useAntdCssVars } from "speed-components-ui/hooks";
+import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
 // 组件列表
 const components: Component[] = [SpeedTiptapEditor];

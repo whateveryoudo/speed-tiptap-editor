@@ -23,6 +23,7 @@ declare module 'vue' {
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
+    CaretRightOutlined: typeof import('@ant-design/icons-vue')['CaretRightOutlined']
     CheckOutlined: typeof import('@ant-design/icons-vue')['CheckOutlined']
     DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
     RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']

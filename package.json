@@ -126,7 +126,7 @@
     "prosemirror-utils": "^0.9.6",
     "prosemirror-view": "^1.23.6",
     "scroll-into-view-if-needed": "^3.0.3",
-    "speed-components-ui": "^0.1.7",
+    "speed-components-ui": "^0.1.18",
     "tippy.js": "^6.3.7",
     "toggle-selection": "^1.0.6",
     "vitepress": "^1.0.0",
