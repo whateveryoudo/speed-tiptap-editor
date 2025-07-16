@@ -25,11 +25,11 @@
     @triggerOpenModal="handleEditLink"
   />
   <!-- modal设置 -->
-  <!-- <link-modal-setting
+  <link-modal-setting
     v-bind="linkModalProp"
     :editor="editor"
     @closeModal="linkModalProp.visible = false"
-  /> -->
+  />
 </template>
 
 <script setup lang="ts">
@@ -37,7 +37,7 @@ import { PropType, ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { LinkOutlined } from '@ant-design/icons-vue'
 import { isMarkActive } from '@/prose-utils'
-// import LinkModalSetting from './modal.vue'
+import LinkModalSetting from './modal.vue'
 import LinkBubble from './bubble.vue'
 import { LinkModalProps } from './modal'
 import { Title } from '@/extensions/title'

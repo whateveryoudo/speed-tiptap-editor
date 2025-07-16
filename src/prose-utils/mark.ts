@@ -1,4 +1,4 @@
-import { EditorState } from 'prosemirror-state';
+import { EditorState } from '@tiptap/pm/state';
 
 export const markInputRegex = (tag) => new RegExp(`(<(${tag})((?: \\w+=".+?")+)?>([^<]+)</${tag}>)$`, 'gm');
 

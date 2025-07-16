@@ -6,9 +6,9 @@
  * @Description:
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\trailingNode.ts
  */
-import { Extension } from '@tiptap/core'
-import { Plugin, PluginKey } from 'prosemirror-state'
-import { type NodeType } from 'prosemirror-model'
+import { Node } from '@tiptap/core'
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+import { type NodeType } from '@tiptap/pm/model'
 
 interface TrailingNodeOptions {
   node: string
@@ -21,7 +21,7 @@ interface NodeTypes {
 function nodeEqualsType({ node, types }: NodeTypes) {
   return (Array.isArray(types) && types.includes(node.type)) || node.type === types
 }
-export const TrailingNode = Extension.create<TrailingNodeOptions>({
+export const TrailingNode = Node.create<TrailingNodeOptions>({
   name: 'trailingNode',
   addOptions() {
     return {

@@ -21,6 +21,8 @@ import { Editor } from '@tiptap/core'
 import EmojiPicker from '@/components/emojiPicker/index.vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
+import { Emoji } from '@tiptap/extension-emoji'
+
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -28,11 +30,12 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
-const setEmoji = (emoji: any) => {
+const setEmoji = (emoji: string) => {
   const { selection } = props.editor.state
   const { $anchor } = selection
   return props.editor.chain().insertContentAt($anchor.pos, emoji).run()
 }
+const isEmojiActive = useActive(props.editor, Emoji.name)
 </script>
 
 <style scoped lang="less">

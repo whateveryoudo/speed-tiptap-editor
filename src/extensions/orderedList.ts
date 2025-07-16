@@ -6,7 +6,7 @@
  * @Description: 
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\orderedList.ts
  */
-import { OrderedList as BuiltInOrderedList } from '@tiptap/extension-ordered-list';
+import { OrderedList as BuiltInOrderedList } from '@tiptap/extension-list';
 import { getMarkdownSource } from '@/prose-utils';
 
 export const OrderedList = BuiltInOrderedList.extend({

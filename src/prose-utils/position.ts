@@ -1,5 +1,5 @@
 /* Copyright 2021, Milkdown by Mirone. */
-import type { EditorView } from 'prosemirror-view';
+import type { EditorView } from '@tiptap/pm/view';
 
 type Point = [top: number, left: number];
 

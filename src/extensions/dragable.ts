@@ -1,7 +1,7 @@
-import { Extension } from '@tiptap/core';
-import { Plugin, PluginKey, Selection } from 'prosemirror-state';
-import { NodeSelection } from 'prosemirror-state';
-import { __serializeForClipboard, EditorView } from 'prosemirror-view';
+import { Extension } from '@tiptap/core'
+import { Plugin, PluginKey, Selection } from '@tiptap/pm/state'
+import { NodeSelection } from '@tiptap/pm/state'
+import { EditorView } from '@tiptap/pm/view'
 import { ActiveNode, getNodeAtPos, selectRootNodeByDom } from '@/prose-utils';
 
 export const DragablePluginKey = new PluginKey('dragable');
@@ -79,10 +79,10 @@ export const Dragable = Extension.create({
         const brokenClipboardAPI = false;
         const slice = activeSelection.content();
         event.dataTransfer.effectAllowed = 'copyMove';
-        const { dom, text } = __serializeForClipboard(editorView, slice);
-        event.dataTransfer.clearData();
-        event.dataTransfer.setData(brokenClipboardAPI ? 'Text' : 'text/html', dom.innerHTML);
-        if (!brokenClipboardAPI) event.dataTransfer.setData('text/plain', text);
+        // const { dom, text } = EditorView.serializeForClipboard(editorView, slice);
+        // event.dataTransfer.clearData();
+        // event.dataTransfer.setData(brokenClipboardAPI ? 'Text' : 'text/html', dom.innerHTML);
+        // event.dataTransfer.setData('text/plain', text);
         editorView.dragging = {
           slice,
           move: true,

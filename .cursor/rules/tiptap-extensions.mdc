@@ -1,0 +1,122 @@
+---
+description: 扩展tiptap插件的时候
+alwaysApply: false
+---
+# Tiptap 扩展开发指南
+## 你安装依赖的的时候用pnpm
+## 扩展结构
+创建 Tiptap 扩展时，请遵循以下模式：
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+export const MyExtension = Extension.create({
+  name: 'myExtension',
+  
+  addOptions() {
+    return {
+      // 默认选项
+    }
+  },
+
+  addAttributes() {
+    return {
+      // 定义扩展的属性
+    }
+  },
+
+  addInputRules() {
+    return [
+      // 文本转换的输入规则
+    ]
+  },
+
+  addCommands() {
+    return {
+      // 自定义命令
+    }
+  },
+
+  addKeyboardShortcuts() {
+    return {
+      // 键盘快捷键
+    }
+  }
+})
+```
+
+## 关键方法
+- **`addInputRules()`**：用于将文本输入转换为节点/标记（适用于 Markdown 类语法）
+- **`addPasteRules()`**：用于处理粘贴内容转换
+- **`addProseMirrorPlugins()`**：用于复杂交互（自动链接、点击处理等）
+- **`addAttributes()`**：定义扩展的数据结构
+- **`addCommands()`**：添加自定义编辑器命令
+
+## 最佳实践
+1. 使用 `addInputRules()` 进行简单的文本模式匹配
+2. 使用 `addProseMirrorPlugins()` 进行复杂交互（自动链接、粘贴处理）
+3. 尽可能继承内置扩展：`BuiltInExtension.extend()`
+4. 使用 `configure()` 进行简单的选项覆盖
+5. 始终包含正确的 TypeScript 类型
+
+## 链接扩展示例
+参考：[link.ts](mdc:src/extensions/link.ts) - 展示了如何扩展内置 Link 扩展，支持 Markdown 语法和自动链接功能。
+# Tiptap 扩展开发指南
+
+## 扩展结构
+创建 Tiptap 扩展时，请遵循以下模式：
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+export const MyExtension = Extension.create({
+  name: 'myExtension',
+  
+  addOptions() {
+    return {
+      // 默认选项
+    }
+  },
+
+  addAttributes() {
+    return {
+      // 定义扩展的属性
+    }
+  },
+
+  addInputRules() {
+    return [
+      // 文本转换的输入规则
+    ]
+  },
+
+  addCommands() {
+    return {
+      // 自定义命令
+    }
+  },
+
+  addKeyboardShortcuts() {
+    return {
+      // 键盘快捷键
+    }
+  }
+})
+```
+
+## 关键方法
+- **`addInputRules()`**：用于将文本输入转换为节点/标记（适用于 Markdown 类语法）
+- **`addPasteRules()`**：用于处理粘贴内容转换
+- **`addProseMirrorPlugins()`**：用于复杂交互（自动链接、点击处理等）
+- **`addAttributes()`**：定义扩展的数据结构
+- **`addCommands()`**：添加自定义编辑器命令
+
+## 最佳实践
+1. 使用 `addInputRules()` 进行简单的文本模式匹配
+2. 使用 `addProseMirrorPlugins()` 进行复杂交互（自动链接、粘贴处理）
+3. 尽可能继承内置扩展：`BuiltInExtension.extend()`
+4. 使用 `configure()` 进行简单的选项覆盖
+5. 始终包含正确的 TypeScript 类型
+
+## 链接扩展示例
+参考：[link.ts](mdc:src/extensions/link.ts) - 展示了如何扩展内置 Link 扩展，支持 Markdown 语法和自动链接功能。

@@ -1,4 +1,4 @@
-import { EditorState } from 'prosemirror-state';
+import { EditorState } from '@tiptap/pm/state'
 
 export const isListActive = (editor) => {
   return editor.isActive('bulletList') || editor.isActive('orderedList') || editor.isActive('taskList');

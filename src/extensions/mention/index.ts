@@ -3,14 +3,15 @@
  * @Date: 2022-11-11 16:10:18
  * @LastEditTime: 2023-01-09 18:58:30
  * @LastEditors: your name
- * @Description:
+ * @Description: Mention 扩展 - 使用 floating-ui 替代 tippy.js
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\mention\index.ts
  */
 import BulitInMention from '@tiptap/extension-mention'
 import { VueRenderer } from '@tiptap/vue-3'
-import tippy from 'tippy.js'
 import MentionList from './MentionList.vue'
 import { getDatasetAttribute } from '@/prose-utils';
+import { useFloatingPopup } from '@/hooks/useFloatingPopup'
+
 const suggestion = {
   items: async ({ query }: any) => {
     // const route = Vrouter.currentRoute.value
@@ -26,46 +27,47 @@ const suggestion = {
 
   render: () => {
     let component: any
-    let popup: any
+    const { showPopup, updatePopupPosition, hidePopup } = useFloatingPopup({
+      placement: 'bottom-start',
+      offset: 4,
+      padding: 8
+    })
 
     return {
-      onStart: props => {
+      onStart: (props: any) => {
+        const isEditable = props.editor.isEditable
+        if (!isEditable) return
+
         component = new VueRenderer(MentionList, {
           props,
           editor: props.editor,
         })
 
-        popup = tippy('body', {
-          getReferenceClientRect: props.clientRect,
-          appendTo: () => document.body,
-          content: component.element,
-          showOnCreate: true,
-          interactive: true,
-          trigger: 'manual',
-          placement: 'bottom-start',
-        })
+        showPopup(component, props.clientRect)
       },
 
-      onUpdate(props) {
+      onUpdate: (props: any) => {
+        const isEditable = props.editor.isEditable
+        if (!isEditable) return
+
         component.updateProps(props)
-
-        popup[0].setProps({
-          getReferenceClientRect: props.clientRect,
-        })
+        updatePopupPosition(props.clientRect)
       },
 
-      onKeyDown(props) {
-        if (props.event.key === 'Escape') {
-          popup[0].hide()
+      onKeyDown: (props: any) => {
+        const isEditable = props.editor.isEditable
+        if (!isEditable) return
 
+        if (props.event.key === 'Escape') {
+          hidePopup()
           return true
         }
 
         return component.ref?.onKeyDown(props)
       },
 
-      onExit() {
-        popup[0].destroy()
+      onExit: () => {
+        hidePopup()
         component.destroy()
       },
     }

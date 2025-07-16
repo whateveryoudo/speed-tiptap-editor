@@ -1,6 +1,6 @@
 // @ts-ignore
 import { lowlight } from 'lowlight';
-import { EditorState } from 'prosemirror-state';
+import { EditorState } from '@tiptap/pm/state';
 
 import { isMarkActive } from './active';
 

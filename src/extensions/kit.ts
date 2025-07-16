@@ -3,7 +3,7 @@
  * @Date: 2022-11-11 14:30:33
  * @LastEditTime: 2023-01-09 10:05:11
  * @LastEditors: your name
- * @Description:
+ * @Description: Tiptap 3.0 扩展配置
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\kit.ts
  */
 
@@ -13,44 +13,36 @@ import { Document as BaseDocument } from "./document";
 import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 import { Attachment } from "./attachment";
-import { Placeholder } from "@tiptap/extensions";
-import type { Node } from "prosemirror-model";
-import Focus from "@tiptap/extension-focus";
+import { Placeholder, Focus, CharacterCount, Dropcursor, Gapcursor, UndoRedo, TrailingNode, Selection } from "@tiptap/extensions";
+import { StarterKit } from "@tiptap/starter-kit";
 import type { Editor } from "@tiptap/core";
 import { Dragable } from "./dragable";
-import Underline from "@tiptap/extension-underline";
 import { Link } from "./link";
-import TextStyle from "@tiptap/extension-text-style";
+import { TextStyle } from "@tiptap/extension-text-style";
 import { FontSize } from "./fontSize";
 import { Color } from "@tiptap/extension-color";
 import { BackgroundColor } from "./backgroundColor";
-import Superscript from "@tiptap/extension-superscript";
-import Subscript from "@tiptap/extension-subscript";
 
 import { Code } from "./code";
 import { Parse } from "./parse";
 import { Loading } from "./loading";
 import { QuickInsert } from "./quickInsert";
-import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import { HorizontalRule } from "@tiptap/extension-horizontal-rule";
 import { Blockquote } from "./blockquote";
-import { BulletList } from "./bulletList";
-import { OrderedList } from "./orderedList";
-import TaskItem from "@tiptap/extension-task-item";
-import { TaskList } from "./taskList";
-import { Emoji } from "./emoji";
-import TextAlign from "@tiptap/extension-text-align";
+import { Emoji } from "@tiptap/extension-emoji";
+import { TextAlign } from "@tiptap/extension-text-align";
 import { Mind } from "./mind";
 import { Mention } from "./mention";
 import { CodeBlock } from "./codeBlock";
-import { TrailingNode } from "./trailingNode";
 import CustomeFlowMap from "./flowMap/CustomeFlowMap";
-import table from "./table";
-import tableRow from "./tableRow";
-import tableCell from "./tableCell";
-import tableHeader from "./tableHeader";
+import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
+import { TaskList } from "./taskList";
+import { TaskItem } from "@tiptap/extension-list";
+
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
 });
+
 const placeholders = [
   "输入 / 唤起更多",
   // '使用 markdown 语法进行输入',
@@ -58,13 +50,28 @@ const placeholders = [
   "输入 : 来插入表情",
   // '你知道吗？输入 $katex 然后在输入一个 $ 就可以快速插入数学公式，其他节点操作类似哦',
 ];
+
 // 默认文档（无 title）
 export const defauktKit = [
+  // 使用 StarterKit 作为基础，禁用需要自定义的扩展
+  StarterKit.configure({
+    // 禁用一些扩展，因为我们要使用自定义版本
+    document: false,
+    paragraph: false,
+    code: false,
+    codeBlock: false,
+    blockquote: false,
+    horizontalRule: false,
+    // 保留 StarterKit 中的其他扩展
+    // bold, italic, strike, underline, link, heading, hardBreak, text
+    // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
+  }),
+  
+  // 自定义扩展
   Paragraph,
-  Underline,
   Link,
   Placeholder.configure({
-    placeholder: ({ node, editor }: { node: Node; editor: Editor }) => {
+    placeholder: ({ node, editor, pos, hasAnchor }) => {
       if (node.type.name === "title") {
         console.log(editor.isEditable);
         return editor.isEditable ? "请输入标题" : "未命名文档";
@@ -74,9 +81,8 @@ export const defauktKit = [
       }
 
       if (!editor.isEditable) return "";
-
-      return placeholders[~~(Math.random() * placeholders.length)]
-      // return placeholders[0];
+      // 这里不使用随机，比如选择颜色就会又执行这个方法导致placeholder一直变化
+      return '输入 / 唤起更多';
     },
     showOnlyCurrent: false,
     showOnlyWhenEditable: false,
@@ -100,28 +106,23 @@ export const defauktKit = [
   BackgroundColor,
   Mind,
   CodeBlock,
-  TrailingNode,
-  Superscript,
-  Subscript,
   Code,
   Loading,
   QuickInsert,
   HorizontalRule,
   Blockquote,
-  BulletList,
-  OrderedList,
-  TaskItem,
-  TaskList,
   Emoji,
   Parse,
   Mention,
   TextAlign.configure({
     types: ["heading", "paragraph", "image"],
   }),
-  table,
-  tableCell,
-  tableRow,
-  tableHeader,
+  Table,
+  TableCell,
+  TableRow,
+  TableHeader,
+  TaskList,
+  TaskItem,
 ];
 
 // 知识库

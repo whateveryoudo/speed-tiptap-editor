@@ -10,7 +10,7 @@ import { mergeAttributes, Node } from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 import CustomeFlowMap from './CustomeFlowMap.vue'
 import { nodeInputRule } from '@tiptap/core'
-import { TextSelection } from 'prosemirror-state'
+import { TextSelection } from '@tiptap/pm/state'
 export interface FlowMapOptions {
   HTMLAttributes: Record<string, any>
 }

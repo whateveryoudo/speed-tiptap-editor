@@ -1,0 +1,74 @@
+---
+description: 使用样式变量的时候
+alwaysApply: false
+---
+# Ant Design CSS 变量使用指南
+
+本项目使用 Ant Design CSS 变量来保持样式一致性。请优先使用这些变量而不是硬编码值。
+
+## 颜色使用优先级
+1. **语义化颜色**：`--ant-color-primary`、`--ant-color-success`、`--ant-color-warning`、`--ant-color-error`、`--ant-color-info`
+2. **功能色**：`--ant-color-text`、`--ant-color-bg-container`、`--ant-color-border`
+3. **色系**：`--ant-blue-6`、`--ant-green-6`、`--ant-red-6` 等
+
+## 尺寸使用优先级
+1. **控件高度**：`--ant-control-height-sm`、`--ant-control-height-lg`
+2. **间距**：`--ant-size-xs`、`--ant-size-sm`、`--ant-size-md`、`--ant-size-lg`
+3. **字体大小**：`--ant-font-size-sm`、`--ant-font-size-lg`
+
+## 圆角使用
+- 小圆角：`--ant-border-radius-sm` (4px)
+- 默认圆角：`--ant-border-radius` (6px)
+- 大圆角：`--ant-border-radius-lg` (8px)
+
+## 动画使用
+- 快速：`--ant-motion-duration-fast` (0.1s)
+- 中等：`--ant-motion-duration-mid` (0.2s)
+- 慢速：`--ant-motion-duration-slow` (0.3s)
+
+## 使用示例
+```css
+.my-component {
+  color: var(--ant-color-text);
+  background-color: var(--ant-color-bg-container);
+  border: 1px solid var(--ant-color-border);
+  border-radius: var(--ant-border-radius);
+  padding: var(--ant-size-sm);
+  font-size: var(--ant-font-size);
+}
+```
+# Ant Design CSS 变量使用指南
+
+本项目使用 Ant Design CSS 变量来保持样式一致性。请优先使用这些变量而不是硬编码值。
+
+## 颜色使用优先级
+1. **语义化颜色**：`--ant-color-primary`、`--ant-color-success`、`--ant-color-warning`、`--ant-color-error`、`--ant-color-info`
+2. **功能色**：`--ant-color-text`、`--ant-color-bg-container`、`--ant-color-border`
+3. **色系**：`--ant-blue-6`、`--ant-green-6`、`--ant-red-6` 等
+
+## 尺寸使用优先级
+1. **控件高度**：`--ant-control-height-sm`、`--ant-control-height-lg`
+2. **间距**：`--ant-size-xs`、`--ant-size-sm`、`--ant-size-md`、`--ant-size-lg`
+3. **字体大小**：`--ant-font-size-sm`、`--ant-font-size-lg`
+
+## 圆角使用
+- 小圆角：`--ant-border-radius-sm` (4px)
+- 默认圆角：`--ant-border-radius` (6px)
+- 大圆角：`--ant-border-radius-lg` (8px)
+
+## 动画使用
+- 快速：`--ant-motion-duration-fast` (0.1s)
+- 中等：`--ant-motion-duration-mid` (0.2s)
+- 慢速：`--ant-motion-duration-slow` (0.3s)
+
+## 使用示例
+```css
+.my-component {
+  color: var(--ant-color-text);
+  background-color: var(--ant-color-bg-container);
+  border: 1px solid var(--ant-color-border);
+  border-radius: var(--ant-border-radius);
+  padding: var(--ant-size-sm);
+  font-size: var(--ant-font-size);
+}
+```

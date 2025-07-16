@@ -3,19 +3,19 @@
  * @Date: 2022-12-01 15:05:36
  * @LastEditTime: 2022-12-29 10:43:06
  * @LastEditors: your name
- * @Description: Emoji 扩展 - 使用 floating-ui 替代 tippy.js
+ * @Description:
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\emoji\index.ts
  */
-import { Extension } from '@tiptap/core'
+import { Node } from '@tiptap/core'
 import { EXTENSION_PRIORITY_HIGHEST } from '@/enums/constants'
 import Suggestion from '@tiptap/suggestion'
+import tippy from 'tippy.js';
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { emojiSearch, emojisToName } from './emojis';
 import { VueRenderer } from '@tiptap/vue-3'
 import EmojiList from './EmojiList.vue'
-import { useFloatingPopup } from '@/hooks/useFloatingPopup'
-
 const EmojiPluginKey = new PluginKey('emoji')
+
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -24,19 +24,17 @@ declare module '@tiptap/core' {
     }
   }
 }
-
-export const Emoji = Extension.create({
+export const Emoji = Node.create({
   name: 'emoji',
   content: 'text*',
   priority: EXTENSION_PRIORITY_HIGHEST,
-  
   addOptions() {
     return {
       HTMLAttributes: {},
       suggestion: {
         char: ':',
         pluginKey: EmojiPluginKey,
-        command: ({ editor, range, props }: { editor: any; range: any; props: any }) => {
+        command: ({ editor, range, props }) => {
           editor
             .chain()
             .focus()
@@ -46,17 +44,15 @@ export const Emoji = Extension.create({
       },
     }
   },
-
   addCommands() {
     return {
       setEmoji:
-        (emojiObject: { name: string; emoji: string }) =>
+        emojiObject =>
         ({ commands }) => {
           return commands.insertContent(emojiObject.emoji + ' ')
         },
     }
   },
-
   addProseMirrorPlugins() {
     const { editor } = this
 
@@ -74,51 +70,58 @@ export const Emoji = Extension.create({
   },
 }).configure({
   suggestion: {
-    items: ({ query }: { query: string }) => {
+    items: ({ query }) => {
       return emojiSearch(query)
     },
     render: () => {
-      let component: any
-      const { showPopup, updatePopupPosition, hidePopup } = useFloatingPopup({
-        placement: 'bottom-start',
-        offset: 4,
-        padding: 8
-      })
+      let component:any;
+      let popup:any;
+      let isEditable:boolean;
 
       return {
-        onStart: (props: any) => {
-          const isEditable = props.editor.isEditable
+        onStart: props => {
+          isEditable = props.editor.isEditable
           if (!isEditable) return
-
+          console.log(props,);
           component = new VueRenderer(EmojiList, {
             props,
             editor: props.editor,
           })
 
-          showPopup(component, props.clientRect)
+          popup = tippy('body', {
+            getReferenceClientRect: props.clientRect,
+            appendTo: () => document.body,
+            content: component.element,
+            showOnCreate: true,
+            interactive: true,
+            trigger: 'manual',
+            placement: 'bottom-start',
+          })
         },
 
-        onUpdate: (props: any) => {
-          const isEditable = props.editor.isEditable
+        onUpdate(props) {
           if (!isEditable) return
 
           component.updateProps(props)
-          updatePopupPosition(props.clientRect)
+          popup[0].setProps({
+            getReferenceClientRect: props.clientRect,
+          })
         },
 
-        onKeyDown: (props: any) => {
-          const isEditable = props.editor.isEditable
+        onKeyDown(props) {
           if (!isEditable) return
 
           if (props.event.key === 'Escape') {
-            hidePopup()
+            popup[0].hide()
             return true
           }
           return component.ref?.onKeyDown(props)
         },
 
-        onExit: () => {
-          hidePopup()
+        onExit() {
+          if (!isEditable) return
+
+          popup[0].destroy()
           component.destroy()
         },
       }

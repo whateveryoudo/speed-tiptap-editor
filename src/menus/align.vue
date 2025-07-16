@@ -14,7 +14,7 @@
           <template #title>
             {{ item.tip }}
           </template>
-          <a-button type="text" class="shadow-btn-wrapper" :class="selectButton.key === item.key && 'is-active'"
+          <a-button type="text" :class="['shadow-btn-wrapper', selectButton.key === item.key && 'is-active']"
             @click="item.action">
             <s-icon-font v-if="item.iconRender" :icon-render="item.iconRender" />
           </a-button>
@@ -118,10 +118,11 @@ const alignButtons = ref<AlignButton[]>([
 .align-popover-wrapper {
   .ant-popover-inner {
     border-radius: 4px;
+    padding: 0;
   }
 
   .ant-popover-inner-content {
-    padding: 3px 10px;
+    padding: 4px 8px;
   }
 
   .align-list-wrapper {

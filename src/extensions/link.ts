@@ -9,11 +9,11 @@
 import { markInputRule } from '@tiptap/core';
 import { Link as BuiltInLink } from '@tiptap/extension-link';
 
-const extractHrefFromMatch = (match) => {
+const extractHrefFromMatch = (match: any) => {
   return { href: match.groups.href };
 };
 
-export const extractHrefFromMarkdownLink = (match) => {
+export const extractHrefFromMarkdownLink = (match: any) => {
   /**
    * Removes the last capture group from the match to satisfy
    * tiptap markInputRule expectation of having the content as
@@ -26,16 +26,9 @@ export const extractHrefFromMarkdownLink = (match) => {
 };
 
 export const Link = BuiltInLink.extend({
-  addOptions() {
-    return {
-      ...this.parent?.(),
-      openOnClick: false,
-    };
-  },
-
   addInputRules() {
+    // 支持 Markdown 链接语法: [文本](链接)
     const markdownLinkSyntaxInputRuleRegExp = /(?:^|\s)\[([\w|\s|-|\u4e00-\u9fa5]+)\]\((?<href>.+?)\)$/gm;
-    const urlSyntaxRegExp = /(?:^|\s)(?<href>(?:https?:\/\/|www\.)[\S]+)(?:\s|\n)$/gim;
 
     return [
       markInputRule({
@@ -43,29 +36,10 @@ export const Link = BuiltInLink.extend({
         type: this.type,
         getAttributes: extractHrefFromMarkdownLink,
       }),
-      markInputRule({
-        find: urlSyntaxRegExp,
-        type: this.type,
-        getAttributes: extractHrefFromMatch,
-      }),
     ];
-  },
-
-  addAttributes() {
-    return {
-      ...this.parent?.(),
-      href: {
-        default: null,
-        parseHTML: (element) => element.getAttribute('href'),
-      },
-      title: {
-        title: null,
-        parseHTML: (element) => element.getAttribute('title'),
-      },
-    };
   },
 }).configure({
   openOnClick: false,
   linkOnPaste: true,
-  autolink: false,
+  autolink: true,
 });

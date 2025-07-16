@@ -1,5 +1,5 @@
-import { Fragment, MarkType, Node as PMNode, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
-import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
+import { Fragment, MarkType, Node as PMNode, NodeType, ResolvedPos, Schema } from '@tiptap/pm/model';
+import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from '@tiptap/pm/state';
 
 export function atTheEndOfDoc(state: EditorState): boolean {
   const { selection, doc } = state;

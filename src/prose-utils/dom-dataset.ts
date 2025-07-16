@@ -1,5 +1,5 @@
 import { safeJSONParse } from '@/helpers/json';
-import { Node } from 'prosemirror-state';
+import { Node } from '@tiptap/pm/state';
 
 /**
  * 将 JSON 转为字符串

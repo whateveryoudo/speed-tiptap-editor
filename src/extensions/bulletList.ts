@@ -6,7 +6,7 @@
  * @Description: 
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\bulletList.ts
  */
-import { BulletList as BuiltInBulletList } from '@tiptap/extension-bullet-list';
+import { BulletList as BuiltInBulletList } from '@tiptap/extension-list';
 import { getMarkdownSource } from '@/prose-utils';
 
 export const BulletList = BuiltInBulletList.extend({

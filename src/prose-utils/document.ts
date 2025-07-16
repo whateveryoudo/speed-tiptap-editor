@@ -1,4 +1,4 @@
-import { ReadonlyTransaction, Transaction } from 'prosemirror-state';
+import { ReadonlyTransaction, Transaction } from '@tiptap/pm/state';
 
 export const getStepRange = (transaction: Transaction | ReadonlyTransaction): { from: number; to: number } | null => {
   let from = -1;

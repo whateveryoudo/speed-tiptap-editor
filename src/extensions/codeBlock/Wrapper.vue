@@ -3,7 +3,7 @@
  * @Date: 2022-11-23 09:42:32
  * @LastEditTime: 2022-11-24 17:59:53
  * @LastEditors: your name
- * @Description: 
+ * @Description: CodeBlock Wrapper - Tiptap 3.0 版本
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\codeBlock\wrapper.vue
 -->
 <template>
@@ -17,7 +17,7 @@
       </option>
       <option disabled>
         —
-      </option>
+      </option> 
       <option
         v-for="(language, index) in languages"
         :key="index"
@@ -33,9 +33,33 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+
 const props = defineProps(nodeViewProps)
 
-const languages = ref(props.extension.options.lowlight.listLanguages())
+// 常用的编程语言列表
+const languages = ref([
+  'javascript',
+  'typescript',
+  'html',
+  'css',
+  'json',
+  'python',
+  'java',
+  'cpp',
+  'csharp',
+  'php',
+  'ruby',
+  'go',
+  'rust',
+  'swift',
+  'kotlin',
+  'scala',
+  'sql',
+  'bash',
+  'yaml',
+  'xml',
+  'markdown',
+])
 
 const selectedLanguage = computed({
   get() {

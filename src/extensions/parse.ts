@@ -8,8 +8,8 @@
  */
 import { Extension } from '@tiptap/core'
 import { EXTENSION_PRIORITY_HIGHEST } from '@/enums/constants'
-import { toggleMark } from 'prosemirror-commands'
-import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
+import { toggleMark } from '@tiptap/pm/commands'
+import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { safeJSONParse } from '@/helpers/json'
 import { handleFileEvent, isValidURL } from '@/prose-utils'
 export const Parse = Extension.create({

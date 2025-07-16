@@ -18,6 +18,7 @@
       :visible="mindState.visible"
       @triggerData="(data: any) => handleUpdateMindState('data', data)"
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
+    <TextMenu v-if="editor" :editor="editor" />
     <main>
       <div :class="['content-wrap']" v-if="scene === 'knowledge'">
         <editor-content :editor="editor" />
@@ -35,8 +36,8 @@ import { watch, ref, PropType } from 'vue'
 import MenuBar from './menus/menuBar.vue'
 import { knowledgeKit, defauktKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
+import { TextMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
@@ -141,7 +142,6 @@ const editor = useEditor({
   },
 
   extensions: [
-    StarterKit.configure({ document: false, paragraph: false, codeBlock: false }),
     ...(props.scene === 'knowledge' ? knowledgeKit : defauktKit),
     // Collaboration.configure({
     //   document: props?.hocuspocusProvider?.document ?? {},
@@ -175,17 +175,17 @@ watch(
       const { state } = editor.value
       const { doc } = state
       const firstChild = doc.firstChild
-      
+
       // 检查当前标题是否已经相同，避免循环
       const currentTitle = firstChild?.type.name === 'title' ? firstChild.textContent : ''
       if (currentTitle === newTitle) {
         return // 如果标题相同，不执行更新
       }
-      
+
       if (firstChild && firstChild.type.name === 'title') {
         // 使用 insertContentAt 替换标题内容
         editor.value.commands.insertContentAt(
-          { from: 0, to: firstChild.nodeSize }, 
+          { from: 0, to: firstChild.nodeSize },
           newTitle
         )
       }
@@ -249,10 +249,11 @@ console.log(editor.value)
     overflow-y: auto;
     padding: 0 10px;
     box-sizing: border-box;
-
+    position: relative; // 为 BubbleMenu 提供定位上下文
 
     .content-wrap {
       width: 100%;
+      position: relative; // 确保内容区域也有定位上下文
 
       &>div {
         position: relative; // 无结构的style??

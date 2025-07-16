@@ -6,8 +6,8 @@
  * @Description: 
  * @FilePath: \we-knowledge-base\src\tiptap\prose-utils\select-node-by-dom.ts
  */
-import { Node, ResolvedPos } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
+import { Node, ResolvedPos } from '@tiptap/pm/model';
+import { EditorView } from '@tiptap/pm/view';
 
 export type ActiveNode = Readonly<{
   $pos: ResolvedPos;

@@ -9,7 +9,7 @@
 import { Editor } from '@tiptap/core';
 import { copy } from '@/helpers/copy';
 import { safeJSONStringify } from '@/helpers/json';
-import { Fragment, Node } from 'prosemirror-model';
+import { Fragment, Node } from '@tiptap/pm/model';
 
 import { debug } from './debug';
 

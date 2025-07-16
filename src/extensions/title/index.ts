@@ -8,8 +8,8 @@
  */
 import { mergeAttributes, Node } from '@tiptap/core';
 import { VueNodeViewRenderer  } from '@tiptap/vue-3';
-import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
-import { Decoration, DecorationSet } from 'prosemirror-view';
+import { PluginKey, TextSelection } from '@tiptap/pm/state';
+import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import { getDatasetAttribute, getNodeAtPos, isInTitle, nodeAttrsToDataset } from '@/prose-utils';
 
 import Wrapper from './Wrapper.vue';

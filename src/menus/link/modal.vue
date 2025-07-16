@@ -7,13 +7,14 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\link\modal.vue
 -->
 <template>
-  <s-draggable-modal
+  <s-full-modal
     :visible="visible"
     title="编辑链接"
     @cancel="emit('closeModal')"
     @ok="handleSubmit"
   >
     <a-form
+      class="pt-4"
       ref="formRef"
       :model="formState"
       :label-col="{ span: 5 }"
@@ -43,7 +44,7 @@
         />
       </a-form-item>
     </a-form>
-  </s-draggable-modal>
+  </s-full-modal>
 </template>
 
 <script setup lang="ts">
@@ -85,7 +86,7 @@ const handleSubmit = async () => {
 }
 watch(() => props.visible, (val: boolean) => {
   if (val) {
-    formState.text = props.href;
+    formState.text = props.text;
     formState.href = props.href;
   }
 })

@@ -6,7 +6,7 @@
  * @Description: 
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\taskList.ts
  */
-import { TaskList as BuiltInTaskList } from '@tiptap/extension-task-list';
+import { TaskList as BuiltInTaskList } from '@tiptap/extension-list';
 import { PARSE_HTML_PRIORITY_HIGHEST } from '@/enums/constants';
 
 export const TaskList = BuiltInTaskList.extend({

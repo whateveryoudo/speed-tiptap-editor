@@ -8,30 +8,24 @@
 -->
 <template>
   <a-tooltip title="粗体">
-    <a-button
-      type="text"
-      class="shadow-btn-wrapper"
-      :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      @click="toggleBold"
-      :disabled="isTitleActive"
-    >
+    <a-button type="text" class="shadow-btn-wrapper"
+      :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']" @click="toggleBold"
+      :disabled="isTitleActive">
       <bold-outlined />
     </a-button>
   </a-tooltip>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
 import { Editor } from '@tiptap/core'
 import { BoldOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 
-const props = defineProps({
-  editor: {
-    type: Object as PropType<Editor>,
-    default: () => ({}),
-  },
+const props = withDefaults(defineProps<{
+  editor: Editor,
+}>(), {
+  editor: () => ({}) as Editor,
 })
 const isTitleActive = useActive(props.editor, Title.name)
 const toggleBold = () => {

@@ -6,14 +6,14 @@
  * @Description: 
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\placeholder.ts
  */
-import { Editor, Extension } from '@tiptap/core';
-import { Plugin } from 'prosemirror-state';
-import { Node as ProsemirrorNode } from 'prosemirror-model';
-import { Decoration, DecorationSet } from 'prosemirror-view';
+import { Extension } from '@tiptap/core'
+import { Plugin } from '@tiptap/pm/state'
+import { Node as ProsemirrorNode } from '@tiptap/pm/model'
+import { Decoration, DecorationSet } from '@tiptap/pm/view'
 export interface PlaceholderOptions {
     emptyEditorClass: string;
     emptyNodeClass: string;
-    placeholder: ((PlaceholderProps: { editor: Editor; node: ProsemirrorNode; pos: number }) => string) | string;
+    placeholder: ((PlaceholderProps: { editor: any; node: ProsemirrorNode; pos: number }) => string) | string;
     showOnlyWhenEditable: boolean;
     showOnlyCurrent: boolean;
     includeChildren: boolean;

@@ -1,0 +1,104 @@
+---
+description: 通用的定义vue3的setup组件规则
+alwaysApply: false
+---
+# Vue 组件开发指南
+
+## 组件结构
+Vue 组件请遵循以下模式：
+
+```vue
+<template>
+  <!-- 模板内容 -->
+</template>
+
+<script setup lang="ts">
+// 使用 TypeScript 和组合式 API
+import { ref, computed, onMounted } from 'vue'
+
+// Props 定义
+const props = defineProps<{
+  // 定义带类型的 props
+}>()
+
+// Emits 定义
+const emit = defineEmits<{
+  // 定义带类型的 emits
+}>()
+
+// 组件逻辑
+</script>
+
+<style lang="less" scoped>
+/* 使用 Less 进行样式设计，使用 scoped 样式 */
+</style>
+
+## Ant Design Vue 集成
+- 使用 Ant Design Vue 组件：`<a-button>`、`<a-input>` 等
+- 应用 Ant Design CSS 变量保持样式一致性
+- 使用 Ant Design 图标：`import { PlusOutlined } from '@ant-design/icons-vue'`
+
+## 颜色选择器组件
+参考：[colorPicker/index.vue](mdc:src/components/colorPicker/index.vue) - 展示了：
+- 与 Ant Design 集成的自定义颜色选择器
+- 使用 LocalStorage 存储自定义颜色
+- 正确的 TypeScript 使用方式
+- 事件处理和状态管理
+
+## 最佳实践
+1. 使用 `<script setup>` 语法进行组合式 API
+2. 为 props 和 emits 定义正确的 TypeScript 类型
+3. 使用 Ant Design CSS 变量进行样式设计
+4. 实现正确的事件处理
+5. 使用 scoped 样式避免 CSS 冲突
+6. 遵循 Vue 3 响应式最佳实践
+# Vue 组件开发指南
+
+## 组件结构
+Vue 组件请遵循以下模式：
+
+```vue
+<template>
+  <!-- 模板内容 -->
+</template>
+
+<script setup lang="ts">
+// 使用 TypeScript 和组合式 API
+import { ref, computed, onMounted } from 'vue'
+
+// Props 定义
+const props = defineProps<{
+  // 定义带类型的 props
+}>()
+
+// Emits 定义
+const emit = defineEmits<{
+  // 定义带类型的 emits
+}>()
+
+// 组件逻辑
+</script>
+
+<style lang="less" scoped>
+/* 使用 Less 进行样式设计，使用 scoped 样式 */
+</style>
+
+## Ant Design Vue 集成
+- 使用 Ant Design Vue 组件：`<a-button>`、`<a-input>` 等
+- 应用 Ant Design CSS 变量保持样式一致性
+- 使用 Ant Design 图标：`import { PlusOutlined } from '@ant-design/icons-vue'`
+
+## 颜色选择器组件
+参考：[colorPicker/index.vue](mdc:src/components/colorPicker/index.vue) - 展示了：
+- 与 Ant Design 集成的自定义颜色选择器
+- 使用 LocalStorage 存储自定义颜色
+- 正确的 TypeScript 使用方式
+- 事件处理和状态管理
+
+## 最佳实践
+1. 使用 `<script setup>` 语法进行组合式 API
+2. 为 props 和 emits 定义正确的 TypeScript 类型
+3. 使用 Ant Design CSS 变量进行样式设计
+4. 实现正确的事件处理
+5. 使用 scoped 样式避免 CSS 冲突
+6. 遵循 Vue 3 响应式最佳实践

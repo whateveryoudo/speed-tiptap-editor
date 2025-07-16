@@ -1,0 +1,71 @@
+---
+alwaysApply: true
+---
+# 项目结构指南
+
+这是一个基于 Vue 3 + TypeScript + Tiptap 编辑器项目，集成了 Ant Design。
+
+## 关键目录
+- **`src/components/`**：Vue 组件，包括颜色选择器、模态框、菜单等
+- **`src/extensions/`**：Tiptap 编辑器扩展（链接、思维导图、流程图等）
+- **`src/assets/style/`**：CSS/Less 文件，包括 Ant Design 变量
+- **`src/menus/`**：编辑器工具栏菜单组件
+- **`src/helpers/`**：工具函数和辅助函数
+- **`src/hooks/`**：Vue 组合式 API 钩子
+- **`src/prose-utils/`**：Tiptap/ProseMirror 工具函数
+
+## 主要文件
+- **`src/editor.vue`**：主编辑器组件
+- **`src/main.ts`**：应用程序入口点
+- **`src/extensions/kit.ts`**：扩展配置和设置
+- **`src/assets/style/antd-variables.rule`**：Ant Design CSS 变量
+
+## 技术栈
+- **前端**：Vue 3 + TypeScript + 组合式 API
+- **编辑器**：Tiptap 2.x（基于 ProseMirror）
+- **UI**：Ant Design Vue 4.x
+- **样式**：Less + CSS 变量
+- **构建**：Vite
+
+## 扩展系统
+项目使用自定义的 Tiptap 扩展系统：
+- 支持 Markdown 语法的自定义链接扩展
+- 基于 kityminder 的思维导图扩展
+- 基于 X6 的流程图扩展
+- 各种文本格式化扩展
+
+参考：[kit.ts](mdc:src/extensions/kit.ts) - 展示了如何配置和加载扩展。
+# 项目结构指南
+
+这是一个基于 Vue 3 + TypeScript + Tiptap 编辑器项目，集成了 Ant Design。
+
+## 关键目录
+- **`src/components/`**：Vue 组件，包括颜色选择器、模态框、菜单等
+- **`src/extensions/`**：Tiptap 编辑器扩展（链接、思维导图、流程图等）
+- **`src/assets/style/`**：CSS/Less 文件，包括 Ant Design 变量
+- **`src/menus/`**：编辑器工具栏菜单组件
+- **`src/helpers/`**：工具函数和辅助函数
+- **`src/hooks/`**：Vue 组合式 API 钩子
+- **`src/prose-utils/`**：Tiptap/ProseMirror 工具函数
+
+## 主要文件
+- **`src/editor.vue`**：主编辑器组件
+- **`src/main.ts`**：应用程序入口点
+- **`src/extensions/kit.ts`**：扩展配置和设置
+- **`src/assets/style/antd-variables.rule`**：Ant Design CSS 变量
+
+## 技术栈
+- **前端**：Vue 3 + TypeScript + 组合式 API
+- **编辑器**：Tiptap 2.x（基于 ProseMirror）
+- **UI**：Ant Design Vue 4.x
+- **样式**：Less + CSS 变量
+- **构建**：Vite
+
+## 扩展系统
+项目使用自定义的 Tiptap 扩展系统：
+- 支持 Markdown 语法的自定义链接扩展
+- 基于 kityminder 的思维导图扩展
+- 基于 X6 的流程图扩展
+- 各种文本格式化扩展
+
+参考：[kit.ts](mdc:src/extensions/kit.ts) - 展示了如何配置和加载扩展。
