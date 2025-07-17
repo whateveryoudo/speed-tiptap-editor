@@ -32,18 +32,22 @@
           最近使用的自定义颜色
         </div>
         <ul class="color-board-list-wrapper">
-          <li v-for="(color, index) in customColors" :key="'custom-'+index" class="color-board-item" @click="chooseColor(color)">
+          <li v-for="(color, index) in customColors" :key="'custom-' + index" class="color-board-item"
+            @click="chooseColor(color)">
             <span class="color-inner" :style="`background-color: ${color}`" />
             <check-outlined v-if="color === curColor" class="checked-icon" />
           </li>
         </ul>
         <!-- 自定义颜色选择 -->
         <s-color-picker placement="right" :color="curColor" @update:color="chooseColor">
-        <!-- 这里需要包一个div?? -->
+          <!-- 这里需要包一个div?? -->
           <div>
             <a-flex align="center" justify="space-between"
               class="px-2 py-2 cursor-pointer hover:bg-gray-100 rounded-b-[4px] border-t border-solid border-l-0 border-r-0 border-b-0 border-gray-200">
-              <a-space>更多颜色</a-space>
+              <a-flex align="center" :gap="6">
+                <img :src="CustomColor" alt="自定义颜色" class="w-[17px] h-[auto]">
+                更多颜色
+              </a-flex>
               <CaretRightOutlined />
             </a-flex>
           </div>
@@ -59,6 +63,7 @@
 <script setup lang="tsx">
 import { ref, PropType, onMounted } from 'vue'
 import { colors, type ColorType } from './data'
+import CustomColor from '@/assets/image/custom-color.png'
 const defaultColor: ColorType = '#000000'
 const LOCAL_KEY = 'custom_colors'
 const MAX_CUSTOM_COLORS = 9
@@ -91,7 +96,7 @@ const loadCustomColors = () => {
       if (Array.isArray(arr)) {
         customColors.value = arr.slice(0, MAX_CUSTOM_COLORS)
       }
-    } catch {}
+    } catch { }
   }
 }
 
