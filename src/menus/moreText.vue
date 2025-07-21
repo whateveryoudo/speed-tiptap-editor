@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\moreText.vue
 -->
 <template>
-  <a-popover v-if="!isTitleActive" overlay-class-name="text-popover-wrapper" trigger="click" placement="bottom">
+  <a-popover v-if="!isTitleActive" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click" placement="bottom">
     <template #content>
       <a-space>
         <ul class="text-list-wrapper">
@@ -132,11 +132,6 @@ const textItems = ref<TextItem[]>([
 </script>
 <style lang="less">
 .text-popover-wrapper {
-  .ant-popover-inner {
-    border-radius: 4px;
-    padding: 0;
-
-  }
 
 
   .text-list-wrapper {

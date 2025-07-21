@@ -12,7 +12,7 @@
       type="text"
       class="shadow-btn-wrapper"
       :class="[isUnderlineActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      @click="toggleUnderline"
+      v-on="buttonEvents"
       :disabled="isTitleActive"
     >
       <underline-outlined />
@@ -21,17 +21,19 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { UnderlineOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
+import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 
-const props = defineProps({
-  editor: {
-    type: Object as PropType<Editor>,
-    default: () => ({}),
-  },
+const props = withDefaults(defineProps<{
+  editor: Editor,
+  triggerType?: 'menu' | 'bubble'
+}>(), {
+  editor: () => ({}) as Editor,
+  triggerType: 'menu'
 })
 const isTitleActive = useActive(props.editor, Title.name)
 const toggleUnderline = () => {
@@ -41,6 +43,7 @@ const toggleUnderline = () => {
   props.editor && props.editor.chain().focus().toggleUnderline().run()
 }
 const isUnderlineActive = useActive(props.editor, 'underline')
+const buttonEvents = useMenuButtonEvents(toggleUnderline, props.triggerType)
 </script>
 
 <style scoped lang="less"></style>

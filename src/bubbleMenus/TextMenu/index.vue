@@ -9,10 +9,10 @@
 <template>
     <BubbleContainer :editor="editor" :should-show="shouldShow" plugin-key="text-bubble-menu">
         <a-space :size="5">
-            <Bold :editor="editor" />
-            <Italic :editor="editor" />
-            <Underline :editor="editor" />
-            <Strike :editor="editor" />
+            <Bold trigger-type="bubble" :editor="editor" />
+            <Italic trigger-type="bubble" :editor="editor" />
+            <Underline trigger-type="bubble" :editor="editor" />
+            <Strike trigger-type="bubble" :editor="editor" />
         </a-space>
     </BubbleContainer>
 </template>
@@ -25,7 +25,6 @@ import Underline from '@/menus/underline.vue'
 import Strike from '@/menus/strike.vue'
 import { Title } from '@/extensions/title'
 import { Link } from '@/extensions/link'
-
 const OTHER_BUBBLE_MENU_TYPES = [Title.name, Link.name]
 const props = withDefaults(defineProps<{
     editor: any,
@@ -34,6 +33,7 @@ const props = withDefaults(defineProps<{
 })
 // editor.state 与  editor.view.state??
 const shouldShow = ({ editor, state }: { editor: any; state: any }) => {
+    console.log(state.selection.empty)
     return (
         editor.isEditable &&
         !state.selection.empty &&

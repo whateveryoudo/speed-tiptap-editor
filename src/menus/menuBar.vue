@@ -35,6 +35,8 @@
       <OrderedList :editor="editor"/>
       <TaskList :editor="editor"/>
       <a-divider type="vertical" />
+      <Indent :editor="editor" />
+      <a-divider type="vertical" />
       <Emoji :editor="editor"/>
       <BlockQuote :editor="editor"/>
       <HorizontalRule :editor="editor"/>
@@ -70,6 +72,8 @@ import TaskList from './taskList.vue'
 import BlockQuote from './blockQuote.vue'
 import HorizontalRule from './horizontalRule.vue'
 import Emoji from './emoji.vue'
+import Indent from './indent.vue'
+
 defineProps({
   editor: {
     type: Object as PropType<Editor>,

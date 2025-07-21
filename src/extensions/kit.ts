@@ -38,6 +38,7 @@ import CustomeFlowMap from "./flowMap/CustomeFlowMap";
 import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
 import { TaskList } from "./taskList";
 import { TaskItem } from "@tiptap/extension-list";
+import { Indent } from "./indent";
 
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
@@ -123,6 +124,7 @@ export const defauktKit = [
   TableHeader,
   TaskList,
   TaskItem,
+  Indent
 ];
 
 // 知识库

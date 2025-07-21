@@ -8,33 +8,31 @@
 -->
 <template>
   <a-tooltip title="斜体">
-    <a-button
-      type="text"
-      class="shadow-btn-wrapper"
+    <a-button type="text" class="shadow-btn-wrapper"
       :class="[isItalicActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      @click="toggleItalic"
-      :disabled="isTitleActive"
-    >
+      v-on="buttonEvents"
+      :disabled="isTitleActive">
       <italic-outlined />
     </a-button>
   </a-tooltip>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { ItalicOutlined } from '@ant-design/icons-vue'
-import { useActive } from '@/hooks/useActive'
 import { Title } from '@/extensions/title'
+import { useActive } from '@/hooks/useActive'
+import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 
-const props = defineProps({
-  editor: {
-    type: Object as PropType<Editor>,
-    default: () => ({}),
-  },
+const props = withDefaults(defineProps<{
+  editor: Editor,
+  triggerType?: 'menu' | 'bubble'
+}>(), {
+  editor: () => ({}) as Editor,
+  triggerType: 'menu'
 })
 const isTitleActive = useActive(props.editor, Title.name)
-
 const toggleItalic = () => {
   if (isTitleActive.value) {
     return
@@ -42,6 +40,7 @@ const toggleItalic = () => {
   props.editor && props.editor.chain().focus().toggleItalic().run()
 }
 const isItalicActive = useActive(props.editor, 'italic')
+const buttonEvents = useMenuButtonEvents(toggleItalic, props.triggerType)
 </script>
 
 <style scoped lang="less"></style>

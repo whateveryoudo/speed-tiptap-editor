@@ -1,0 +1,40 @@
+---
+description: 自定义菜单，气泡菜单
+alwaysApply: false
+---
+# 菜单按钮事件绑定最佳实践
+
+
+## 为什么要用 useMenuButtonEvents hook？
+
+在 Tiptap 编辑器中，菜单栏和气泡菜单的按钮事件绑定需求不同：
+- 工具栏按钮需要防止点击时编辑器失焦（否则选区丢失，命令无效），应使用 `mousedown.prevent`。
+
+- 气泡菜单按钮则应允许点击气泡外部时自动关闭气泡，需用 `click`，不能阻止默认行为。
+
+> ⚠️  Tiptap 的 BubbleMenu 组件内置逻辑是“编辑器失去焦点时气泡自动消失”，而不是 selection 变化导致气泡隐藏。用 mousedown.prevent 可以阻止编辑器 blur，从而保证气泡菜单不消失，交互体验更自然。
+
+如果直接在模板中用 v-if/v-else 或多份按钮，会导致代码重复、维护困难。通过 useMenuButtonEvents hook，可以根据 triggerType 自动切换事件类型（工具栏用 mousedown.prevent，气泡菜单用 click），只需写一遍按钮模板，保证交互体验一致、代码简洁且易于维护。这也是 Vue 组合式 API 的最佳实践。
+
+---
+
+为保证 Tiptap 编辑器菜单栏和气泡菜单的交互体验统一，所有菜单按钮事件绑定应遵循如下规范：
+
+- **统一使用 [useMenuButtonEvents.ts](mdc:src/hooks/useMenuButtonEvents.ts) hook**，根据 `triggerType` 动态切换事件绑定。
+- 工具栏按钮（`triggerType='menu'`，默认）使用 `mousedown.prevent`，防止失焦和选区丢失。
+- 气泡菜单按钮（`triggerType='bubble'`）使用 `click`，保证点击气泡外部时气泡能正常关闭。
+- 组件模板中只需写一遍 `<a-button v-on="buttonEvents">`，无需 v-if/v-else。
+- 事件绑定对象由 hook 自动生成，props 变化时自动响应。
+
+示例用法：
+
+```vue
+<script setup lang="ts">
+import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
+const buttonEvents = useMenuButtonEvents(toggleBold, props.triggerType)
+</script>
+
+<template>
+  <a-button v-on="buttonEvents">...</a-button>
+</template>
+```

@@ -9,7 +9,8 @@
 <template>
   <a-tooltip title="粗体">
     <a-button type="text" class="shadow-btn-wrapper"
-      :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']" @click="toggleBold"
+      :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']"
+      v-on="buttonEvents"
       :disabled="isTitleActive">
       <bold-outlined />
     </a-button>
@@ -17,15 +18,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { BoldOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
+import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 
 const props = withDefaults(defineProps<{
   editor: Editor,
+  triggerType?: 'menu' | 'bubble'
 }>(), {
   editor: () => ({}) as Editor,
+  triggerType: 'menu'
 })
 const isTitleActive = useActive(props.editor, Title.name)
 const toggleBold = () => {
@@ -35,6 +40,7 @@ const toggleBold = () => {
   props.editor && props.editor.chain().focus().toggleBold().run()
 }
 const isBoldActive = useActive(props.editor, 'bold')
+const buttonEvents = useMenuButtonEvents(toggleBold, props.triggerType)
 </script>
 
 <style scoped lang="less"></style>

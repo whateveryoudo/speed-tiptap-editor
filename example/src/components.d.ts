@@ -28,6 +28,8 @@ declare module 'vue' {
     CaretRightOutlined: typeof import('@ant-design/icons-vue')['CaretRightOutlined']
     CheckOutlined: typeof import('@ant-design/icons-vue')['CheckOutlined']
     DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
+    MenuFoldOutlined: typeof import('@ant-design/icons-vue')['MenuFoldOutlined']
+    MenuUnfoldOutlined: typeof import('@ant-design/icons-vue')['MenuUnfoldOutlined']
     RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

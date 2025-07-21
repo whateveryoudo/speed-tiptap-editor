@@ -9,24 +9,28 @@
 <template>
   <a-tooltip title="删除线">
     <a-button type="text" class="shadow-btn-wrapper"
-      :class="[isStrikeActive ? 'is-active' : '', isTitleActive && 'disabled']" @click="toggleStrike"
+      :class="[isStrikeActive ? 'is-active' : '', isTitleActive && 'disabled']"
+      v-on="buttonEvents"
       :disabled="isTitleActive">
-      <StrikethroughOutlined />
+      <strikethrough-outlined />
     </a-button>
   </a-tooltip>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { computed } from 'vue'
 import { Editor } from '@tiptap/core'
+import { StrikethroughOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
+import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 
-const props = defineProps({
-  editor: {
-    type: Object as PropType<Editor>,
-    default: () => ({}),
-  },
+const props = withDefaults(defineProps<{
+  editor: Editor,
+  triggerType?: 'menu' | 'bubble'
+}>(), {
+  editor: () => ({}) as Editor,
+  triggerType: 'menu'
 })
 const isTitleActive = useActive(props.editor, Title.name)
 const toggleStrike = () => {
@@ -36,6 +40,7 @@ const toggleStrike = () => {
   props.editor && props.editor.chain().focus().toggleStrike().run()
 }
 const isStrikeActive = useActive(props.editor, 'strike')
+const buttonEvents = useMenuButtonEvents(toggleStrike, props.triggerType)
 </script>
 
 <style scoped lang="less"></style>
