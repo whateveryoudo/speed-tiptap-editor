@@ -13,7 +13,7 @@ import { Document as BaseDocument } from "./document";
 import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 import { Attachment } from "./attachment";
-import { Placeholder, Focus, CharacterCount, Dropcursor, Gapcursor, UndoRedo, TrailingNode, Selection } from "@tiptap/extensions";
+import { Placeholder, Focus } from "@tiptap/extensions";
 import { StarterKit } from "@tiptap/starter-kit";
 import type { Editor } from "@tiptap/core";
 import { Dragable } from "./dragable";
@@ -39,6 +39,8 @@ import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table
 import { TaskList } from "./taskList";
 import { TaskItem } from "@tiptap/extension-list";
 import { Indent } from "./indent";
+import Superscript from "@tiptap/extension-superscript";
+import Subscript from "@tiptap/extension-subscript";
 
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
@@ -63,6 +65,7 @@ export const defauktKit = [
     codeBlock: false,
     blockquote: false,
     horizontalRule: false,
+    link:false
     // 保留 StarterKit 中的其他扩展
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
@@ -124,7 +127,13 @@ export const defauktKit = [
   TableHeader,
   TaskList,
   TaskItem,
-  Indent
+  Indent.configure({
+    types: ['paragraph', 'heading', 'listItem'],
+    minIndent: 0,
+    maxIndent: 8,
+  }),
+  Superscript,
+  Subscript,
 ];
 
 // 知识库

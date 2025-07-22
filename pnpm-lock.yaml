@@ -75,10 +75,10 @@ importers:
         specifier: ^3.0.0
         version: 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))
       '@tiptap/extension-subscript':
-        specifier: ^3.0.0
+        specifier: ^3.0.6
         version: 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
       '@tiptap/extension-superscript':
-        specifier: ^3.0.0
+        specifier: ^3.0.6
         version: 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
       '@tiptap/extension-table':
         specifier: ^3.0.0
@@ -152,6 +152,9 @@ importers:
       vue:
         specifier: ^3.4.0
         version: 3.5.16(typescript@5.8.3)
+      vue-color:
+        specifier: ^3.2.0
+        version: 3.2.0(vue@3.5.16(typescript@5.8.3))
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.16(typescript@5.8.3))

@@ -10,14 +10,14 @@
   <a-tooltip title="字体颜色">
     <div :class="['text-color-menu-wrapper']">
       <a-button type="text" class="shadow-btn-wrapper middle" style="margin-top:-1px" :disabled="isTitleActive"
-        @click="setColor(curColor)">
+        v-on="buttonEvents">
         <span class="text-wrapper" :style="{ color: isTitleActive ? 'rgba(0, 0, 0, 0.25)' : '#000' }">A
           <span class="under-line"
             :style="{ backgroundColor: isTitleActive ? 'rgba(0, 0, 0, 0.25)' : curColor || 'transparent' }" />
         </span>
       </a-button>
       <color-picker :cur-color="curColor" show-default :disabled="isTitleActive" @triggerColor="setColor">
-        <a-button type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="isTitleActive">
+        <a-button @mousedown.prevent type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="isTitleActive">
           <caret-down-outlined />
         </a-button>
       </color-picker>
@@ -33,6 +33,7 @@ import { type ColorType } from '@/components/colorPicker/data'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
+import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -50,6 +51,7 @@ const setColor = (color: ColorType) => {
   curColor.value = color;
   props.editor?.chain().focus().setColor(color).run()
 }
+const buttonEvents = useMenuButtonEvents(() => setColor(curColor.value), 'menu')
 </script>
 
 <style scoped lang="less">

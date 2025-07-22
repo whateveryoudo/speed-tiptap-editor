@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\heading.vue
 -->
 <template>
-  <a-select class="w-[110px]" :value="current" :disabled="isTitleActive" dropdown-class-name="heading-dropdown"
+  <a-select class="w-[110px]" :value="current" :disabled="isTitleActive" popover-class-name="heading-dropdown"
     :options="headingOptions" @change="handleChange">
     <template #option="{ value: val, label, style }">
       <span class="place-check-icon">

@@ -11,7 +11,7 @@
   <a-popover v-if="!disabled" overlay-class-name="color-board-popover-wrapper" trigger="click" placement="bottomLeft">
     <template #content>
       <div class="color-board-wrapper">
-        <div class="top-choosed-wrapper transition-bg" @click="chooseColor(showDefault ? defaultColor : null)">
+        <div class="top-choosed-wrapper transition-bg" @mousedown.prevent="chooseColor(showDefault ? defaultColor : null)">
           <div v-if="showDefault" class="top-choosed-item">
             <span class="color-board-item"><span class="color-inner"
                 :style="{ backgroundColor: defaultColor }" /></span>
@@ -23,7 +23,7 @@
           </div>
         </div>
         <ul class="color-board-list-wrapper">
-          <li v-for="(color, index) in colors" :key="index" class="color-board-item" @click="chooseColor(color)">
+          <li v-for="(color, index) in colors" :key="index" class="color-board-item" @mousedown.prevent="chooseColor(color)">
             <span class="color-inner" :style="{ backgroundColor: color }" />
             <check-outlined v-if="color === curColor" class="checked-icon" />
           </li>
@@ -33,12 +33,12 @@
         </div>
         <ul class="color-board-list-wrapper">
           <li v-for="(color, index) in customColors" :key="'custom-' + index" class="color-board-item"
-            @click="chooseColor(color)">
+            @mousedown.prevent="chooseColor(color)">
             <span class="color-inner" :style="`background-color: ${color}`" />
             <check-outlined v-if="color === curColor" class="checked-icon" />
           </li>
         </ul>
-        <!-- 自定义颜色选择 -->
+        <!-- 自定义颜色选择：这里没法设置vue-color的mouseDown事件,会造成bubbleMenu闪烁 -->
         <s-color-picker placement="right" :color="curColor" @update:color="chooseColor">
           <!-- 这里需要包一个div?? -->
           <div>
@@ -51,7 +51,6 @@
               <CaretRightOutlined />
             </a-flex>
           </div>
-
         </s-color-picker>
       </div>
     </template>

@@ -6,7 +6,7 @@
       :class="[fullscreenModel && 'fullscreen', modalClass]">
       <a-modal
         v-bind="omit(props, ['visible', 'onCancel', 'onOk', 'onUpdate:visible'])"
-        v-model:visible="visibleModel"
+        v-model:open="visibleModel"
         :mask-closable="false"
         :get-container="() => modalWrapRef"
         :width="innerWidth || width"

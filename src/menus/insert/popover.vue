@@ -8,12 +8,12 @@
 -->
 <template>
   <a-popover
-    v-model:visible="visible"
+    v-model:open="open"
     overlay-class-name="menu-popover-wrapper"
     trigger="click"
     placement="bottomLeft">
     <template #content>
-      <base-list :full-items="menuGroup" :editor="editor" @triggerVisible="(val:boolean) => visible = val"/>
+      <base-list :editor="editor" trigger-type="menu" @triggerVisible="(val:boolean) => visible = val"/>
     </template>
     <a-tooltip>
       <template #title> 插入 </template>
@@ -28,13 +28,11 @@
 import { PropType, ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import BaseList from './baseList.vue'
-import { useCommand } from './useCommand'
 
 import {
   PlusCircleFilled,
 } from '@ant-design/icons-vue'
 
-const { menuGroup } = useCommand()
 
 defineProps({
   editor: {
@@ -42,7 +40,7 @@ defineProps({
     default: () => ({}),
   },
 })
-const visible = ref(false)
+const open = ref(false)
 
 </script>
 <style lang="less">
@@ -50,8 +48,8 @@ const visible = ref(false)
   .ant-popover-inner {
     border-radius: 4px;
   }
-  .ant-popover-inner-content {
-    padding: 3px 10px;
+  .ant-popover-inner {
+    padding: 15px 20px;
   }
 }
 </style>

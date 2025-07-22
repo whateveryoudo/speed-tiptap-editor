@@ -12,7 +12,7 @@
       class="w-[110px]"
       :value="currentFontSize"
       :disabled="isTitleActive"
-      dropdown-class-name="font-size-dropdown"
+      popover-class-name="font-size-dropdown"
       :options="fontSizeOptions"
       @change="handleChange"
     >

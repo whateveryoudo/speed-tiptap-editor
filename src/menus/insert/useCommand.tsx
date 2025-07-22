@@ -26,6 +26,8 @@ export interface SubMenuGroup {
 export interface MenuGroup {
   key: number | string
   name: string
+  layout?: 'horizontal' | 'vertical'
+  span?: number;
   children: SubMenuGroup[]
 }
 export const useCommand = () => {
@@ -36,6 +38,8 @@ export const useCommand = () => {
     {
       key: 1,
       name: '通用',
+      layout: 'horizontal',
+      span: 12,
       children: [
         {
           key: '1-1',
@@ -53,13 +57,6 @@ export const useCommand = () => {
           },
           action: editor => editor.chain().focus().setAttachment().run(),
         },
-        // {
-        //   key: '1-3',
-        //   name: '外链',
-        //   iconRender: () => {
-        //     return <LinkOutlined />
-        //   },
-        // },
         {
           key: '1-4',
           name: '表格',

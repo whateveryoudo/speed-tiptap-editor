@@ -18,7 +18,7 @@ import { useFloatingPopup } from '@/hooks/useFloatingPopup'
 const QuickInsertPluginKey = new PluginKey('quickInsert')
 
 const extensionName = 'quickInsert'
-const { flatLeafMenu, menuGroup } = useCommand()
+const { menuGroup } = useCommand()
 
 export const QuickInsert = Node.create({
   name: extensionName,
@@ -76,10 +76,9 @@ export const QuickInsert = Node.create({
   },
 }).configure({
   suggestion: {
+    // 这里只返回全量项(搜索操作是在组件内部执行)
     items: ({ query }: any) => {
-      return flatLeafMenu.value.filter((item: SubMenuGroup) => {
-        return item.name.startsWith(query)
-      })
+      return menuGroup.value
     },
     render: () => {
       let component: any
@@ -95,7 +94,7 @@ export const QuickInsert = Node.create({
           if (!isEditable) return
           
           component = new VueRenderer(BaseList, {
-            props: { ...props, fullItems: menuGroup.value, noPopover: true },
+            props: { ...props, triggerType: 'bubble' },
             editor: props.editor,
           })
 
@@ -114,8 +113,6 @@ export const QuickInsert = Node.create({
         },
 
         onKeyDown: (props: any) => {
-          const isEditable = props.editor.isEditable
-          if (!isEditable) return
 
           if (props.event.key === 'Escape') {
             hidePopup()
@@ -125,8 +122,6 @@ export const QuickInsert = Node.create({
         },
 
         onExit: (props: any) => {
-          const isEditable = props.editor.isEditable
-          if (!isEditable) return
           
           hidePopup()
           component.destroy()

@@ -89,8 +89,8 @@
     "@tiptap/extension-list": "^3.0.0",
     "@tiptap/extension-mention": "^3.0.0",
     "@tiptap/extension-paragraph": "^3.0.0",
-    "@tiptap/extension-subscript": "^3.0.0",
-    "@tiptap/extension-superscript": "^3.0.0",
+    "@tiptap/extension-subscript": "^3.0.6",
+    "@tiptap/extension-superscript": "^3.0.6",
     "@tiptap/extension-table": "^3.0.0",
     "@tiptap/extension-text": "^3.0.0",
     "@tiptap/extension-text-align": "^3.0.0",
@@ -114,7 +114,8 @@
     "speed-components-ui": "^0.1.18",
     "toggle-selection": "^1.0.6",
     "vitepress": "^1.0.0",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue-color": "^3.2.0"
   },
   "repository": {
     "type": "git",

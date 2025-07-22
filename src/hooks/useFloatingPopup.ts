@@ -3,7 +3,7 @@
  * @Date: 2024-01-09
  * @LastEditTime: 2024-01-09
  * @LastEditors: your name
- * @Description: Floating UI 弹出层管理 Hook
+ * @Description: Floating UI 弹出层管理 Hook，支持点击弹窗外部自动关闭
  * @FilePath: src/hooks/useFloatingPopup.ts
  */
 import { ref, onUnmounted } from 'vue'
@@ -34,6 +34,12 @@ export function useFloatingPopup(options: FloatingPopupOptions = {}) {
 
   const popupInstance = ref<PopupInstance | null>(null)
 
+  // 用于存储外部点击监听的引用，避免重复绑定和内存泄漏
+  let removeClickListener: (() => void) | null = null
+
+  /**
+   * 创建弹出层实例
+   */
   const createPopup = (component: VueRenderer): PopupInstance => {
     // 创建弹出层容器
     const popup = document.createElement('div')
@@ -84,6 +90,9 @@ export function useFloatingPopup(options: FloatingPopupOptions = {}) {
     }
   }
 
+  /**
+   * 显示弹出层，并绑定点击外部关闭事件
+   */
   const showPopup = (component: VueRenderer, clientRect: () => DOMRect) => {
     // 如果已有弹出层，先销毁
     if (popupInstance.value) {
@@ -93,25 +102,48 @@ export function useFloatingPopup(options: FloatingPopupOptions = {}) {
     // 创建新的弹出层
     const instance = createPopup(component)
     popupInstance.value = instance
-
     // 计算初始位置
     instance.updatePosition(clientRect)
+
+    // 绑定点击外部关闭事件
+    if (removeClickListener) {
+      removeClickListener()
+      removeClickListener = null
+    }
+    const onClickOutside = (e: MouseEvent) => {
+      const popupEl = instance.popup
+      if (popupEl && !popupEl.contains(e.target as Node)) {
+        hidePopup()
+      }
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    removeClickListener = () => document.removeEventListener('mousedown', onClickOutside)
   }
 
+  /**
+   * 更新弹出层位置
+   */
   const updatePopupPosition = async (clientRect: () => DOMRect) => {
     if (popupInstance.value) {
       await popupInstance.value.updatePosition(clientRect)
     }
   }
 
+  /**
+   * 隐藏弹出层，并移除点击外部关闭事件
+   */
   const hidePopup = () => {
     if (popupInstance.value) {
       popupInstance.value.destroy()
       popupInstance.value = null
     }
+    if (removeClickListener) {
+      removeClickListener()
+      removeClickListener = null
+    }
   }
 
-  // 组件卸载时清理
+  // 组件卸载时清理弹窗和事件监听
   onUnmounted(() => {
     hidePopup()
   })

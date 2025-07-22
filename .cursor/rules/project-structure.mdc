@@ -5,6 +5,8 @@ alwaysApply: true
 
 这是一个基于 Vue 3 + TypeScript + Tiptap 编辑器项目，集成了 Ant Design。
 
+## 涉及到样式生成的情况下，采用如下的优先级： ant-design-vue组件库 > uno.css > 定义class > 行内style
+
 ## 关键目录
 - **`src/components/`**：Vue 组件，包括颜色选择器、模态框、菜单等
 - **`src/extensions/`**：Tiptap 编辑器扩展（链接、思维导图、流程图等）

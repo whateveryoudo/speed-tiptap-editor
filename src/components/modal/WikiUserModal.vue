@@ -18,7 +18,7 @@
           trigger="click"
           placement="bottomLeft"
           :getPopupContainer="(triggerNode:any) => triggerNode.parentNode"
-          v-model:visible="visible">
+          v-model:open="visible">
           <template #content>
             <a-spin :spinning="loading">
               <a-form class="w-96 flex" layout="inline">
@@ -63,7 +63,7 @@
               <a-popover
                 :title="`修改用户 “${wikiUsersStore.list[index].name}” 权限`"
                 trigger="click"
-                v-model:visible="wikiUsersStore.removeConfirmVisible[index]"
+                v-model:open="wikiUsersStore.removeConfirmVisible[index]"
                 :getPopupContainer="(triggerNode:any) => triggerNode.parentNode"
                 placement="bottomLeft">
                 <template #content>

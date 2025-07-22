@@ -10,7 +10,7 @@
 <template>
   <a-tooltip title="背景颜色">
     <div :class="['bg-color-menu-wrapper', isTitleActive && 'menu-disabled']">
-      <a-button type="text" class="shadow-btn-wrapper small" :disabled="isTitleActive" @click="setBackgroundColor(curColor)">
+      <a-button type="text" class="shadow-btn-wrapper small" :disabled="isTitleActive" @mousedown.prevent="setBackgroundColor(curColor)">
         <span class="text-wrapper">
           <s-icon-font
             :size="17"

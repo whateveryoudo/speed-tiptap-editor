@@ -18,7 +18,7 @@
     border: none;
   }
   &:hover {
-    background-color: var(--ant-gray-bg) !important;
+    background-color: var(--ant-color-fill-secondary) !important;
   }
   &.inline {
     display: inline-flex;
@@ -27,7 +27,7 @@
     font-size: 16px;
   }
   &.is-active {
-    background-color: var(--ant-color-fill-1);
+    background-color: var(--ant-color-fill-secondary);
   }
   &.select {
     height: auto;
@@ -75,7 +75,7 @@
 .transition-bg {
   transition: all 0.1s;
   &:hover {
-    background-color: var(--ant-gray-bg);
+    background-color: var(--ant-color-fill-secondary);
   }
 }
 // 气泡菜单
@@ -98,4 +98,11 @@ span {
     border-radius: 4px;
     padding: 0;
   }
+}
+
+ul,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

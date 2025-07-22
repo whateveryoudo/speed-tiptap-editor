@@ -6,7 +6,7 @@ const docExportStore = useDocExportStore()
 
 <template>
   <a-modal
-    v-model:visible="docExportStore.visible"
+    v-model:open="docExportStore.visible"
     :footer="null"
     title="文档导出"
     :keyboard="!docExportStore.loading"

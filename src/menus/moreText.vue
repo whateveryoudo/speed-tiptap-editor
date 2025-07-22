@@ -14,7 +14,7 @@
           <li v-for="item in textItems" :key="item.key" class="list-item">
             <s-icon-font v-if="selectItem && selectItem.key === item.key" type="icon-kl-gouxuan" class="absolute top-[50%] translate-y-[-50%] left-[13px]" />
 
-            <a-button type="text" class="shadow-btn-wrapper" @click="item.action"
+            <a-button type="text" class="shadow-btn-wrapper" v-on="item.action ? getButtonEvents(item.action) : {}"
               style="width: 100%; text-align: left;">
               <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
               {{ item.name }}
@@ -54,6 +54,10 @@ const props = defineProps({
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
+  triggerType: {
+    type: String as PropType<'menu' | 'bubble'>,
+    default: 'menu',
+  },
 })
 type TextType = 'sup' | 'sub' | 'code'
 
@@ -83,7 +87,14 @@ interface TextItem {
 const selectItem = computed(() => {
   return textItems.value.find((item: TextItem) => item.key === current.value) as TextItem
 })
-
+const getButtonEvents = (action: (editor: Editor) => void) => {
+  return props.triggerType === 'menu' ? {
+    mousedown: (e: MouseEvent) => {
+      e.preventDefault()
+      action(props.editor)
+    }
+  } : { click: () => action(props.editor) }
+}
 //追加互斥操作
 const removeAllText = () => {
   props?.editor.chain().focus().unsetSuperscript().run()
