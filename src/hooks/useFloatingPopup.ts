@@ -29,7 +29,7 @@ export function useFloatingPopup(options: FloatingPopupOptions = {}) {
     placement = 'bottom-start',
     offset: offsetValue = 4,
     padding = 8,
-    zIndex = 9999
+    zIndex = 999
   } = options
 
   const popupInstance = ref<PopupInstance | null>(null)

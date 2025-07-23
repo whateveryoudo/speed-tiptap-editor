@@ -63,9 +63,12 @@
 import { ref, PropType, onMounted } from 'vue'
 import { colors, type ColorType } from './data'
 import CustomColor from '@/assets/image/custom-color.png'
+import { createKeysLocalStorageLRUCache } from '@/helpers/lru-cache';
+
 const defaultColor: ColorType = '#000000'
-const LOCAL_KEY = 'custom_colors'
+const LOCAL_KEY = 'RECENT_CUSTOM_COLORS'
 const MAX_CUSTOM_COLORS = 9
+const colorCache = createKeysLocalStorageLRUCache(LOCAL_KEY, MAX_CUSTOM_COLORS);
 
 const props = defineProps({
   curColor: {
@@ -88,25 +91,10 @@ const visible = ref(false)
 const customColors = ref<ColorType[]>([])
 
 const loadCustomColors = () => {
-  const raw = localStorage.getItem(LOCAL_KEY)
-  if (raw) {
-    try {
-      const arr = JSON.parse(raw)
-      if (Array.isArray(arr)) {
-        customColors.value = arr.slice(0, MAX_CUSTOM_COLORS)
-      }
-    } catch { }
+  const cachedColors = colorCache.get();
+  if (Array.isArray(cachedColors)) {
+    customColors.value = cachedColors;
   }
-}
-
-const saveCustomColor = (color: ColorType) => {
-  if (!color) return
-  // 先去重
-  let arr = customColors.value.filter(c => c !== color)
-  arr.unshift(color)
-  if (arr.length > MAX_CUSTOM_COLORS) arr = arr.slice(0, MAX_CUSTOM_COLORS)
-  customColors.value = arr
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(arr))
 }
 
 const chooseColor = (color: ColorType) => {
@@ -114,7 +102,8 @@ const chooseColor = (color: ColorType) => {
   visible.value = false
   // 只对自定义颜色进行收集
   if (color && !colors.includes(color)) {
-    saveCustomColor(color)
+    colorCache.put(color);
+    loadCustomColors(); // 重新加载以获取最新顺序
   }
 }
 

@@ -11,5 +11,5 @@ export function getStorage(key, defaultValue = null) {
 }
 
 export const setStorage = (key, value) => {
-  window.localStorage.setItem(key, '' + value);
+  window.localStorage.setItem(key, JSON.stringify(value));
 };

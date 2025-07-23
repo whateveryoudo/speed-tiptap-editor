@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { resolve } from 'path'
@@ -10,7 +10,8 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const isLib = process.env.BUILD_MODE === 'lib'
-  
+  console.log(process.env.VITE_APP_BASE_URL);
+  const exampleEnv = loadEnv(mode, process.cwd() + '/example'); // example的变量
   return {
     root: isLib ? '.' : 'example',
     base: process.env.NODE_ENV === 'production' ? '/speed-tiptap-editor/example/' : '',
@@ -52,6 +53,20 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       port: 3000,
+      proxy: {
+        [exampleEnv.VITE_APP_BASE_URL]: {
+          target: exampleEnv.VITE_APP_BASE_PROXY_URL,
+          changeOrigin: true,
+          rewrite: (path) =>
+            path.replace(new RegExp(`^${exampleEnv.VITE_APP_BASE_URL}`), ""),
+          configure: (proxy, options) => {
+            proxy.on("proxyReq", (proxyReq, req, res) => {
+              proxyReq.setHeader("Connection", "keep-alive");
+            });
+          },
+          timeout: 30000,
+        },
+      },
     },
   }
 })

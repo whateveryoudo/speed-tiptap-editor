@@ -3,19 +3,20 @@
  * @Date: 2022-11-14 15:03:18
  * @LastEditTime: 2022-12-30 17:42:16
  * @LastEditors: your name
- * @Description: 
+ * @Description:
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\image\index.ts
  */
-import { Image as BuiltInImage } from '@tiptap/extension-image';
-import { VueNodeViewRenderer } from '@tiptap/vue-3';
-import  ImageWrapper from './Wrapper.vue';
+import { Image as BuiltInImage } from "@tiptap/extension-image";
+import { VueNodeViewRenderer } from "@tiptap/vue-3";
+import ImageWrapper from "./Wrapper.vue";
 
-const resolveImageEl = (element: HTMLElement) => (element.nodeName === 'IMG' ? element : element.querySelector('img'));
+const resolveImageEl = (element: HTMLElement) =>
+  element.nodeName === "IMG" ? element : element.querySelector("img");
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     iamge: {
-      setEmptyImage: (arg: { width?: number | string }) => ReturnType;
+      uploadImage: (arg: { width?: number | string }) => ReturnType;
     };
   }
 }
@@ -25,10 +26,10 @@ export const Image = BuiltInImage.extend({
     return {
       ...this.parent?.(),
       inline: false,
-      content: '',
-      marks: '',
-      group: 'block', 
-      draggable: false,
+      content: "",
+      marks: "",
+      group: "block",
+      draggable: true,
       selectable: true,
       atom: true,
     };
@@ -41,7 +42,7 @@ export const Image = BuiltInImage.extend({
         default: null,
         parseHTML: (element) => {
           const img: any = resolveImageEl(element);
-          return img.dataset.src || img.getAttribute('src');
+          return img.dataset.src || img.getAttribute("src");
         },
       },
       alt: {
@@ -49,21 +50,22 @@ export const Image = BuiltInImage.extend({
         parseHTML: (element) => {
           const img: any = resolveImageEl(element);
 
-          return img.getAttribute('alt');
+          return img.getAttribute("alt");
         },
+      },
+      file: {
+        default: null
       },
       title: {
         default: null,
       },
       width: {
-        default: 'auto',
+        default: "auto",
       },
       height: {
-        default: 'auto',
+        default: "auto",
       },
-      hasTrigger: {
-        default: false,
-      },
+
       error: {
         default: null,
       },
@@ -73,16 +75,33 @@ export const Image = BuiltInImage.extend({
   addCommands() {
     return {
       ...this.parent?.(),
-      setEmptyImage:
-        (attrs = {}) =>
-        ({ chain }) => {
-          console.log(attrs);
-          return chain().insertContent({ type: this.name, attrs }).run();
+      uploadImage:
+      // 如何指定类型？？
+        (files: any) =>
+        ({ editor, tr }) => {
+          // 转换为数组统一处理
+          const fileList = files?.length ? files : [files];
+
+          // 为每个文件创建一个图片节点
+          Array.from(fileList).forEach((file) => {
+            // 插入空的图片节点
+            // const node = this.type.create({
+            //   fileName: file.name,
+            //   fileSize: file.size,
+            //   fileType: file.type,
+            //   fileExt: file.name.split('.').pop()
+            // });
+            const node = this.type.create({ src: "", file });
+            const pos = tr.selection.from;
+            tr.insert(pos, node);
+          });
+
+          return true;
         },
     };
   },
 
   addNodeView() {
     return VueNodeViewRenderer(ImageWrapper);
-  }
+  },
 });

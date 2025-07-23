@@ -42,10 +42,13 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, PropType, computed, nextTick } from 'vue'
+import { ref, PropType, computed, nextTick, onMounted } from 'vue'
 import { createKeysLocalStorageLRUCache } from '@/helpers/lru-cache';
 import { ACTIVITIES, EXPRESSIONES, GESTURES, OBJECTS, SKY_WEATHER, SYMBOLS } from './data';
-const emojiLocalStorageLRUCache = createKeysLocalStorageLRUCache('EMOJI_PICKER', 20);
+
+const EMOJI_CACHE_KEY = 'RECENT_EMOJI_LIST'
+const MAX_EMOJI_COUNT = 20
+const emojiCache = createKeysLocalStorageLRUCache(EMOJI_CACHE_KEY, MAX_EMOJI_COUNT);
 
 const props = defineProps({
   showDefault: {
@@ -84,13 +87,25 @@ const filteredEmojiList = computed(() => {
 const emit = defineEmits(['triggerEmoji'])
 const visible = ref(false)
 const onSelectEmoji = (emoji: any) => {
-  emojiLocalStorageLRUCache.put(emoji);
-  recentUseList.value = emojiLocalStorageLRUCache.get() as any[]
+  emojiCache.put(emoji);
+  // 重新加载以获取最新顺序
+  const cachedEmojis = emojiCache.get();
+  if (Array.isArray(cachedEmojis)) {
+    recentUseList.value = cachedEmojis;
+  }
   emit('triggerEmoji', emoji)
   visible.value = false
 }
 // Anchor锚点导航需要的容器获取方法
 const getEmojiScrollContainer = () => document.querySelector('.emoji-scroll-wrapper') || null
+
+// 初始化时加载
+onMounted(() => {
+  const cachedEmojis = emojiCache.get();
+  if (Array.isArray(cachedEmojis)) {
+    recentUseList.value = cachedEmojis;
+  }
+});
 </script>
 
 <style lang="less">

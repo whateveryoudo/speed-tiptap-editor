@@ -35,6 +35,7 @@ declare module 'vue' {
     MenuFoldOutlined: typeof import('@ant-design/icons-vue')['MenuFoldOutlined']
     MenuUnfoldOutlined: typeof import('@ant-design/icons-vue')['MenuUnfoldOutlined']
     RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']
+    RightOutlined: typeof import('@ant-design/icons-vue')['RightOutlined']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StrikeOutlined: typeof import('@ant-design/icons-vue')['StrikeOutlined']

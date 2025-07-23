@@ -15,16 +15,26 @@ import {
   DeploymentUnitOutlined,
   TableOutlined,
 } from '@ant-design/icons-vue'
+import imgIcon from '@/assets/image/insert/img.svg'
+import tableIcon from '@/assets/image/insert/table.svg'
+import fileIcon from '@/assets/image/insert/file.svg'
+import mindIcon from '@/assets/image/insert/mind.svg'
+import flowIcon from '@/assets/image/insert/flow.svg'
+import emojiIcon from '@/assets/image/insert/emoji.svg'
+import codeBlockIcon from '@/assets/image/insert/code-block.svg'
+import formulaIcon from '@/assets/image/insert/formula.svg'
 export interface SubMenuGroup {
   key: string
   name: string
   size?: number
   iconRender?: (opt?: any) => VNode
   iconType?: string
-  action?: (editor: Editor) => void
+  imgIcon?: any
+  hasMore?: boolean
+  action?: (editor: Editor, payload?: any) => void
 }
 export interface MenuGroup {
-  key: number | string
+  key: string
   name: string
   layout?: 'horizontal' | 'vertical'
   span?: number;
@@ -36,47 +46,46 @@ export const useCommand = () => {
   const updateFlowState = inject('updateFlowState') as any
   const menuGroup = ref<MenuGroup[]>([
     {
-      key: 1,
+      key: 'common',
       name: '通用',
       layout: 'horizontal',
       span: 12,
       children: [
         {
-          key: '1-1',
+          key: 'img',
           name: '图片',
-          iconRender: () => {
-            return <FileImageOutlined />
-          },
-          action: editor => editor.chain().focus().setEmptyImage({ width: '100%' }).run(),
+          imgIcon: imgIcon,
+          action: (editor,payload) => editor.chain().focus().uploadImage(payload).run(),
         },
         {
-          key: '1-2',
-          name: '附件',
-          iconRender: () => {
-            return <FolderOutlined />
+          key: 'table',
+          name: '表格',
+          imgIcon: tableIcon,
+          hasMore: true,
+          action: (editor, payload) => {
+            console.log(payload);
+            // 如果没选择则默认3 * 3
+            editor?.chain().insertTable({ rows: payload.rows || 3, cols: payload.cols || 3, withHeaderRow: true }).focus().run()
           },
+        },
+        {
+          key: 'file',
+          name: '附件',
+          imgIcon: fileIcon,
           action: editor => editor.chain().focus().setAttachment().run(),
         },
-        {
-          key: '1-4',
-          name: '表格',
-          iconRender: () => {
-            return <TableOutlined />
-          },
-          action: editor =>
-            editor?.chain().insertTable({ rows: 3, cols: 4, withHeaderRow: true }).focus().run(),
-        },
+
       ],
     },
     {
-      key: 2,
+      key: 'board',
       name: '画板类',
       children: [
         {
           key: '2-1',
           name: '思维导图',
           size: 18,
-          iconType: 'icon-kl-mind-map',
+          imgIcon: mindIcon,
           action: editor => {
             editor?.chain().focus().setMind().run()
             updateFlowState && updateMindState('visible', true)
@@ -86,9 +95,7 @@ export const useCommand = () => {
         {
           key: '2-2',
           name: '流程图',
-          iconRender: () => {
-            return <DeploymentUnitOutlined />
-          },
+          imgIcon: flowIcon,
           action: editor => {
             editor
               .chain()

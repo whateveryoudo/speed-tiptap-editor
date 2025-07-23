@@ -65,6 +65,7 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   // 注册SpeedComponents
   app.use(SpeedComponents, {
     iconfontUrl: "//at.alicdn.com/t/c/font_3786040_u4kcigjj5x.js",
+    apis: currentConfig.value.apis
   });
   // 使用 Ant Design Vue CSS 变量
   const cleanup = useAntdCssVars();
