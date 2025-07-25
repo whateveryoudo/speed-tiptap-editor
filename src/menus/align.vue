@@ -7,7 +7,8 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\align.vue
 -->
 <template>
-  <a-popover v-if="!isTitleActive" overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
+  <a-popover v-model:open="open"  v-if="!isTitleActive"
+    overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
     <template #content>
       <a-space class="align-list-wrapper">
         <a-tooltip v-for="item in alignButtons" :key="item.key">
@@ -60,7 +61,7 @@ const props = defineProps({
   },
 })
 type AlignType = 'left' | 'center' | 'right'
-
+const open = ref(false);
 const isTitleActive = useActive(props.editor, Title.name)
 const isLeftActive = useActive(props.editor, { textAlign: 'left' })
 const isCenterActive = useActive(props.editor, { textAlign: 'center' })
@@ -93,26 +94,30 @@ const alignButtons = ref<AlignButton[]>([
     tip: '左对齐',
     iconRender: () => <AlignLeftOutlined />,
     action: () => {
-      props?.editor.chain().focus().setTextAlign('left').run()
+      props?.editor.chain().focus().setTextAlign('left').run();
+      open.value = false;
     },
   },
   {
     key: 'center',
     tip: '居中',
-    iconRender: () => <AlignRightOutlined />,
+    iconRender: () => <AlignCenterOutlined />,
     action: () => {
-      props?.editor.chain().focus().setTextAlign('center').run()
+      props?.editor.chain().focus().setTextAlign('center').run();
+      open.value = false;
     },
   },
   {
     key: 'right',
     tip: '右对齐',
-    iconRender: () => <AlignCenterOutlined />,
+    iconRender: () => <AlignRightOutlined />,
     action: () => {
-      props?.editor.chain().focus().setTextAlign('right').run()
+      props?.editor.chain().focus().setTextAlign('right').run();
+      open.value = false;
     },
   },
 ])
+
 </script>
 <style lang="less">
 .align-popover-wrapper {

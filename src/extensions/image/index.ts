@@ -25,11 +25,11 @@ export const Image = BuiltInImage.extend({
   addOptions() {
     return {
       ...this.parent?.(),
-      inline: false,
+      inline: true,
       content: "",
       marks: "",
       group: "block",
-      draggable: true,
+      draggable: false,
       selectable: true,
       atom: true,
     };

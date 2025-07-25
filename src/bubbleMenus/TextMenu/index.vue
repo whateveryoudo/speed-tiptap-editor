@@ -25,7 +25,8 @@ import Underline from '@/menus/underline.vue'
 import Strike from '@/menus/strike.vue'
 import { Title } from '@/extensions/title'
 import { Link } from '@/extensions/link'
-const OTHER_BUBBLE_MENU_TYPES = [Title.name, Link.name]
+import { Image } from '@/extensions/image'
+const OTHER_BUBBLE_MENU_TYPES = [Title.name, Link.name, Image.name]
 const props = withDefaults(defineProps<{
     editor: any,
 }>(), {

@@ -66,7 +66,7 @@ export class LRUCache {
     node.prev = this.head;
     node.next = this.head.next;
     if (this.head.next) {
-      this.head.next.prev = node;
+    this.head.next.prev = node;
     }
     this.head.next = node;
   }
@@ -87,9 +87,9 @@ export class LRUCache {
   private removeTail(): Node | null {
     const node = this.tail.prev;
     if (node && node !== this.head) {
-      this.removeNode(node);
-      return node;
-    }
+    this.removeNode(node);
+    return node;
+  }
     return null;
   }
 
@@ -129,11 +129,11 @@ export class LRUCache {
       if (this.usedCapacity > this.capacity) {
         const tailNode = this.removeTail();
         if (tailNode) {
-          delete this.store[tailNode.key];
-          this.usedCapacity -= 1;
-        }
+        delete this.store[tailNode.key];
+        this.usedCapacity -= 1;
       }
     }
+  }
   }
 
   /**
@@ -146,7 +146,7 @@ export class LRUCache {
 
     while (node) {
       if (node !== this.head && node !== this.tail) {
-        res.push(node.key);
+      res.push(node.key);
       }
       node = node.next;
     }
@@ -164,7 +164,7 @@ export class LRUCache {
 
     while (node) {
       if (node !== this.head && node !== this.tail) {
-        res.push(node.value);
+      res.push(node.value);
       }
       node = node.next;
     }

@@ -15,7 +15,7 @@
       width: getCompatUnit(width),
       height: getCompatUnit(height),
     }"
-    ref="containerRef">
+    ref="containerRef" >
     <template v-if="isEditable">
       <div class="placeholder-wrapper" ref="placeholderRef">
         <span class="resizer top-left"></span>
@@ -35,7 +35,7 @@
       </div>
     </template>
 
-    <slot />
+    <!-- <slot /> -->
   </div>
 </template>
 
@@ -107,13 +107,14 @@ onMounted(async () => {
   })
   interact(containerRef.value).resizable({
     edges: {
-      top: true,
-      right: true,
-      bottom: true,
-      left: true,
+      top: '.resizer.top-left,.resizer.top-right',
+      right: '.resizer.top-right,.resizer.bottom-right',
+      bottom: '.resizer.bottom-left,.resizer.bottom-right',
+      left: '.resizer.top-left,.resizer.bottom-left',
     },
     listeners: {
       move: function (event) {
+        console.log(event);
         Object.assign(placeholderRef.value?.style, {
           opacity: 0,
         })
@@ -138,6 +139,7 @@ onMounted(async () => {
         Object.assign(placeholderRef.value?.style, {
           opacity: 1,
         })
+        console.log(newW, newH);
         emit('changeEnd', { width: newW, height: newH })
       },
     },

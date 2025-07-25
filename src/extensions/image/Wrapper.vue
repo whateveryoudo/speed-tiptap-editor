@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\image\Wrapper.vue
 -->
 <template>
-  <NodeViewWrapper class="node-image" :style="{ textAlign: nodeAttrs.textAlign, maxWidth: '100%' }">
+  <NodeViewWrapper class="node-image">
     <!-- <div v-if="nodeAttrs.error" :class="styles.wrapper">
       <a-typography-text>{{ nodeAttrs.error }}</a-typography-text>
     </div> -->
@@ -16,7 +16,7 @@
         <img :src="ImgPlaceholder" alt="请选择图片" style="width: 100%; height: 100%">
       </a-spin>
     </div>
-    <Resizeable v-else class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
+    <Resizeable v-else :editor="editor" class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
       :height="nodeAttrs.height" :maxWidth="maxWidth" @changeEnd="updateImageAttrs">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </Resizeable>
@@ -26,9 +26,9 @@
 <script setup lang="ts">
 import { PropType, inject, ref, computed, watch, Ref } from 'vue'
 import { NodeViewWrapper } from '@tiptap/vue-3'
+import { NodeSelection } from '@tiptap/pm/state'
 import { Editor } from '@tiptap/core'
 import { Resizeable } from '@/components/basic/resizeable'
-import styles from './index.module.less'
 import ImgPlaceholder from '@/assets/image/img-placeholder.png'
 import {
   getEditorContainerDOMSize,
@@ -86,7 +86,6 @@ const { customRequest, handleDelFile, uploadLoading, files } =
 // 处理文件选择
 const startUpload = (file: File) => {
   // 如果后端支持多文件上传，则直接上传
-  debugger
   customRequest({
     file
   });
@@ -100,9 +99,9 @@ const maxWidth = getEditorContainerDOMSize(props.editor)?.width
 //   console.log(uploadRef)
 //   uploadRef.value && uploadRef.value.click()
 // }
-// const updateImageAttrs = (size: any) => {
-//   props.updateAttributes({ height: size.height, width: size.width })
-// }
+const updateImageAttrs = (size: any) => {
+  props.updateAttributes({ height: size.height, width: size.width });
+}
 
 // const handleFile = async (e: any) => {
 //   const file = e.target.files && e.target.files[0]
@@ -150,8 +149,7 @@ const handlePreivew = () => {
 //   { flush: 'post' },
 // )
 watch(() => nodeAttrs.value.file, (file: File) => {
-  debugger;
-  if (file) {
+  if (file && !nodeAttrs.value.src) {
     startUpload(file)
   }
 }, {
@@ -162,6 +160,8 @@ watch(() => nodeAttrs.value.file, (file: File) => {
 
 <style lang="less" scoped>
 .node-image {
+  display: inline-block;
+
   .wrapper {
     display: flex;
     padding: 8px 16px;

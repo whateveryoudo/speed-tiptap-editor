@@ -119,7 +119,7 @@ export const defauktKit = [
   Parse,
   Mention,
   TextAlign.configure({
-    types: ["heading", "paragraph", "image"],
+    types: ["heading", "paragraph"],
   }),
   Table,
   TableCell,

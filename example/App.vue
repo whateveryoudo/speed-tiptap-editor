@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { message } from 'ant-design-vue'
 const route = useRoute();
 const router = useRouter();
-const content = ref("");
+const content = ref('<p></p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mdh0zic00qt3z0yuiqar?token=speed-test-token" width="240" height="264" file="[object File]"><p>asdas</p><p>asdasdasdsa</p><p>asdasdas</p><p>asdsadas</p>');
 
 const onUpdate = (content) => {
   console.log(content);

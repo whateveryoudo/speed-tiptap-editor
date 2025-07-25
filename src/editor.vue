@@ -19,6 +19,7 @@
       @triggerData="(data: any) => handleUpdateMindState('data', data)"
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
     <TextMenu v-if="editor" :editor="editor" />
+    <ImageMenu v-if="editor" :editor="editor" />
     <main>
       <div :class="['content-wrap']" v-if="scene === 'knowledge'">
         <editor-content :editor="editor" />
@@ -37,7 +38,7 @@ import MenuBar from './menus/menuBar.vue'
 import { knowledgeKit, defauktKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu } from '@/bubbleMenus'
+import { TextMenu, ImageMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
