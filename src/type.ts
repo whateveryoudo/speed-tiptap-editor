@@ -64,3 +64,6 @@ export const collaborationEditorProps = {
 export type CollaborationEditorProps = ExtractPropTypes<
   typeof collaborationEditorProps
 >;
+
+
+

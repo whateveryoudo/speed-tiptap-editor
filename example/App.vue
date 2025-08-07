@@ -62,6 +62,7 @@ watch(
 
 <template>
   <h2>以下是Speed Tiptap Editor的示例</h2>
+  <router-view />
   <a-space class="mb-2">
     <a-button :type="currentDemo === demo.name ? 'link' : 'text'" @click="checkDemo(demo.name)" v-for="demo in demos"
       :key="demo.name">

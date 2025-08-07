@@ -104,4 +104,5 @@ export const Image = BuiltInImage.extend({
   addNodeView() {
     return VueNodeViewRenderer(ImageWrapper);
   },
+  
 });

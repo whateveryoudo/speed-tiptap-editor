@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, PropType, ref, computed } from 'vue'
+import { inject, PropType, computed, Ref } from 'vue'
 import BubbleContainer from '../BubbleContainer.vue'
 import { Image } from '@/extensions/image'
 import { Attachment } from '@/extensions/attachment'
@@ -47,7 +47,6 @@ const props = defineProps({
     default: () => ({}),
   },
 })
-const $viewerApi = inject('$viewerApi') as any
 const isActiveImage = computed(() => {
   return props?.editor.isActive(Image.name) && !!props?.editor.getAttributes(Image.name).src
 })
@@ -84,10 +83,11 @@ const shouldShow = () => {
 // }
 // 图片专有
 const src = useAttributes(props.editor, Image.name, { src: '' }, attrs => attrs.src)
+const previewInstance = inject('previewInstance') as Ref<any>
 const handlePreivew = () => {
-  $viewerApi({
-    images: [src.value],
-  })
+  if (previewInstance.value) {  
+    previewInstance.value.previewImage(src.value)
+  }
 }
 </script>
 

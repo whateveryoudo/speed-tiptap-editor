@@ -52,7 +52,7 @@ export default defineConfig(({ command, mode }) => {
       outDir: 'dist-example'
     },
     server: {
-      port: 3000,
+      port: 3003,
       proxy: {
         [exampleEnv.VITE_APP_BASE_URL]: {
           target: exampleEnv.VITE_APP_BASE_PROXY_URL,
@@ -62,7 +62,7 @@ export default defineConfig(({ command, mode }) => {
           configure: (proxy, options) => {
             proxy.on("proxyReq", (proxyReq, req, res) => {
               proxyReq.setHeader("Connection", "keep-alive");
-            });
+            }); 
           },
           timeout: 30000,
         },

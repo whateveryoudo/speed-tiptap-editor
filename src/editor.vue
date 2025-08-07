@@ -20,6 +20,7 @@
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
     <TextMenu v-if="editor" :editor="editor" />
     <ImageMenu v-if="editor" :editor="editor" />
+    <TableMenu v-if="editor" :editor="editor" />
     <main>
       <div :class="['content-wrap']" v-if="scene === 'knowledge'">
         <editor-content :editor="editor" />
@@ -33,16 +34,17 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, PropType } from 'vue'
+import { watch, ref, PropType, provide } from 'vue'
 import MenuBar from './menus/menuBar.vue'
 import { knowledgeKit, defauktKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu } from '@/bubbleMenus'
+import { TextMenu, ImageMenu, TableMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { collaborationEditorProps } from './type'
+import { EditorPreviewImage } from '@/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
 import { message } from 'ant-design-vue'
@@ -107,6 +109,8 @@ const props = withDefaults(defineProps<{
 
 
 const emit = defineEmits(['update:title', 'update:content'])
+const previewInstance = ref<EditorPreviewImage | null>(null);
+provide('previewInstance', previewInstance);
 
 watch(
   () => props.hocuspocusProvider,
@@ -155,6 +159,10 @@ const editor = useEditor({
     //   },
     // }),
   ],
+  onCreate({ editor }) {
+    // 初始化图片预览
+    previewInstance.value = new EditorPreviewImage(editor);
+  }
 })
 
 // 监听 content 变化，同步到编辑器
@@ -194,6 +202,7 @@ watch(
   }
 )
 console.log(editor.value)
+
 </script>
 
 <style scoped lang="less">

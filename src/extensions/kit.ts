@@ -35,7 +35,7 @@ import { Mind } from "./mind";
 import { Mention } from "./mention";
 import { CodeBlock } from "./codeBlock";
 import CustomeFlowMap from "./flowMap/CustomeFlowMap";
-import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
+import { TableKit } from "@tiptap/extension-table";
 import { TaskList } from "./taskList";
 import { TaskItem } from "@tiptap/extension-list";
 import { Indent } from "./indent";
@@ -65,12 +65,12 @@ export const defauktKit = [
     codeBlock: false,
     blockquote: false,
     horizontalRule: false,
-    link:false
+    link: false
     // 保留 StarterKit 中的其他扩展
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
   }),
-  
+
   // 自定义扩展
   Paragraph,
   Link,
@@ -121,10 +121,7 @@ export const defauktKit = [
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
-  Table,
-  TableCell,
-  TableRow,
-  TableHeader,
+  TableKit,
   TaskList,
   TaskItem,
   Indent.configure({

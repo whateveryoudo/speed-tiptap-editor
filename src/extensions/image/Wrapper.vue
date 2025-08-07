@@ -3,7 +3,7 @@
  * @Date: 2022-11-11 15:39:52
  * @LastEditTime: 2022-12-21 12:20:20
  * @LastEditors: Please set LastEditors
- * @Description: 图片容器
+ * @Description: 图片容器(无法删除图片最左边的最后一个文字？？)
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\image\Wrapper.vue
 -->
 <template>
@@ -16,19 +16,24 @@
         <img :src="ImgPlaceholder" alt="请选择图片" style="width: 100%; height: 100%">
       </a-spin>
     </div>
-    <Resizeable v-else :editor="editor" class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
+    <!-- <Resizeable v-else :editor="editor" class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
       :height="nodeAttrs.height" :maxWidth="maxWidth" @changeEnd="updateImageAttrs">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
-    </Resizeable>
+    </Resizeable> -->
+    <drager v-else :selected="selected" :draggable="false" :boundary="false" :disabled="!isEditable"
+      :width="Number(node.attrs.width)" :height="Number(node.attrs.height)" :min-width="14" :min-height="14"
+      :max-width="maxWidth" :max-height="maxWidth" @resize="onResize" @focus="selected = true">
+      <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
+    </drager>
+
   </NodeViewWrapper>
 </template>
 
 <script setup lang="ts">
 import { PropType, inject, ref, computed, watch, Ref } from 'vue'
 import { NodeViewWrapper } from '@tiptap/vue-3'
-import { NodeSelection } from '@tiptap/pm/state'
 import { Editor } from '@tiptap/core'
-import { Resizeable } from '@/components/basic/resizeable'
+import Drager from 'es-drager'
 import ImgPlaceholder from '@/assets/image/img-placeholder.png'
 import {
   getEditorContainerDOMSize,
@@ -39,6 +44,7 @@ const speedTiptapConfig = inject(
   "speed-tiptap-config",
   ref({})
 ) as Ref<any>;
+const previewInstance = inject('previewInstance') as Ref<any>
 const props = defineProps({
   node: {
     type: Object,
@@ -54,7 +60,7 @@ const props = defineProps({
     default: null,
   },
 })
-
+const selected = ref(false)
 const isEditable = computed(() => {
   return props.editor?.isEditable
 })
@@ -99,6 +105,15 @@ const maxWidth = getEditorContainerDOMSize(props.editor)?.width
 //   console.log(uploadRef)
 //   uploadRef.value && uploadRef.value.click()
 // }
+const onResize = ({ width, height }: { width: number; height: number }) => {
+  props.updateAttributes({
+    width: width.toFixed(2),
+    height: height.toFixed(2),
+  })
+}
+const onRotate = (angle: any) => {
+  props.updateAttributes({ angle });
+}
 const updateImageAttrs = (size: any) => {
   props.updateAttributes({ height: size.height, width: size.width });
 }
@@ -131,12 +146,12 @@ const updateImageAttrs = (size: any) => {
 //     loading.value = false
 //   }
 // }
-const $viewerApi = inject('$viewerApi') as any
 const handlePreivew = () => {
   if (!isEditable.value) {
-    $viewerApi({
-      images: [nodeAttrs.value?.src],
-    })
+    // 调用全局图片预览
+    if (previewInstance.value) {
+      previewInstance.value.previewImage(nodeAttrs.value?.src)
+    }
   }
 }
 // watchEffect(
@@ -161,6 +176,7 @@ watch(() => nodeAttrs.value.file, (file: File) => {
 <style lang="less" scoped>
 .node-image {
   display: inline-block;
+  position: relative;
 
   .wrapper {
     display: flex;
@@ -170,6 +186,10 @@ watch(() => nodeAttrs.value.file, (file: File) => {
     border-radius: var(--ant-border-radius);
     justify-content: space-between;
     align-items: center;
+  }
+
+  :deep(.es-drager) {
+    position: relative;
   }
 }
 </style>
