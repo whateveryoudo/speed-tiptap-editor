@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import type { OptionMenuItem } from './type'
 import type { Editor } from '@tiptap/core'
 import { Table } from '@tiptap/extension-table'
-import './icon.js'
+import './initTableIcon.js'
 // 气泡菜单元素
 export interface BubbleMenuItem {
   iconType: string
