@@ -3,7 +3,7 @@
  * @Date: 2022-11-18 19:02:23
  * @LastEditTime: 2022-12-07 11:03:58
  * @LastEditors: your name
- * @Description: 背景色选择
+ * @Description: 背景色选择（兼容单元格配置）
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\backgroundColor.vue
 -->
 
@@ -44,16 +44,23 @@ import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { useAttributes } from '@/hooks/useAttributes'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-const props = defineProps({
-  editor: {
-    type: Object as PropType<Editor>,
-    default: () => ({}),
+const props = withDefaults(defineProps<{
+  editor: Editor
+  action?: (editor: Editor, payload?: any) => void
+}>(), {
+  editor: () => {
+    return {} as Editor
   },
 })
 const curColor = ref<ColorType | null>();
 const isTitleActive = useActive(props.editor, Title.name)
 
 const setBackgroundColor = (color: ColorType) => {
+  // 如果外部传入了action，则直接调用action
+  if (props.action) {
+    props.action(props.editor, { color })
+    return
+  }
   if (isTitleActive.value || !color) {
     props.editor?.chain().focus().unsetBackgroundColor().run();
   } else {

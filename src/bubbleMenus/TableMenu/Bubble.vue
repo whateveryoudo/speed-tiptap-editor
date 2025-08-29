@@ -8,27 +8,15 @@
 -->
 <template>
     <BubbleContainer :editor="editor" :should-show="shouldShow" plugin-key="table-bubble-menu">
-        <a-space :size="5">
-            <span>表格操作菜单</span>
-            <a-button type="text" size="small">合并单元格</a-button>
-            <a-button type="text" size="small">删除行</a-button>
-            <a-button type="text" size="small">删除列</a-button>
-        </a-space>
+        <RenderMenuItems :editor="editor" :tableItems="bubbleTableItem" />
     </BubbleContainer>
 </template>
 
 <script setup lang="ts">
 import BubbleContainer from '../BubbleContainer.vue'
-import Bold from '@/menus/bold.vue'
-import Italic from '@/menus/italic.vue'
-import Underline from '@/menus/underline.vue'
-import Strike from '@/menus/strike.vue'
-import { Table } from "@tiptap/extension-table";
-import { Title } from '@/extensions/title'
-import { Link } from '@/extensions/link'
-import { Image } from '@/extensions/image'
-import { Paragraph } from '@/extensions/paragraph'
-const OTHER_BUBBLE_MENU_TYPES = [Title.name, Link.name, Image.name]
+import RenderMenuItems from './RenderMenuItems.vue'
+import { bubbleTableItem } from './useTableBubbleMenu.tsx'
+
 const props = withDefaults(defineProps<{
     editor: any,
 }>(), {
@@ -39,7 +27,7 @@ const shouldShow = ({ editor, state }: { editor: any; state: any }) => {
     if (!editor?.isEditable) {
         return false
     }
-    
+
     // 检查是否是单元格选择（而不是文字选择）
     return (state.selection as any).$anchorCell && (state.selection as any).$headCell
 }

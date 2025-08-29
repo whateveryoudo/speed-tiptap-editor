@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import type { Editor } from '@tiptap/vue-3'
 import { onMounted, onUnmounted } from 'vue'
-import Icon from './Icon.vue'
-import { useTableBubbleMenu } from './useTableBubbleMenu.tsx'
-
+import { useTableBubbleMenu, tableItems } from './useTableBubbleMenu.tsx'
+import RenderMenuItems from './RenderMenuItems.vue'
 const props = defineProps<{
   editor: Editor
 }>()
@@ -11,21 +10,10 @@ const props = defineProps<{
 const {
   isVisible,
   floatingElement,
-  tableItems,
-  shouldShow,
-  showBubbleMenu,
-  hideBubbleMenu,
   handleEditorFocus,
   handleSelectionUpdate
 } = useTableBubbleMenu(props.editor)
 
-// 处理菜单项点击事件
-const handleItemClick = (item: any, event: MouseEvent) => {
-  
-  if (item.action) {
-    item.action()
-  }
-}
 
 // 组件挂载时设置事件监听器
 onMounted(() => {
@@ -48,15 +36,8 @@ onUnmounted(() => {
 
 <template>
   <div v-if="isVisible" ref="floatingElement" class="bubble-menu-wrapper absolute z-[500]">
-    <a-space>
-      <a-tooltip :key="item.title" v-for="item in tableItems" :title="item.title">
-        <a-button type="text" class="shadow-btn-wrapper" :disabled="item.disabled" @click="handleItemClick(item, $event)">
-          <component :is="item.iconRender" />
-        </a-button>
-      </a-tooltip>
-    </a-space>
+    <RenderMenuItems :editor="editor" :tableItems="tableItems" />
   </div>
 </template>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

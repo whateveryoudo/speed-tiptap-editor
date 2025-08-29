@@ -35,7 +35,8 @@ import { Mind } from "./mind";
 import { Mention } from "./mention";
 import { CodeBlock } from "./codeBlock";
 import CustomeFlowMap from "./flowMap/CustomeFlowMap";
-import { TableKit } from "@tiptap/extension-table";
+import { Table, TableRow, TableHeader } from "@tiptap/extension-table";
+import TableCell from "./tableCell";
 import { TaskList } from "./taskList";
 import { TaskItem } from "@tiptap/extension-list";
 import { Indent } from "./indent";
@@ -121,7 +122,15 @@ export const defauktKit = [
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
-  TableKit,
+  // 这里没使用tableKit,要扩展tableCell属性
+  Table.configure({
+    resizable: true,
+    handleWidth: 5,
+    lastColumnResizable: false,
+  }),
+  TableRow,
+  TableHeader,
+  TableCell,
   TaskList,
   TaskItem,
   Indent.configure({

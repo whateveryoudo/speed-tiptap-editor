@@ -4,9 +4,10 @@ import { computePosition, offset, flip, shift, autoUpdate } from '@floating-ui/d
 import type { Editor } from '@tiptap/core'
 import {
   MergeCellsOutlined, SplitCellsOutlined, DeleteColumnOutlined, DeleteRowOutlined,
-
-  InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, DeleteOutlined, TableOutlined
+  AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined,
+  InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, DeleteOutlined, TableOutlined,
 } from '@ant-design/icons-vue'
+import BackgroundColor from '@/menus/backgroundColor.vue'
 // 表格节点信息接口
 export interface TableNodeInfo {
   table: any // Table node
@@ -14,16 +15,160 @@ export interface TableNodeInfo {
   tableDOM: HTMLElement | null // 表格的 DOM 元素
   cursorPos: number // 当前光标位置
 }
-
 // 气泡菜单项接口
 export interface TableBubbleMenuItem {
   iconRender: VNode
   title: string
   class?: string
   name?: string
-  disabled?: boolean
-  action?: (tableInfo: TableNodeInfo | null) => void
+  disabled?: ((editor: Editor) => boolean)
+  useComponnent?: boolean
+  key: string
+  action?: (editor: Editor, payload?: any) => void;
+  children?: TableBubbleMenuItem[];
 }
+const tableMenuItemMaps: Record<string, TableBubbleMenuItem> = {
+  'align': {
+    title: '对齐方式',
+    key: 'align',
+    iconRender: h(AlignLeftOutlined),
+    children: [{
+      title: '左对齐',
+      key: 'align-left',
+      iconRender: h(AlignLeftOutlined),
+      action: (editor: Editor) => {
+        editor?.chain().focus().setCellAttribute('align', 'left').run()
+      },
+    }, {
+      title: '居中对齐',
+      key: 'align-center',
+      iconRender: h(AlignCenterOutlined),
+      action: (editor: Editor) => {
+        editor?.chain().focus().setCellAttribute('align', 'center').run()
+      },
+    }, {
+      title: '右对齐',
+      key: 'align-right',
+      iconRender: h(AlignRightOutlined),
+      action: (editor: Editor) => {
+        editor?.chain().focus().setCellAttribute('align', 'right').run()
+      },
+    }],
+  },
+  'merge-cells': {
+    title: '合并单元格',
+    iconRender: h(MergeCellsOutlined),
+    key: 'merge-cells',
+    disabled: (editor: Editor) => !editor?.can().mergeCells(),
+    action: (editor: Editor) => {
+      editor?.chain().focus().mergeCells().run()
+    },
+  },
+  'split-cells': {
+    title: '拆分单元格',
+    iconRender: h(SplitCellsOutlined),
+    key: 'split-cells',
+    disabled: (editor: Editor) => !editor?.can().splitCell(),
+    action: (editor: Editor) => {
+      editor?.chain().focus().splitCell().run()
+    },
+  },
+  'background-color': {
+    title: '单元格背景色',
+    useComponnent: true,
+    iconRender: h(BackgroundColor),
+    key: 'background-color',
+    action: (editor: Editor, payload: any) => {
+      editor?.chain().focus().setCellAttribute('backgroundColor', payload.color).run()
+    },
+  },
+  'add-column-before': {
+    title: '往前增加列',
+    iconRender: h(InsertRowRightOutlined),
+    key: 'add-column-before',
+    action: (editor: Editor) => {
+      editor?.chain().focus().addColumnBefore().run()
+    },
+  },
+  'add-column-after': {
+    title: '往后增加列',
+    iconRender: h(InsertRowLeftOutlined),
+    key: 'add-column-after',
+    action: (editor: Editor) => {
+      editor?.chain().focus().addColumnAfter().run()
+    },
+  },
+  'delete-column': {
+    title: '删除列',
+    iconRender: h(DeleteColumnOutlined),
+    key: 'delete-column',
+    action: (editor: Editor) => {
+      editor?.chain().focus().deleteColumn().run()
+    },
+  },
+  'add-row-before': {
+    title: '往前增加行',
+    iconRender: h(InsertRowAboveOutlined),
+    key: 'add-row-before',
+    action: (editor: Editor) => {
+      editor?.chain().focus().addRowBefore().run()
+    },
+  },
+  'add-row-after': {
+    title: '往后增加行',
+    iconRender: h(InsertRowBelowOutlined),
+    key: 'add-row-after',
+    action: (editor: Editor) => {
+      editor?.chain().focus().addRowAfter().run()
+    },
+  },
+  'delete-row': {
+    title: '删除行',
+    iconRender: h(DeleteRowOutlined),
+    key: 'delete-row',
+    action: (editor: Editor) => {
+      editor?.chain().focus().deleteRow().run()
+    },
+  },
+  'delete-table': {
+    title: '删除表格',
+    iconRender: h(DeleteOutlined),
+    key: 'delete-table',
+    action: (editor: Editor) => {
+      editor?.chain().focus().deleteTable().run()
+    },
+  },
+}
+// 注入菜单项(表格最外层的气泡菜单)
+export const tableItems = [
+  tableMenuItemMaps['align'],
+  tableMenuItemMaps['background-color'],
+  tableMenuItemMaps['split-cells'],
+  tableMenuItemMaps['add-column-before'],
+  tableMenuItemMaps['add-column-after'],
+  tableMenuItemMaps['delete-column'],
+  tableMenuItemMaps['add-row-before'],
+  tableMenuItemMaps['add-row-after'],
+  tableMenuItemMaps['delete-row'],
+  tableMenuItemMaps['delete-table'],
+]
+// 选中单元格的气泡菜单
+export const bubbleTableItem = [
+  tableMenuItemMaps['align'],
+  tableMenuItemMaps['background-color'],
+  tableMenuItemMaps['merge-cells'],
+  tableMenuItemMaps['split-cells'],
+  tableMenuItemMaps['add-column-before'],
+  tableMenuItemMaps['add-column-after'],
+  tableMenuItemMaps['delete-column'],
+  tableMenuItemMaps['add-row-before'],
+  tableMenuItemMaps['add-row-after'],
+  tableMenuItemMaps['delete-row'],
+  tableMenuItemMaps['delete-table'],
+]
+
+
+// 表格固定气泡菜单
 
 export function useTableBubbleMenu(editor: Editor) {
   const isVisible = ref(false)
@@ -33,19 +178,29 @@ export function useTableBubbleMenu(editor: Editor) {
   // 检查点击是否在气泡菜单外部
   const isClickOutside = (event: MouseEvent): boolean => {
     if (!floatingElement.value) return true
-    
+
     // 检查点击的目标是否在气泡菜单内部
     const target = event.target as Node
     if (floatingElement.value.contains(target)) {
       return false
     }
-    
+
     // 检查点击的目标是否在表格内部
     const tableInfo = getTableNodeInfo()
     if (tableInfo && tableInfo.tableDOM && tableInfo.tableDOM.contains(target)) {
       return false
     }
-    
+
+    // 排除 Ant Design 的 Popover/Dropdown 组件（防止气泡菜单被其他组件触发）
+    const antdPopover = (target as Element).closest('.ant-popover')
+    const antdDropdown = (target as Element).closest('.ant-dropdown')
+    const antdTooltip = (target as Element).closest('.ant-tooltip')
+    const antdModal = (target as Element).closest('.ant-modal')
+
+    if (antdPopover || antdDropdown || antdTooltip || antdModal) {
+      return false
+    }
+
     return true
   }
 
@@ -132,7 +287,7 @@ export function useTableBubbleMenu(editor: Editor) {
   // 更新气泡菜单位置
   const updatePosition = async () => {
     if (!floatingElement.value) return
-    
+
     const tableInfo = getTableNodeInfo()
     if (!tableInfo || !tableInfo.tableDOM) return
 
@@ -188,10 +343,10 @@ export function useTableBubbleMenu(editor: Editor) {
   // 隐藏气泡菜单
   const hideBubbleMenu = () => {
     isVisible.value = false
-    
+
     // 移除全局点击事件监听器
     document.removeEventListener('click', handleGlobalClick, true)
-    
+
     if (cleanup) {
       cleanup()
       cleanup = null
@@ -217,83 +372,7 @@ export function useTableBubbleMenu(editor: Editor) {
     }
   }
 
-  // 注入菜单项
-  const tableItems = computed((): TableBubbleMenuItem[] => {
-    return [
-      {
-        title: '合并单元格',
-        iconRender: h(MergeCellsOutlined),
-        class: 'has-icon right-border',
-        disabled: !editor?.can().mergeCells(),
-        action: () => {
-          editor?.chain().focus().mergeOrSplit().run()
-        },
-      },
-      {
-        title: '拆分单元格',
-        iconRender: h(SplitCellsOutlined),
-        class: 'has-icon right-border',
-        disabled: !editor?.can().splitCell(),
-        action: () => {
-          editor?.chain().focus().splitCell().run()
-        },
-      },
 
-      {
-        title: '往前增加列',
-        iconRender: h(InsertRowRightOutlined),
-        action: () => {
-          editor?.chain().focus().addColumnBefore().run()
-        },
-      },
-      {
-        title: '往后增加列',
-        iconRender: h(InsertRowLeftOutlined),
-        action: () => {
-          editor?.chain().focus().addColumnAfter().run()
-        },
-      },
-      {
-        title: '删除列',
-        iconRender: h(DeleteColumnOutlined),
-        class: 'del',
-        action: () => {
-          editor?.chain().focus().deleteColumn().run()
-        },
-      },
-      {
-        title: '往前增加行',
-        iconRender: h(InsertRowAboveOutlined),
-        action: () => {
-          editor?.chain().focus().addRowBefore().run()
-        },
-      },
-      {
-        title: '往后增加行',
-        iconRender: h(InsertRowBelowOutlined),
-        action: () => {
-          editor?.chain().focus().addRowAfter().run()
-        },
-      },
-      {
-        title: '删除行',
-        class: 'del',
-        iconRender: h(DeleteRowOutlined),
-        action: () => {
-          editor?.chain().focus().deleteRow().run()
-        },
-      },
-
-      {
-        title: '删除表格',
-        class: 'del',
-        iconRender: h(DeleteOutlined),
-        action: () => {
-          editor?.chain().focus().deleteTable().run()
-        },
-      },
-    ]
-  })
 
   // 组件卸载时清理
   onUnmounted(() => {
@@ -304,7 +383,6 @@ export function useTableBubbleMenu(editor: Editor) {
     isVisible,
     floatingElement,
     shouldShow,
-    tableItems,
     getTableNodeInfo,
     showBubbleMenu,
     hideBubbleMenu,

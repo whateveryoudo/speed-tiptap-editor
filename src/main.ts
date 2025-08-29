@@ -12,8 +12,6 @@ import SpeedComponents from "speed-components-ui/components";
 import { useAntdCssVars } from "speed-components-ui/hooks";
 import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
-// 初始化table用到的图标
-import './bubbleMenus/TableMenu/initTableIcon.js'
 // 组件列表
 const components: Component[] = [SpeedTiptapEditor];
 
