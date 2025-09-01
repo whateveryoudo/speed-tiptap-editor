@@ -2,6 +2,9 @@
     position: relative;
     --es-drager-color: var(--ant-color-primary) !important;
     box-sizing: border-box;
+    &.border {
+      border-color: transparent;
+    }
     // 样式固定不支持拖拽
     &:not([draggable='true']) {
       left: 0 !important;
@@ -24,6 +27,7 @@
     &.selected {
       transition: none;
       user-select: none;
+      border: 1px solid var(--ant-color-primary);
       &:after {
         display: block;
       }

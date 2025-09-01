@@ -35,9 +35,14 @@ const request = axios.create({
 });
 request.interceptors.request.use(
   (config: any) => {
-
-    // 添加测试token
-    config.headers["Authorization"] = `Bearer speed-test-token`;
+    // 登录接口不注入 Authorization，避免首个获取 token 的请求携带旧/测试 token
+    const url = config.url || ''
+    if (url.includes('/onlyoffice/login')) {
+      return config
+    }
+    // 其他请求优先使用路由守卫写入的 token；无则回退到测试 token
+    const token = localStorage.getItem('onlyoffice-token') || 'speed-test-token'
+    config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
   (err) => Promise.reject(err)
@@ -77,9 +82,6 @@ request.interceptors.response.use(
           HTTP_CODE[error.response.status as keyof typeof HTTP_CODE] ||
           "服务器开小差啦，请稍后再试"
       );
-      if (error.response.status === 401) {
-        message.error("请先登录");
-      }
       return Promise.reject(error);
     } else {
       message.destroy();

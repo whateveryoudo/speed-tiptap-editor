@@ -53,7 +53,7 @@
                 <img v-else-if="subItem.imgIcon" :src="subItem.imgIcon" alt="">
               </span>
               {{ subItem.name }}
-              <!-- file,img隐藏一个input，点击后选择文件 -->
+              <!-- file,img隐藏一个input，点击后选择文件, TODO: accept支持外部传入 -->
               <template v-if="['file', 'img'].includes(subItem.key)">
                 <input :ref="el => inputRefs[subItem.key] = el" @change="handleFileChange(subItem, $event)" multiple
                   v-if="subItem.key === 'img'" type="file" accept=".svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic" hidden>
@@ -160,7 +160,7 @@ const handleEditorOpt = (item?: SubMenuGroup, payload?: any) => {
       .map(key => findMenuItem(key))
       .filter((item): item is SubMenuGroup => item !== undefined);
   }
-  if (item.key === 'img') {
+  if (item.key === 'img' || item.key === 'file') {
     // 查找下方的input，并触发点击
     const inputRef = inputRefs.value[item.key]
     if (inputRef) {

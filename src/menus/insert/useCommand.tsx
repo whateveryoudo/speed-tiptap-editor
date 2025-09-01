@@ -72,7 +72,7 @@ export const useCommand = () => {
           key: 'file',
           name: '附件',
           imgIcon: fileIcon,
-          action: editor => editor.chain().focus().setAttachment().run(),
+          action: (editor,payload) => editor.chain().focus().uploadAttachment(payload).run(),
         },
 
       ],

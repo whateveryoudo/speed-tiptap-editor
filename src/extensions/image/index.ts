@@ -28,7 +28,7 @@ export const Image = BuiltInImage.extend({
       inline: true,
       content: "",
       marks: "",
-      group: "block",
+      group: "inline",
       draggable: false,
       selectable: true,
       atom: true,
@@ -102,7 +102,7 @@ export const Image = BuiltInImage.extend({
   },
 
   addNodeView() {
-    return VueNodeViewRenderer(ImageWrapper);
+    return VueNodeViewRenderer(ImageWrapper as any);
   },
   
 });
