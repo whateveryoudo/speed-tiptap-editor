@@ -7,7 +7,9 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\attachment\Wrapper.vue
 -->
 <template>
-  <NodeViewWrapper class="inline-block">
+  <NodeViewWrapper
+    :class="[nodeAttrs.displayMode !== 'card' && 'inline-block']"
+  >
     <div v-if="isEditable && !nodeAttrs.fileId" class="wrap">
       <a-spin :spinning="uploadLoading">
         <a-typography-text style="cursor: pointer">
@@ -31,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, computed, watch, inject, Ref } from "vue";
+import { PropType, ref, computed, watch, inject, Ref, onMounted } from "vue";
 import { NodeViewWrapper } from "@tiptap/vue-3";
 import { Editor } from "@tiptap/core";
 import FileDisplayBar from "./FileDisplayBar.vue";
@@ -92,6 +94,15 @@ const startUpload = (file: File) => {
     file,
   });
 };
+
+onMounted(() => {
+  // 监听下载事件
+  props.editor?.on('attachment:download', ({ fileId }: { fileId: string }) => {
+    if (fileId === props.node.attrs.fileId) {
+      handleDownloadFile(fileId)
+    }
+  })
+})
 watch(
   () => nodeAttrs.value.file,
   (file: File) => {
@@ -103,20 +114,11 @@ watch(
     immediate: true,
   }
 );
-defineExpose({
-  handleDownloadFile,
-});
 </script>
 <style lang="less" scoped>
 .wrap {
-  border: 1px solid var(--semi-color-border);
-  border-radius: var(--border-radius);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  .sizeText {
-    color: var(--semi-color-text-2);
-  }
 }
 </style>

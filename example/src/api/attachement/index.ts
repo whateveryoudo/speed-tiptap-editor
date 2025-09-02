@@ -28,10 +28,6 @@ export const fileDel = (fileId: string) => {
   return request.delete(`${attachmentPrefix}/delete/${fileId}`);
 };
 
-// OnlyOffice 登录，获取 token（示例）
-export const onlyofficeLogin = (payload: { username: string; password: string }) => {
-  return request.post(`${onlyofficePrefix}/login`, payload);
-};
 
 // 获取 OnlyOffice 文档配置（后端已对 config 使用 ONLYOFFICE_SECRET 签名）
 export const getOnlyofficeConfig = (payload: { fileId: string; mode?: 'view' | 'edit' }) => {

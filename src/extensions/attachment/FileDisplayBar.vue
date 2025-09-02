@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\attachment\FileDisplayBar.vue
 -->
 <template>
-  <a-flex class="wrap max-w-[400px]" align="center" justify="space-between">
+  <a-flex :class="['display-wrap max-w-[400px]', displayMode === 'card' && 'card']" align="center" justify="space-between">
     <a-flex class="min-w-0 flex-1" align="center" gap="small">
       <s-icon-font
         v-if="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons]"
@@ -15,11 +15,11 @@
         :color="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons].color"
       />
       <span class="flex-1 flex gap-1 items-center min-w-0">
-        <span class="truncate flex-1" :title="fileName" >{{ fileName }}</span>
-        <span class="size-text">({{ normalizeFileSize(fileSize || 0) }})</span>
+        <span class="truncate" :title="fileName" >{{ fileName }}</span>
+        <span class="size-text flex-shrink-0">({{ normalizeFileSize(fileSize || 0) }})</span>
       </span>
     </a-flex>
-    <a-space class="ml-2 flex-shrink-0">
+    <a-space :size="10" class="ml-2 flex-shrink-0" v-if="displayMode === 'card'">
       <a-tooltip title="预览">
         <eye-outlined @click="handlePreview" />
       </a-tooltip>
@@ -41,8 +41,6 @@ import {
   EyeOutlined,
   FilePdfOutlined,
   FileWordOutlined,
-  FileExcelOutlined,
-  FilePptOutlined,
   FileZipOutlined,
   CodeOutlined,
 } from "@ant-design/icons-vue";
@@ -55,12 +53,14 @@ const props = withDefaults(
     fileName: string;
     fileSize: number;
     fileId: string;
+    displayMode: 'title' | 'card';
   }>(),
   {
     fileType: "",
     fileName: "",
     fileSize: 0,
     fileId: "",
+    displayMode: "title",
   }
 );
 const emit = defineEmits<{
@@ -68,9 +68,9 @@ const emit = defineEmits<{
 }>();
 const handlePreview = () => {
   message.info("功能待开发");
-  // const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
+  const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
 
-  // props.fileId && window.open(getPreviewUrl ? getPreviewUrl(props.fileId) : "");
+  props.fileId && window.open(getPreviewUrl ? getPreviewUrl(props.fileId) : "");
 };
 const fileTypeIcons = {
   audio: { icon: <AudioOutlined />, color: '#48a25e' }  ,
@@ -95,19 +95,19 @@ const handleDownLoad = () => {
 </script>
 
 <style scoped lang="less">
-.wrap {
+.display-wrap {
   min-width: 200px;
-  color: var(--ant-color-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
   .size-text {
-    font-size: 12px;
-    color: var(--ant-color-text-2);
+    color: var(--ant-color-text-tertiary);
   }
   &.card {
+    max-width: none;
+    width: 100%;
     border: 1px solid var(--ant-color-border);
-    border-radius: var(--ant-border-radius);
+    border-radius: calc(var(--ant-border-radius) * 1px);
     padding: 8px 16px;
   }
 }

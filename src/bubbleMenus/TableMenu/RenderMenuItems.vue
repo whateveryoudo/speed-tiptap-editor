@@ -1,7 +1,7 @@
 <template>
 
     <a-space>
-        <tempalte :key="item.key" v-for="item in tableItems" :title="item.title">
+        <template :key="item.key" v-for="item in tableItems" :title="item.title">
             <!-- 使用自定义组件 -->
             <template v-if="item.useComponnent">
                 <component :is="item.iconRender" :action="item.action" :editor="editor" />
@@ -30,7 +30,7 @@
                     </a-dropdown>
                 </a-tooltip>
             </template>
-        </tempalte>
+        </template>
 
     </a-space>
 </template>

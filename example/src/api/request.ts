@@ -41,7 +41,7 @@ request.interceptors.request.use(
       return config
     }
     // 其他请求优先使用路由守卫写入的 token；无则回退到测试 token
-    const token = localStorage.getItem('onlyoffice-token') || 'speed-test-token'
+    const token = localStorage.getItem('speed-tiptap-token');
     config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
@@ -78,7 +78,7 @@ request.interceptors.response.use(
     if (error.response) {
       message.destroy();
       message.error(
-        (error.response.data as any)?.errMessage! ||
+        (error.response.data as any)?.message! ||
           HTTP_CODE[error.response.status as keyof typeof HTTP_CODE] ||
           "服务器开小差啦，请稍后再试"
       );

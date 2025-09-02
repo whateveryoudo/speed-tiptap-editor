@@ -20,6 +20,7 @@
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
     <TextMenu v-if="editor" :editor="editor" />
     <ImageMenu v-if="editor" :editor="editor" />
+    <AttachmentMenu v-if="editor" :editor="editor"></AttachmentMenu>
     <!-- table的点击提示框 -->
     <TableMenu v-if="editor" :editor="editor" />
     <!-- table的选择气泡提示框 -->
@@ -44,7 +45,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TableMenu from '@/bubbleMenus/TableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/TableMenu/Bubble.vue'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu } from '@/bubbleMenus'
+import { TextMenu, ImageMenu, AttachmentMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'

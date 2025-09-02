@@ -12,22 +12,16 @@ import {
 // 配置一些请求地址，用于上传文件
 createApp(App)
   .use(router)
-  .use(
-    SpeedTiptapEditor, {
-      apis: {
-        fileDownload: fileDownload,
-        fileUploadSingle: fileUploadSingle,
-        fileUploadMulti: fileUploadMulti,
-        fileDel: fileDel,
-        getPreviewUrl: (fileId: string) => {
-          // 实际情况替换为实际地址
-          return (
-            "//localhost:3005/attachment/preview/" +
-            fileId +
-            "?token=speed-test-token"
-          );
-        },
+  .use(SpeedTiptapEditor, {
+    apis: {
+      fileDownload: fileDownload,
+      fileUploadSingle: fileUploadSingle,
+      fileUploadMulti: fileUploadMulti,
+      fileDel: fileDel,
+      getPreviewUrl: (fileId: string) => {
+        // 实际情况替换为实际地址(此处为本地启动的node附件服务)
+        return "//localhost:3005/onlyoffice/previewFile/" + fileId;
       },
-    }
-  )
+    },
+  })
   .mount("#app");

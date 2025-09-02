@@ -10,6 +10,7 @@ import { mergeAttributes, Node } from "@tiptap/core";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
 import { getDatasetAttribute } from "@/prose-utils";
+import { Editor } from "@tiptap/core";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -106,10 +107,9 @@ export const Attachment = Node.create({
   
       downloadAttachment:
         (fileId?: string) =>
-        () => {
-          if (fileId) {
-            Wrapper.value?.handleDownloadFile(fileId);
-          }
+        ({editor}: {editor: Editor}) => {
+          // 触发自定义事件 
+          editor.emit('attachment:download', { fileId })
           return true;
         },
     };

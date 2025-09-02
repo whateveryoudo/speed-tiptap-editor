@@ -16,22 +16,28 @@
     <a-space :size="5">
       <a-tooltip title="标题">
         <div
-          :class="['shadow-bg-wrapper']"
+          :class="[
+            'shadow-bg-wrapper',
+            attributes.displayMode === 'title' && 'is-active',
+          ]"
           @click="handleUpdateAttributes({ displayMode: 'title' })"
         >
-          <copy-outlined />
+          <ProfileOutlined />
         </div>
       </a-tooltip>
       <a-tooltip title="卡片">
         <a-button
           type="text"
-          :class="['shadow-bg-wrapper', displayMode === 'card' && 'is-active']"
+          :class="[
+            'shadow-bg-wrapper',
+            attributes.displayMode === 'card' && 'is-active',
+          ]"
           @click="handleUpdateAttributes({ displayMode: 'card' })"
         >
           <CreditCardOutlined />
         </a-button>
       </a-tooltip>
-      <a-divider type="vertical" />
+      <a-divider type="vertical" class="menu-divider" />
       <a-tooltip title="预览">
         <a-button type="text" class="shadow-btn-wrapper" @click="handlePreivew">
           <eye-outlined />
@@ -51,30 +57,33 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from "vue";
+import { PropType, computed, inject, ref, Ref } from "vue";
 import { message } from "ant-design-vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { Attachment } from "@/extensions/attachment";
 import { useAttributes } from "@/hooks/useAttributes";
 import {
-  DeleteOutlined,
   EyeOutlined,
-  CopyOutlined,
+  ProfileOutlined,
   CreditCardOutlined,
   DownloadOutlined,
 } from "@ant-design/icons-vue";
 import { type Editor } from "@tiptap/core";
-
+const speedTiptapConfig = inject("speed-tiptap-config", ref({})) as Ref<any>;
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
 });
-const attributes = useAttributes<{ fileId: string; displayMode: string }>(props.editor, Attachment.name, {
-  fileId: "",
-  displayMode: "title",
-});
+const attributes = useAttributes<{ fileId: string; displayMode: string }>(
+  props.editor,
+  Attachment.name,
+  {
+    fileId: "",
+    displayMode: "title",
+  }
+);
 const isActiveAttachment = computed(() => {
   return props?.editor.isActive(Attachment.name) && !!attributes.value.fileId;
 });
@@ -87,12 +96,23 @@ const shouldShow = () => {
   );
 };
 
-// 如何预览文件？？
+// 调用本地服务
 const handlePreivew = () => {
-  message.info("功能待开发");
+  const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
+  // 追加token
+  getPreviewUrl &&
+    window.open(
+      getPreviewUrl(attributes.value.fileId) +
+        "?token=" +
+        localStorage.getItem("speed-tiptap-token")
+    );
 };
 const handleDownload = () => {
-  props.editor?.chain().focus().downloadAttachment(attributes.value.fileId).run();
+  props.editor
+    ?.chain()
+    .focus()
+    .downloadAttachment(attributes.value.fileId)
+    .run();
 };
 // 直接调用属性更新
 const handleUpdateAttributes = (attrs: any) => {
