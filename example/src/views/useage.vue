@@ -1,7 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
+import { useGlobalStore } from "#example/store/index";
+import { speedTiptapLogin } from "#example/api/user";
 const route = useRoute();
 const router = useRouter();
 // const content = ref('<p></p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mdh0zic00qt3z0yuiqar?token=speed-test-token" width="240" height="264" file="[object File]"><p>asdas</p><p>asdasdasdsa</p><p>asdasdas</p><p>asdsadas</p>');
@@ -14,6 +16,7 @@ const onUpdate = (content) => {
 };
 const currentDemo = ref();
 const title = ref("");
+const globalStore = useGlobalStore();
 const demos = [
   {
     name: "simple",
@@ -52,6 +55,21 @@ const checkDemo = (name) => {
     },
   });
 };
+const handleOpenJwtChange = async (checked: boolean) => {
+  if (!checked) {
+    localStorage.removeItem("speed-tiptap-token");
+    return;
+  }
+  // 这里写死了，目前没涉及到登录
+  const { data } = await speedTiptapLogin({
+    username: "ykx",
+    password: "123456",
+  });
+  const token = (data && (data.token || data)) || "";
+  if (token) {
+    localStorage.setItem("speed-tiptap-token", token);
+  }
+};
 watch(
   () => route.query.demoType,
   (newVal) => {
@@ -65,6 +83,15 @@ watch(
 
 <template>
   <h2>以下是Speed Tiptap Editor的示例</h2>
+  <a-flex align="center" class="mb-2">
+    <a-switch
+      v-model:checked="globalStore.openJwt"
+      @change="handleOpenJwtChange"
+    ></a-switch
+    ><span class="ml-2 text-sm text-gray-500"
+      >是否开启登录jwt校验(文档可能需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span
+    >
+  </a-flex>
   <router-view />
   <a-space class="mb-2">
     <a-button

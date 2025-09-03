@@ -14,7 +14,7 @@
     :should-show="shouldShow"
   >
     <a-space :size="5">
-      <a-tooltip title="标题">
+      <a-tooltip title="标题" v-model:open="isTitleOpen">
         <div
           :class="[
             'shadow-bg-wrapper',
@@ -25,7 +25,7 @@
           <ProfileOutlined />
         </div>
       </a-tooltip>
-      <a-tooltip title="卡片">
+      <a-tooltip title="卡片" v-model:open="isCardOpen">
         <a-button
           type="text"
           :class="[
@@ -58,7 +58,6 @@
 
 <script setup lang="ts">
 import { PropType, computed, inject, ref, Ref } from "vue";
-import { message } from "ant-design-vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { Attachment } from "@/extensions/attachment";
 import { useAttributes } from "@/hooks/useAttributes";
@@ -76,6 +75,8 @@ const props = defineProps({
     default: () => ({}),
   },
 });
+const isTitleOpen = ref(false);
+const isCardOpen = ref(false);
 const attributes = useAttributes<{ fileId: string; displayMode: string }>(
   props.editor,
   Attachment.name,
@@ -99,12 +100,9 @@ const shouldShow = () => {
 // 调用本地服务
 const handlePreivew = () => {
   const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
-  // 追加token
   getPreviewUrl &&
     window.open(
-      getPreviewUrl(attributes.value.fileId) +
-        "?token=" +
-        localStorage.getItem("speed-tiptap-token")
+      getPreviewUrl(attributes.value.fileId)
     );
 };
 const handleDownload = () => {
@@ -114,8 +112,10 @@ const handleDownload = () => {
     .downloadAttachment(attributes.value.fileId)
     .run();
 };
-// 直接调用属性更新
+// 直接调用属性更新(目前发现bubble,会在更新属性时，导致节点失焦，然后tooltip不消失，这里提前调用关闭变量)
 const handleUpdateAttributes = (attrs: any) => {
+  isTitleOpen.value = false;
+  isCardOpen.value = false;
   props.editor?.chain().focus().updateAttributes(Attachment.name, attrs).run();
 };
 </script>

@@ -13,7 +13,7 @@
     trigger="click"
     placement="bottomLeft">
     <template #content>
-      <base-list :editor="editor" trigger-type="menu" @triggerVisible="(val:boolean) => visible = val"/>
+      <base-list :editor="editor" trigger-type="menu" @triggerVisible="(val:boolean) => open = val"/>
     </template>
     <a-tooltip>
       <template #title> 插入 </template>

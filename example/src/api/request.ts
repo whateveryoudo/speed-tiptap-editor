@@ -8,6 +8,7 @@
  */
 import axios, { AxiosError } from "axios";
 import { message } from "ant-design-vue";
+import { useGlobalStore } from '#example/store/index';
 // 统一配置请求返回数据类型
 export type ResponseType<T = any> = {
   errCode: number;
@@ -40,8 +41,10 @@ request.interceptors.request.use(
     if (url.includes('/onlyoffice/login')) {
       return config
     }
+    const globalStore = useGlobalStore();
+   
     // 其他请求优先使用路由守卫写入的 token；无则回退到测试 token
-    const token = localStorage.getItem('speed-tiptap-token');
+    const token = globalStore.openJwt ? localStorage.getItem('speed-tiptap-token') : 'speed-test-token'; // 未开启jwt 则使用一个模拟值
     config.headers["Authorization"] = `Bearer ${token}`;
     return config;
   },
@@ -62,9 +65,10 @@ request.interceptors.response.use(
       return data;
     } else {
       if (responseType === "blob") {
-        const reg = new RegExp("(?<=filename=).+", "g"); // 兼容safari 不支持断言验证
-        const fileName = headers?.["content-disposition"]?.match(reg) || "";
-        data.fileName = fileName + "";
+        // 这里交给工具函数处理
+        // const reg = new RegExp("(?<=filename=).+", "g"); // 兼容safari 不支持断言验证
+        // const fileName = headers?.["content-disposition"]?.match(reg) || "";
+        // data.fileName = fileName + "";
         return data;
       }
       message.destroy();

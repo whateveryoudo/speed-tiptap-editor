@@ -13,7 +13,7 @@
     </div> -->
     <div v-if="!nodeAttrs.src" class="wrapper">
       <a-spin :spinning="uploadLoading">
-        <img :src="ImgPlaceholder" alt="请选择图片" style="width: 100%; height: 100%">
+        <img :src="ImgPlaceholder" alt="请选择图片" style="width: 200px; height: auto">
       </a-spin>
     </div>
     <!-- <Resizeable v-else :editor="editor" class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
@@ -68,7 +68,6 @@ const isEditable = computed(() => {
 const nodeAttrs = computed(() => {
   return props.node?.attrs
 })
-const uploadRef = ref<HTMLInputElement>()
 // 定义上传选项
 const uploadOptions = ref({
   // 上传后的回调
@@ -78,6 +77,7 @@ const uploadOptions = ref({
     const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
 
     const imgUrl = getPreviewUrl ? getPreviewUrl(file.id) : '';
+    console.log('imgUrl', imgUrl);
     const size = await getImageWidthHeight(imgUrl)
 
     props.updateAttributes && props.updateAttributes({ ...size, src: imgUrl })

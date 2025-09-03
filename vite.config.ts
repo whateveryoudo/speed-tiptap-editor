@@ -35,6 +35,7 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         '@': resolve(__dirname, 'src'),
+        '#example': resolve(__dirname, 'example/src'),
       },
     },
     build: isLib ? {

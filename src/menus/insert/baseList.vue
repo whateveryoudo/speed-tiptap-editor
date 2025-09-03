@@ -59,7 +59,7 @@
                   v-if="subItem.key === 'img'" type="file" accept=".svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic" hidden>
                 <input :ref="el => inputRefs[subItem.key] = el" @change="handleFileChange(subItem, $event)" multiple
                   v-else type="file"
-                  accept=".docx,.doc,.txt,.lake,.lakebook,.lakesheet,.pdf,.xls,.xlsx,.xlsm,.csv,.pptx,.ppt,.pages,.numbers,.key,.keynote,.md,.mark,.markdown,.xmind,.mindnode,.mmap,.mm,.rp,.psd,.sketch,.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,.heif,.ts,.mp3,.mpga,.wav,.bat,.c,.cpp,.css,.go,.h,.java,.js,.json,.jsonl,.log,.m,.mkd,.php,.py,.r,.sh,.sql,.xml,.jmx,.yaml,.yml,.ipynb"
+                  accept=".docx,.doc,.txt,.lake,.lakebook,.lakesheet,.pdf,.xls,.xlsx,.xlsm,.csv,.pptx,.ppt,.pages,.numbers,.key,.keynote,.md,.mark,.markdown,.xmind,.mindnode,.mmap,.mm,.rp,.psd,.sketch,.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,.heif,.ts,.mp3,.mpga,.wav,.bat,.c,.cpp,.css,.go,.h,.java,.js,.json,.jsonl,.log,.m,.mkd,.php,.py,.r,.sh,.sql,.xml,.jmx,.yaml,.yml,.ipynb,.mp4"
                   hidden>
               </template>
             </li>
@@ -119,13 +119,12 @@ onMounted(() => {
 const props = withDefaults(defineProps<{
   editor: Editor,
   query?: string, // 搜索关键字
-  command: Function,
+  command?: Function,
   items?: MenuGroup[], // 这里是气泡菜单的items，目前菜单是没有用到此参数
   triggerType: 'bubble' | 'menu',
 }>(), {
   triggerType: 'menu',
   query: '',
-  command: () => { },
   items: () => [],
   editor: () => ({}) as unknown as Editor,
 })

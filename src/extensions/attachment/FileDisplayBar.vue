@@ -63,14 +63,14 @@ const props = withDefaults(
     displayMode: "title",
   }
 );
+console.log('重新渲染了')
 const emit = defineEmits<{
   (e: "download", file: IFileItem): void;
 }>();
 const handlePreview = () => {
-  message.info("功能待开发");
-  const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
+  const getOfficePreviewUrl = speedTiptapConfig?.value?.apis?.getOfficePreviewUrl;
 
-  props.fileId && window.open(getPreviewUrl ? getPreviewUrl(props.fileId) : "");
+  props.fileId && window.open(getOfficePreviewUrl ? getOfficePreviewUrl(props.fileId) : "");
 };
 const fileTypeIcons = {
   audio: { icon: <AudioOutlined />, color: '#48a25e' }  ,

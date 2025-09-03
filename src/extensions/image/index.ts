@@ -81,7 +81,7 @@ export const Image = BuiltInImage.extend({
         ({ editor, tr }) => {
           // 转换为数组统一处理
           const fileList = files?.length ? files : [files];
-
+          if (fileList.length === 0) return false; // 未选择文件则不处理东西
           // 为每个文件创建一个图片节点
           Array.from(fileList).forEach((file) => {
             // 插入空的图片节点
