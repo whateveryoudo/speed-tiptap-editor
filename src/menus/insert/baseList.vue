@@ -292,7 +292,7 @@ defineExpose({
 }
 
 .menu-wrapper {
-  min-width: 200px;
+  width: 260px;
   margin: 0;
 
   .group-menu-item {

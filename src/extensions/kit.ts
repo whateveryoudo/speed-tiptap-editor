@@ -22,7 +22,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { FontSize } from "./fontSize";
 import { Color } from "@tiptap/extension-color";
 import { BackgroundColor } from "./backgroundColor";
-
+import  FileHandler  from "./fileHandler";
 import { Code } from "./code";
 import { Parse } from "./parse";
 import { Loading } from "./loading";
@@ -31,6 +31,7 @@ import { HorizontalRule } from "@tiptap/extension-horizontal-rule";
 import { Blockquote } from "./blockquote";
 import { Emoji } from "@tiptap/extension-emoji";
 import { TextAlign } from "@tiptap/extension-text-align";
+import { Tag } from "./tag";
 import { Mind } from "./mind";
 import { Mention } from "./mention";
 import { CodeBlock } from "./codeBlock";
@@ -66,7 +67,8 @@ export const defauktKit = [
     codeBlock: false,
     blockquote: false,
     horizontalRule: false,
-    link: false
+    link: false,
+    // paste: false  // 禁用默认的 paste 扩展，使用自定义的 Parse 扩展
     // 保留 StarterKit 中的其他扩展
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
@@ -101,6 +103,7 @@ export const defauktKit = [
     },
   }),
   Attachment,
+  FileHandler,
   BaseDocument, // 用普通的 document
   CustomeFlowMap,
   TextStyle.extend({
@@ -140,6 +143,7 @@ export const defauktKit = [
   }),
   Superscript,
   Subscript,
+  Tag,
 ];
 
 // 知识库

@@ -15,7 +15,7 @@ import { Editor } from "@tiptap/core";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     attachment: {
-      uploadAttachment: (files?: any) => ReturnType;
+      uploadAttachment: (files?: any, pos?: number) => ReturnType;
       downloadAttachment: (fileId?: string) => ReturnType;
       updateAttachmentAttributes: (attrs: Record<string, any>) => ReturnType;
     };
@@ -82,7 +82,7 @@ export const Attachment = Node.create({
   addCommands() {
     return {
       uploadAttachment:
-        (files: any) =>
+        (files: any, pos?: number) =>
         ({ editor, tr }) => {
           // 转换为数组统一处理
           const fileList = files?.length ? files : [files];
@@ -97,8 +97,7 @@ export const Attachment = Node.create({
             //   fileExt: file.name.split('.').pop()
             // });
             const node = this.type.create({ fileId: "", file });
-            const pos = tr.selection.from;
-            tr.insert(pos, node);
+            tr.insert(pos || tr.selection.from, node);
           });
 
           return true;

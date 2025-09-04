@@ -20,6 +20,7 @@ import tableIcon from '@/assets/image/insert/table.svg'
 import fileIcon from '@/assets/image/insert/file.svg'
 import mindIcon from '@/assets/image/insert/mind.svg'
 import flowIcon from '@/assets/image/insert/flow.svg'
+import tagIcon from '@/assets/image/insert/tag.svg'
 import emojiIcon from '@/assets/image/insert/emoji.svg'
 import codeBlockIcon from '@/assets/image/insert/code-block.svg'
 import formulaIcon from '@/assets/image/insert/formula.svg'
@@ -74,7 +75,12 @@ export const useCommand = () => {
           imgIcon: fileIcon,
           action: (editor,payload) => editor.chain().focus().uploadAttachment(payload).run(),
         },
-
+        {
+          key: 'tag',
+          name: '标签',
+          imgIcon: tagIcon,
+          action: (editor,payload) => editor.chain().focus().insertTag(payload).run(),
+        }
       ],
     },
     {

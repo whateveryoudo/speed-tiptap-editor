@@ -16,7 +16,7 @@ const resolveImageEl = (element: HTMLElement) =>
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     iamge: {
-      uploadImage: (arg: { width?: number | string }) => ReturnType;
+      uploadImage: (files: any, pos?: number) => ReturnType;
     };
   }
 }
@@ -76,27 +76,20 @@ export const Image = BuiltInImage.extend({
     return {
       ...this.parent?.(),
       uploadImage:
-      // 如何指定类型？？
         (files: any) =>
-        ({ editor, tr }) => {
+        ({ chain }) => {
           // 转换为数组统一处理
           const fileList = files?.length ? files : [files];
           if (fileList.length === 0) return false; // 未选择文件则不处理东西
-          // 为每个文件创建一个图片节点
-          Array.from(fileList).forEach((file) => {
-            // 插入空的图片节点
-            // const node = this.type.create({
-            //   fileName: file.name,
-            //   fileSize: file.size,
-            //   fileType: file.type,
-            //   fileExt: file.name.split('.').pop()
-            // });
-            const node = this.type.create({ src: "", file });
-            const pos = tr.selection.from;
-            tr.insert(pos, node);
-          });
-
-          return true;
+          
+          // 创建图片节点数组
+          const imageNodes = Array.from(fileList).map((file: any) => ({
+            type: this.name,
+            attrs: { src: "", file }
+          }));
+          
+          // 批量插入图片节点
+          return chain().insertContent(imageNodes).run();
         },
     };
   },

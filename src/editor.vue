@@ -19,6 +19,7 @@
       @triggerData="(data: any) => handleUpdateMindState('data', data)"
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
     <TextMenu v-if="editor" :editor="editor" />
+    <TagMenu v-if="editor" :editor="editor" />
     <ImageMenu v-if="editor" :editor="editor" />
     <AttachmentMenu v-if="editor" :editor="editor"></AttachmentMenu>
     <!-- table的点击提示框 -->
@@ -45,7 +46,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TableMenu from '@/bubbleMenus/TableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/TableMenu/Bubble.vue'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu, AttachmentMenu } from '@/bubbleMenus'
+import { TextMenu, ImageMenu, AttachmentMenu, TagMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
@@ -264,6 +265,7 @@ console.log(editor.value)
     border-bottom-right-radius: 4px;
     overflow-y: auto;
     padding: 0 10px;
+    padding-bottom: 10px;
     box-sizing: border-box;
     position: relative; // 为 BubbleMenu 提供定位上下文
 

@@ -24,9 +24,11 @@ import Italic from '@/menus/italic.vue'
 import Underline from '@/menus/underline.vue'
 import Strike from '@/menus/strike.vue'
 import { Title } from '@/extensions/title'
+import { Tag } from '@/extensions/tag'
+import { Attachment } from '@/extensions/attachment'
 import { Link } from '@/extensions/link'
 import { Image } from '@/extensions/image'
-const OTHER_BUBBLE_MENU_TYPES = [Title.name, Link.name, Image.name]
+const OTHER_BUBBLE_MENU_TYPES = [Title.name, Link.name, Tag.name, Attachment.name, Image.name]
 const props = withDefaults(defineProps<{
     editor: any,
 }>(), {

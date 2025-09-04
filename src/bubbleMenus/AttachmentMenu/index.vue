@@ -8,13 +8,12 @@
 -->
 <template>
   <BubbleContainer
-    class="bubble-menu"
     :editor="editor"
     plugin-key="image-bubble-menu"
     :should-show="shouldShow"
   >
     <a-space :size="5">
-      <a-tooltip title="标题" v-model:open="isTitleOpen">
+      <SpeedTooltip title="标题">
         <div
           :class="[
             'shadow-bg-wrapper',
@@ -24,8 +23,8 @@
         >
           <ProfileOutlined />
         </div>
-      </a-tooltip>
-      <a-tooltip title="卡片" v-model:open="isCardOpen">
+      </SpeedTooltip>
+      <SpeedTooltip title="卡片">
         <a-button
           type="text"
           :class="[
@@ -36,7 +35,7 @@
         >
           <CreditCardOutlined />
         </a-button>
-      </a-tooltip>
+      </SpeedTooltip>
       <a-divider type="vertical" class="menu-divider" />
       <a-tooltip title="预览">
         <a-button type="text" class="shadow-btn-wrapper" @click="handlePreivew">
@@ -75,8 +74,6 @@ const props = defineProps({
     default: () => ({}),
   },
 });
-const isTitleOpen = ref(false);
-const isCardOpen = ref(false);
 const attributes = useAttributes<{ fileId: string; displayMode: string }>(
   props.editor,
   Attachment.name,
@@ -100,10 +97,7 @@ const shouldShow = () => {
 // 调用本地服务
 const handlePreivew = () => {
   const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
-  getPreviewUrl &&
-    window.open(
-      getPreviewUrl(attributes.value.fileId)
-    );
+  getPreviewUrl && window.open(getPreviewUrl(attributes.value.fileId));
 };
 const handleDownload = () => {
   props.editor
@@ -114,8 +108,6 @@ const handleDownload = () => {
 };
 // 直接调用属性更新(目前发现bubble,会在更新属性时，导致节点失焦，然后tooltip不消失，这里提前调用关闭变量)
 const handleUpdateAttributes = (attrs: any) => {
-  isTitleOpen.value = false;
-  isCardOpen.value = false;
   props.editor?.chain().focus().updateAttributes(Attachment.name, attrs).run();
 };
 </script>

@@ -12,6 +12,7 @@ import SpeedComponents from "speed-components-ui/components";
 import { useAntdCssVars } from "speed-components-ui/hooks";
 import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
+import SpeedTooltip from "./components/SpeedTooltip/index.vue";
 // 组件列表
 const components: Component[] = [SpeedTiptapEditor];
 
@@ -60,6 +61,7 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
       app.component(component.name as string, component as any);
     });
   }
+  app.component(SpeedTooltip.name as string, SpeedTooltip);
   // 注入响应式配置
   app.provide("speed-tiptap-config", currentConfig);
   // 注册SpeedComponents

@@ -8,7 +8,6 @@
 -->
 <template>
   <BubbleContainer
-    class="bubble-menu"
     :editor="editor"
     plugin-key="image-bubble-menu"
     :should-show="shouldShow"
@@ -19,11 +18,11 @@
           <copy-outlined />
         </div>
       </a-tooltip>
-      <a-tooltip title="删除">
+      <SpeedTooltip title="删除">
         <div :class="['shadow-bg-wrapper']" @click="handleDelNode(Image.name)">
           <delete-outlined />
         </div>
-      </a-tooltip>
+      </SpeedTooltip>
       <!-- 直接调用通用的居中配置 -->
       <align v-if="isActiveImage" :editor="editor"></align>
       <a-tooltip v-if="isActiveImage" title="预览">
@@ -36,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, PropType, computed, Ref } from "vue";
+import { inject, PropType, computed, Ref, ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { Image } from "@/extensions/image";
 import align from "@/menus/align.vue";

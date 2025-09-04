@@ -73,14 +73,14 @@ const handlePreview = () => {
   props.fileId && window.open(getOfficePreviewUrl ? getOfficePreviewUrl(props.fileId) : "");
 };
 const fileTypeIcons = {
-  audio: { icon: <AudioOutlined />, color: '#48a25e' }  ,
-  video: { icon: <VideoCameraOutlined />, color: '#48a25e' },
-  file: { icon: <FileOutlined />, color: '#48a25e' },
-  image: { icon: <FileImageOutlined />, color: '#48a25e' },
-  pdf: { icon: <FilePdfOutlined />, color: '#48a25e' },
-  document: { icon: <FileWordOutlined />, color: '#48a25e' },
-  archive: { icon: <FileZipOutlined />, color: '#48a25e' },
-  code: { icon: <CodeOutlined />, color: '#48a25e' },
+  audio: { icon: () => <AudioOutlined />, color: '#48a25e' },
+  video: { icon: () => <VideoCameraOutlined />, color: '#48a25e' },
+  file: { icon: () => <FileOutlined />, color: '#48a25e' },
+  image: { icon: () => <FileImageOutlined />, color: '#48a25e' },
+  pdf: { icon: () => <FilePdfOutlined />, color: '#48a25e' },
+  document: { icon: () => <FileWordOutlined />, color: '#48a25e' },
+  archive: { icon: () => <FileZipOutlined />, color: '#48a25e' },
+  code: { icon: () => <CodeOutlined />, color: '#48a25e' },
 };
 
 const handleDownLoad = () => {
