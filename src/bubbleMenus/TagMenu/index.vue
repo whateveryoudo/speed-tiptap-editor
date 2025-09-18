@@ -9,10 +9,9 @@
 <template>
   <BubbleContainer :editor="editor" plugin-key="tag-bubble-menu" :should-show="shouldShow">
     <a-space :size="5">
-      <!--  -->
-      <a-input placeholder="请输入标签"  v-model:value="customTagAttrs.text">
+      <a-input placeholder="请输入标签" v-model:value="customTagAttrs.text">
         <template #suffix>
-          <CheckOutlined title="确认" @click="confirmUse"/>
+          <CheckOutlined title="确认" @click="confirmUse" />
         </template>
       </a-input>
       <a-divider type="vertical" class="menu-divider" />
@@ -45,7 +44,8 @@
             </a-flex>
             <div class="flex justify-center mt-2">
               <span class="px-[6px] rounded-[4px] py-[2px]"
-                :style="{ color: customTagAttrs.color, backgroundColor: customTagAttrs.bgColor }">{{ customTagAttrs.text || '示例标签' }}</span>
+                :style="{ color: customTagAttrs.color, backgroundColor: customTagAttrs.bgColor }">{{ customTagAttrs.text
+                  || '示例标签' }}</span>
             </div>
             <a-flex justify="end">
               <a-space>
@@ -122,6 +122,7 @@ const shouldShow = () => {
     isActiveTag.value
   );
 };
+
 const updateCustomTagAttrs = (attrs: any) => {
   customTagAttrs.value = {
     ...customTagAttrs.value,
@@ -138,21 +139,21 @@ const handleSelectOption = (index: number) => {
 const handleCustomTag = () => {
   customTagOpen.value = true;
 };
-const handleInputChange = (e: any) => {
-  handleUpdateAttributes({ text: e.target.value });
-};
 const confirmUse = () => {
   customTagOpen.value = false;
   handleUpdateAttributes(customTagAttrs.value);
 };
-watch(customTagOpen, (newVal: boolean) => {
+// 这里只监听tag选中
+watch(isActiveTag, (newVal: boolean) => {
   if (newVal) {
+    customTagAttrs.value.text = attributes.value.text;
     customTagAttrs.value.color = attributes.value.color;
     customTagAttrs.value.bgColor = attributes.value.bgColor;
   }
 }, {
   immediate: true,
 });
+
 </script>
 
 <style scoped lang="less"></style>
