@@ -32,6 +32,9 @@ const nodeAttrs = computed(() => {
 </script>
 
 <style lang="less" scoped>
+.tag-wrapper {
+  display: inline-block;
+}
 .tag-node {
   padding: 2px 6px;
   border-radius: 4px;

@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <a-popover v-if="!disabled" overlay-class-name="color-board-popover-wrapper" trigger="click" placement="bottomLeft">
+  <a-popover :placement="placement" v-if="!disabled" overlay-class-name="color-board-popover-wrapper" trigger="click" placement="bottomLeft">
     <template #content>
       <div class="color-board-wrapper">
         <div class="top-choosed-wrapper transition-bg" @mousedown.prevent="chooseColor(showDefault ? defaultColor : null)">
@@ -82,6 +82,10 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
+  },
+  placement: {
+    type: String as PropType<string>,
+    default: 'bottomLeft',
   },
 })
 const emit = defineEmits(['triggerColor'])

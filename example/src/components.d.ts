@@ -37,6 +37,7 @@ declare module 'vue' {
     DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
     MenuFoldOutlined: typeof import('@ant-design/icons-vue')['MenuFoldOutlined']
     MenuUnfoldOutlined: typeof import('@ant-design/icons-vue')['MenuUnfoldOutlined']
+    PlusOutlined: typeof import('@ant-design/icons-vue')['PlusOutlined']
     ProfileOutlined: typeof import('@ant-design/icons-vue')['ProfileOutlined']
     RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']
     RightOutlined: typeof import('@ant-design/icons-vue')['RightOutlined']

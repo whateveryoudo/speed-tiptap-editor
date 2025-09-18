@@ -41,7 +41,6 @@
                 {{ subItem.name }}
                 <RightOutlined
                   class="absolute right-[10px] top-[50%] translate-y-[-50%] text-[var(--ant-color-text-tertiary)]" />
-
               </li>
             </a-popover>
             <li v-else :class="['menu-item shadow-bg-wrapper', selectedKey === subItem.key && 'selected']"
