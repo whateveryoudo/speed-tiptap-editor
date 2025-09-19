@@ -66,7 +66,7 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   app.provide("speed-tiptap-config", currentConfig);
   // 注册SpeedComponents
   app.use(SpeedComponents, {
-    iconfontUrl: "//at.alicdn.com/t/c/font_3786040_u4kcigjj5x.js",
+    iconfontUrl: "//at.alicdn.com/t/c/font_4946230_vtxwz8o0zyo.js",
     apis: currentConfig.value.apis
   });
   // 使用 Ant Design Vue CSS 变量

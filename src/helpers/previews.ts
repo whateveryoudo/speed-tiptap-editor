@@ -12,7 +12,6 @@ export class EditorPreviewImage {
 
     // 获取所有图片src
     getAllImageSrcs(): string[] {
-        debugger;
         const srcs: string[] = [];
         if (!this.editor) return srcs;
         this.editor.state.doc.descendants((node: any) => {

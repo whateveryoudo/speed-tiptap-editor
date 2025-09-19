@@ -111,7 +111,7 @@
     "es-drager": "1.2.11",
     "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
-    "lowlight": "^2.7.0",
+    "lowlight": "^3.3.0",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.3",
     "scroll-into-view-if-needed": "^3.0.3",

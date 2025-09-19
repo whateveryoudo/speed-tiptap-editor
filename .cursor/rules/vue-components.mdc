@@ -1,6 +1,5 @@
 ---
-description: 通用的定义vue3的setup组件规则
-alwaysApply: false
+alwaysApply: true
 ---
 # Vue 组件开发指南
 
@@ -52,7 +51,9 @@ const emit = defineEmits<{
 4. 实现正确的事件处理
 5. 使用 scoped 样式避免 CSS 冲突
 6. 遵循 Vue 3 响应式最佳实践
+7. 生成样式优先级： 先尝试antd的布局组件如： a-flex a-space > unocss > class > 行内 style
 # Vue 组件开发指南
+
 
 ## 组件结构
 Vue 组件请遵循以下模式：

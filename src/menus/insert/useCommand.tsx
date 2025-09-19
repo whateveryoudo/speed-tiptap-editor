@@ -115,6 +115,21 @@ export const useCommand = () => {
         },
       ],
     },
+    {
+      key: 'programmer',
+      name: '程序员专区',
+      children: [
+        {
+          key: '3-1',
+          name: '代码块',
+          size: 18,
+          imgIcon: codeBlockIcon,
+          action: editor => {
+            editor?.chain().focus().setCodeBlock().run()
+          },
+        }
+      ],
+    }
   ])
   // 扁平项
   const flatLeafMenu = computed(() => {

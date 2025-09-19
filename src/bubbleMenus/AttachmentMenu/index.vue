@@ -7,35 +7,24 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\ImageMenu\index.vue
 -->
 <template>
-  <BubbleContainer
-    :editor="editor"
-    plugin-key="image-bubble-menu"
-    :should-show="shouldShow"
-  >
+  <BubbleContainer :editor="editor" plugin-key="image-bubble-menu" :should-show="shouldShow">
     <a-space :size="5">
-      <SpeedTooltip title="标题">
-        <div
-          :class="[
-            'shadow-bg-wrapper',
-            attributes.displayMode === 'title' && 'is-active',
-          ]"
-          @click="handleUpdateAttributes({ displayMode: 'title' })"
-        >
+      <a-tooltip title="标题">
+        <div :class="[
+          'shadow-bg-wrapper',
+          attributes.displayMode === 'title' && 'is-active',
+        ]" @click="handleUpdateAttributes({ displayMode: 'title' })">
           <ProfileOutlined />
         </div>
-      </SpeedTooltip>
-      <SpeedTooltip title="卡片">
-        <a-button
-          type="text"
-          :class="[
-            'shadow-bg-wrapper',
-            attributes.displayMode === 'card' && 'is-active',
-          ]"
-          @click="handleUpdateAttributes({ displayMode: 'card' })"
-        >
+      </a-tooltip>
+      <a-tooltip title="卡片">
+        <a-button type="text" :class="[
+          'shadow-bg-wrapper',
+          attributes.displayMode === 'card' && 'is-active',
+        ]" @click="handleUpdateAttributes({ displayMode: 'card' })">
           <CreditCardOutlined />
         </a-button>
-      </SpeedTooltip>
+      </a-tooltip>
       <a-divider type="vertical" class="menu-divider" />
       <a-tooltip title="预览">
         <a-button type="text" class="shadow-btn-wrapper" @click="handlePreivew">
@@ -43,11 +32,7 @@
         </a-button>
       </a-tooltip>
       <a-tooltip title="下载">
-        <a-button
-          type="text"
-          class="shadow-btn-wrapper"
-          @click="handleDownload"
-        >
+        <a-button type="text" class="shadow-btn-wrapper" @click="handleDownload">
           <download-outlined />
         </a-button>
       </a-tooltip>
@@ -106,9 +91,10 @@ const handleDownload = () => {
     .downloadAttachment(attributes.value.fileId)
     .run();
 };
-// 直接调用属性更新(目前发现bubble,会在更新属性时，导致节点失焦，然后tooltip不消失，这里提前调用关闭变量)
+// 直接调用属性更新
 const handleUpdateAttributes = (attrs: any) => {
-  props.editor?.chain().focus().updateAttributes(Attachment.name, attrs).run();
+  props.editor?.chain().focus().updateAttributes(Attachment.name, attrs)
+    .setNodeSelection(props.editor.state.selection.from).run();
 };
 </script>
 

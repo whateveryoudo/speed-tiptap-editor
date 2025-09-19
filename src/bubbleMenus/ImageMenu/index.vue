@@ -18,11 +18,13 @@
           <copy-outlined />
         </div>
       </a-tooltip>
-      <SpeedTooltip title="删除">
+      <speed-tooltip title="删除">
         <div :class="['shadow-bg-wrapper']" @click="handleDelNode(Image.name)">
           <delete-outlined />
         </div>
-      </SpeedTooltip>
+      </speed-tooltip>
+      <!-- 尺寸设置 -->
+      <SizeSetting v-if="isActiveImage" :editor="editor" />
       <!-- 直接调用通用的居中配置 -->
       <align v-if="isActiveImage" :editor="editor"></align>
       <a-tooltip v-if="isActiveImage" title="预览">
@@ -39,6 +41,7 @@ import { inject, PropType, computed, Ref, ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { Image } from "@/extensions/image";
 import align from "@/menus/align.vue";
+import SizeSetting from "./SizeSetting.vue";
 import { useBubble } from "@/hooks/useBubble";
 import { useAttributes } from "@/hooks/useAttributes";
 import {

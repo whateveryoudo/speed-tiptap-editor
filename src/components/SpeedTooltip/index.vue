@@ -1,5 +1,6 @@
 
 <template>
+  <!-- 某些场景可能直接使用tooltip，气泡不会消失 -->
   <a-tooltip :title="title" v-model:open="open">
     <!-- 支持自身点击关闭的tooltip -->
     <div @click="open = false">

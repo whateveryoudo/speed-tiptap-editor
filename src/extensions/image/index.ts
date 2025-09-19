@@ -15,7 +15,7 @@ const resolveImageEl = (element: HTMLElement) =>
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    iamge: {
+    imageUpload: {
       uploadImage: (files: any, pos?: number) => ReturnType;
     };
   }
@@ -65,7 +65,19 @@ export const Image = BuiltInImage.extend({
       height: {
         default: "auto",
       },
-
+      // 百分比
+      percent: {
+        default: 100,
+      },
+      heightPercent: {
+        default: 1,
+      },
+      originalWidth: {
+        default: null,
+      },
+      originalHeight: {
+        default: null,
+      },
       error: {
         default: null,
       },

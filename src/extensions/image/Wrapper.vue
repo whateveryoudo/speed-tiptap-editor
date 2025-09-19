@@ -20,7 +20,7 @@
       :height="nodeAttrs.height" :maxWidth="maxWidth" @changeEnd="updateImageAttrs">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </Resizeable> -->
-    <drager v-else :selected="selected" :draggable="false" :boundary="false" :disabled="!isEditable"
+    <drager v-else :selected="selected" :boundary="false" :disabled="!isEditable"
       :width="Number(node.attrs.width)" :height="Number(node.attrs.height)" :min-width="14" :min-height="14"
       :max-width="maxWidth" :max-height="maxWidth" @resize="onResize" @focus="selected = true">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
@@ -80,7 +80,13 @@ const uploadOptions = ref({
     console.log('imgUrl', imgUrl);
     const size = await getImageWidthHeight(imgUrl)
 
-    props.updateAttributes && props.updateAttributes({ ...size, src: imgUrl })
+    // 保存原始尺寸和当前尺寸
+    props.updateAttributes && props.updateAttributes({ 
+      ...size, 
+      src: imgUrl,
+      originalWidth: size.width,  // 保存原始宽度
+      originalHeight: size.height // 保存原始高度
+    })
 
   },
 });
@@ -147,6 +153,7 @@ const updateImageAttrs = (size: any) => {
 //   }
 // }
 const handlePreivew = () => {
+  debugger;
   if (!isEditable.value) {
     // 调用全局图片预览
     if (previewInstance.value) {

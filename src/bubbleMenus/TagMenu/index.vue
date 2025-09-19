@@ -3,16 +3,13 @@
  * @Date: 2022-11-16 18:21:23
  * @LastEditTime: 2023-01-09 11:12:21
  * @LastEditors: your name
- * @Description: 气泡工具-标签（注意：updateAttr的时候，会导致节点失焦,这里配置大部分操作都是缓存起来，最后统一更新）
+ * @Description: 气泡工具-标签
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\ImageMenu\index.vue
 -->
 <template>
   <BubbleContainer :editor="editor" plugin-key="tag-bubble-menu" :should-show="shouldShow">
     <a-space :size="5">
-      <a-input placeholder="请输入标签" v-model:value="customTagAttrs.text">
-        <template #suffix>
-          <CheckOutlined title="确认" @click="confirmUse" />
-        </template>
+      <a-input placeholder="请输入标签" :value="attributes.text" @change="handleTextChange">
       </a-input>
       <a-divider type="vertical" class="menu-divider" />
       <template v-for="(item, index) in fixedOptions" :key="item.color">
@@ -23,40 +20,28 @@
           <span v-else :style="{ color: item.color }">A</span>
         </span>
       </template>
-      <a-popover trigger="click" placement="right" v-model:open="customTagOpen">
+      <a-popover trigger="click" placement="right">
         <template #content>
-          <a-flex vertical :gap="20" class="w-[200px]">
+          <a-flex vertical :gap="20" class="w-[150px]">
             <a-flex :gap="5" align="center">
               <span class="flex-shrink-0">文字颜色:</span>
-              <ColorPicker placement="right" class="flex-1  h-[15px]" :cur-color="customTagAttrs.color"
-                @triggerColor="(color: string) => updateCustomTagAttrs({ color })">
-                <span :style="{ backgroundColor: customTagAttrs.color }"
+              <ColorPicker placement="right" class="flex-1  h-[15px]" :cur-color="attributes.color"
+                @triggerColor="(color: string) => handleUpdateAttributes({ color })">
+                <span :style="{ backgroundColor: attributes.color }"
                   class="cursor-pointer border border-solid border-gray-200"></span>
               </ColorPicker>
             </a-flex>
             <a-flex :gap="5" align="center">
               <span class="flex-shrink-0">背景颜色:</span>
-              <ColorPicker class="flex-1 h-[15px]" placement="right" :cur-color="customTagAttrs.bgColor"
-                @triggerColor="(color: string) => updateCustomTagAttrs({ bgColor: color })">
-                <span :style="{ backgroundColor: customTagAttrs.bgColor }"
+              <ColorPicker class="flex-1 h-[15px]" placement="right" :cur-color="attributes.bgColor"
+                @triggerColor="(color: string) => handleUpdateAttributes({ bgColor: color })">
+                <span :style="{ backgroundColor: attributes.bgColor }"
                   class="cursor-pointer border border-solid border-gray-200"></span>
               </ColorPicker>
             </a-flex>
-            <div class="flex justify-center mt-2">
-              <span class="px-[6px] rounded-[4px] py-[2px]"
-                :style="{ color: customTagAttrs.color, backgroundColor: customTagAttrs.bgColor }">{{ customTagAttrs.text
-                  || '示例标签' }}</span>
-            </div>
-            <a-flex justify="end">
-              <a-space>
-                <a-button type="default" size="small" @click="customTagOpen = false">取消</a-button>
-                <a-button type="primary" size="small" @click="confirmUse">使用</a-button>
-              </a-space>
-            </a-flex>
-
           </a-flex>
         </template>
-        <a-button type="primary" @click="handleCustomTag" size="small"> 自定义 </a-button>
+        <a-button type="primary" size="small"> 自定义 </a-button>
       </a-popover>
     </a-space>
   </BubbleContainer>
@@ -76,7 +61,6 @@ const props = defineProps({
   },
 });
 
-const customTagOpen = ref(false);
 const fixedOptions = [
   { color: "rgb(153, 153, 153)", bgColor: "rgba(0, 0, 0, 0.05)" },
   { color: "rgb(200, 78, 67)", bgColor: "rgb(252, 223, 220)" },
@@ -93,16 +77,7 @@ const attributes = useAttributes<{
   color: "",
   bgColor: "",
 });
-// 临时缓存属性
-const customTagAttrs = ref<{
-  text: string;
-  color: string;
-  bgColor: string;
-}>({
-  text: attributes.value.text,
-  color: "",
-  bgColor: "",
-});
+
 // 这里通过color和bgColor来判断选中的选项
 const selectedOptionIndex = computed(() => {
   const tagetIndex = fixedOptions.findIndex(item => item.color === attributes.value.color && item.bgColor === attributes.value.bgColor);
@@ -122,37 +97,22 @@ const shouldShow = () => {
     isActiveTag.value
   );
 };
+// 标签文本改变
+const handleTextChange = (e: Event) => {
+  const value = (e.target as HTMLInputElement).value;
+  handleUpdateAttributes({ text: value });
+}
 
-const updateCustomTagAttrs = (attrs: any) => {
-  customTagAttrs.value = {
-    ...customTagAttrs.value,
-    ...attrs,
-  };
-};
-// 直接调用属性更新
+// 直接调用属性更新(这里追加setNodeSelection，保证更新属性后节点依然选中气泡不消失）
 const handleUpdateAttributes = (attrs: any) => {
-  props.editor?.chain().focus().updateAttributes(Tag.name, attrs).run();
+  props.editor?.chain().focus().updateAttributes(Tag.name, attrs).setNodeSelection(props.editor.state.selection.from).run();
 };
 const handleSelectOption = (index: number) => {
   handleUpdateAttributes(fixedOptions[index]);
 };
-const handleCustomTag = () => {
-  customTagOpen.value = true;
-};
-const confirmUse = () => {
-  customTagOpen.value = false;
-  handleUpdateAttributes(customTagAttrs.value);
-};
-// 这里只监听tag选中
-watch(isActiveTag, (newVal: boolean) => {
-  if (newVal) {
-    customTagAttrs.value.text = attributes.value.text;
-    customTagAttrs.value.color = attributes.value.color;
-    customTagAttrs.value.bgColor = attributes.value.bgColor;
-  }
-}, {
-  immediate: true,
-});
+
+
+
 
 </script>
 
