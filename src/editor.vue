@@ -26,6 +26,7 @@
     <TableMenu v-if="editor" :editor="editor" />
     <!-- table的选择气泡提示框 -->
     <TableBubbleMenu v-if="editor" :editor="editor" />
+    <CalloutMenu v-if="editor" :editor="editor" />
     <main>
       <div :class="['content-wrap']" v-if="scene === 'knowledge'">
         <editor-content :editor="editor" />
@@ -46,7 +47,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TableMenu from '@/bubbleMenus/TableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/TableMenu/Bubble.vue'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu, AttachmentMenu, TagMenu } from '@/bubbleMenus'
+import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'

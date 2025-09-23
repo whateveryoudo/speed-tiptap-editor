@@ -8,8 +8,9 @@ const route = useRoute();
 const router = useRouter();
 // const content = ref('<p></p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mdh0zic00qt3z0yuiqar?token=speed-test-token" width="240" height="264" file="[object File]"><p>asdas</p><p>asdasdasdsa</p><p>asdasdas</p><p>asdsadas</p>');
 const content = ref(
-// '<p>测试下表格</p><table style="min-width: 125px"><colgroup><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"></colgroup><tbody><tr><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th></tr><tr><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mfqgzacd3u35cf1w3nd?token=speed-test-token" width="240" height="264" file="[object File]" originalwidth="240" originalheight="264"></p><p><div class="attachment" displaymode="title" file="[object File]" filename="测试excel新建表单 (1).xlsx" filesize="10142" filetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" fileid="mf1vxwsnbrna0ezoi8m"></div></p><p></p>'
-'<pre><code class="language-auto"></code></pre><p></p>'
+  // '<p>测试下表格</p><table style="min-width: 125px"><colgroup><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"></colgroup><tbody><tr><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th></tr><tr><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mfqgzacd3u35cf1w3nd?token=speed-test-token" width="240" height="264" file="[object File]" originalwidth="240" originalheight="264"></p><p><div class="attachment" displaymode="title" file="[object File]" filename="测试excel新建表单 (1).xlsx" filesize="10142" filetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" fileid="mf1vxwsnbrna0ezoi8m"></div></p><p></p>'
+  // '<pre><code class="language-auto"></code></pre><p></p>'
+  '<p></p><div data-type="callout"><p></p></div><p></p>'
 );
 
 const onUpdate = (content) => {
@@ -85,50 +86,24 @@ watch(
 <template>
   <h2>以下是Speed Tiptap Editor的示例</h2>
   <a-flex align="center" class="mb-2">
-    <a-switch
-      v-model:checked="globalStore.openJwt"
-      @change="handleOpenJwtChange"
-    ></a-switch
-    ><span class="ml-2 text-sm text-gray-500"
-      >是否开启登录jwt校验(文档可能需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span
-    >
+    <a-switch v-model:checked="globalStore.openJwt" @change="handleOpenJwtChange"></a-switch><span
+      class="ml-2 text-sm text-gray-500">是否开启登录jwt校验(文档可能需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span>
   </a-flex>
   <router-view />
   <a-space class="mb-2">
-    <a-button
-      :type="currentDemo === demo.name ? 'link' : 'text'"
-      @click="checkDemo(demo.name)"
-      v-for="demo in demos"
-      :key="demo.name"
-    >
+    <a-button :type="currentDemo === demo.name ? 'link' : 'text'" @click="checkDemo(demo.name)" v-for="demo in demos"
+      :key="demo.name">
       {{ demo.title }}
     </a-button>
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2">
-    <SpeedTiptapEditor
-      v-model:content="content"
-      v-model:title="title"
-      v-if="currentDemo === 'simple'"
-    />
-    <SpeedTiptapEditor
-      v-model:content="content"
-      v-model:title="title"
-      v-else-if="currentDemo === 'knowledge'"
-      scene="knowledge"
-    />
-    <SpeedTiptapEditor
-      v-model:content="content"
-      v-model:title="title"
-      v-else-if="currentDemo === 'collaboration'"
-      scene="collaboration"
-    />
-    <SpeedTiptapEditor
-      v-model:content="content"
-      @update="onUpdate"
-      v-else-if="currentDemo === 'ai'"
-      scene="ai"
-    />
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'" />
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
+      scene="knowledge" />
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
+      scene="collaboration" />
+    <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'ai'" scene="ai" />
   </div>
   <div>
     <a-space>标题:<a-input v-model:value="title" /></a-space>{{ content }}

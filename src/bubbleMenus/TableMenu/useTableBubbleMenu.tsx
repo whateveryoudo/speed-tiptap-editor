@@ -353,7 +353,7 @@ export function useTableBubbleMenu(editor: Editor) {
     }
   }
 
-  // 监听编辑器焦点事件
+  // 监听编辑器焦点事件（大部分场景都不用监听focus, 靠selectionUpdate或者transaction判断）
   const handleEditorFocus = () => {
     // 当编辑器获得焦点时，检查是否在表格内
     if (shouldShow.value) {

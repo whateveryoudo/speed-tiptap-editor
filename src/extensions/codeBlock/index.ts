@@ -7,11 +7,29 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\codeBlock\index.ts
  */
 
-import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
-import { VueNodeViewRenderer } from '@tiptap/vue-3'
-import Wrapper from './Wrapper.vue'
-import { common, createLowlight } from 'lowlight'
-const lowlight = createLowlight(common)
+import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
+import { VueNodeViewRenderer } from "@tiptap/vue-3";
+import Wrapper from "./Wrapper.vue";
+import { common, createLowlight } from "lowlight";
+import { TextSelection } from "@tiptap/pm/state";
+// 添加一些其他语言
+
+export const lowlightInstance = createLowlight(common);
+// 关键：注册别名，这样这些值可直接用于 language
+lowlightInstance.registerAlias({
+  html: "xml",
+  vue: "xml", // 没有官方 vue 解析器时，映射到 xml（模板部分）
+  jsx: "javascript",
+  tsx: "typescript",
+});
+
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    codeBlockNode: {
+      setCodeBlock: () => ReturnType;
+    };
+  }
+}
 export const CodeBlock = CodeBlockLowlight.extend({
   addAttributes() {
     return {
@@ -20,25 +38,78 @@ export const CodeBlock = CodeBlockLowlight.extend({
         default: null,
       },
       language: {
-        default: 'auto',
+        default: "plaintext",
+      },
+      // 增加一个别名，用于存储语言的别名
+      languageAlias: {
+        default: "plaintext",
       },
       wrap: {
         default: true,
       },
       theme: {
-        default: 'github-light',
+        default: "atom-one-light",
+      },
+      isExpanded: {
+        default: true,
       },
       height: {
-        default: '266',
+        default: "250",
       },
-    }
+    };
   },
   addNodeView() {
-    return VueNodeViewRenderer(Wrapper)
+    return VueNodeViewRenderer(Wrapper);
+  },
+  addKeyboardShortcuts() {
+    return {
+      // 处理删除键，防止删除最后一个字符时直接删除节点
+      Backspace: () => {
+        const { state } = this.editor.view;
+        const { selection } = state;
+        const { $from } = selection;
+
+        // 检查是否在 CodeBlock 内部
+        if ($from.parent.type.name === "codeBlock") {
+          // 如果 CodeBlock 内容为空，阻止删除行为
+          if ($from.parent.textContent === "") {
+            return true; // 阻止默认删除行为，保持光标位置
+          }
+        }
+        return false;
+      },
+      // 处理 Ctrl+A，确保只在 CodeBlock 内部全选
+      "Mod-a": () => {
+        const { state, dispatch } = this.editor.view;
+        const { selection } = state;
+        const { $from } = selection;
+
+        // 检查是否在 CodeBlock 内部
+        if ($from.parent.type.name === "codeBlock") {
+          // 全选当前 CodeBlock 的内容
+          const start = $from.start();
+          const end = $from.end();
+          const tr = state.tr.setSelection(
+            TextSelection.create(state.doc, start, end)
+          );
+          dispatch(tr);
+          return true;
+        }
+        return false;
+      },
+    };
+  },
+  addCommands() {
+    return {
+      setCodeBlock:
+        () =>
+        ({ commands }) => {
+          // 插入一个高亮块
+          return commands.setNode(this.name);
+        },
+    };
   },
 }).configure({
-  lowlight,
-  defaultLanguage: 'auto',
-})
-
-
+  lowlight: lowlightInstance,
+  defaultLanguage: "auto",
+});

@@ -164,6 +164,9 @@ importers:
       vue:
         specifier: ^3.4.0
         version: 3.5.16(typescript@5.8.3)
+      vue-collapsed:
+        specifier: ^1.3.4
+        version: 1.3.4
       vue-color:
         specifier: ^3.2.0
         version: 3.2.0(vue@3.5.16(typescript@5.8.3))
@@ -3390,6 +3393,9 @@ packages:
         optional: true
       jsdom:
         optional: true
+
+  vue-collapsed@1.3.4:
+    resolution: {integrity: sha512-W92b+QT3n5iTrfrH6kyvx3TsriYPfy/Ymsb6DaanjeMkJYMdVl1S4wzKRYVDsxWQPDxiC+5m+UwPwT/8YAYodA==}
 
   vue-color@3.2.0:
     resolution: {integrity: sha512-pODAZoMnKNNyjf6uimZQlTx7dXAV4YfjOfU21gKxALOki32lTxMnJ/2J4LqpXwIg1TVMjROA/1P/z16u7mIexA==}
@@ -7001,6 +7007,8 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vue-collapsed@1.3.4: {}
 
   vue-color@3.2.0(vue@3.5.16(typescript@5.8.3)):
     dependencies:

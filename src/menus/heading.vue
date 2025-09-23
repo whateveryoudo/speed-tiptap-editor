@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\heading.vue
 -->
 <template>
-  <a-select class="w-[110px]" :value="current" :disabled="isTitleActive" popover-class-name="heading-dropdown"
+  <a-select :dropdownMatchSelectWidth="false" :bordered="false" class="w-[90px] shadow-ant-select" :value="current" :disabled="isTitleActive" popupClassName="popover-check-dropdown popover-heading-dropdown"
     :options="headingOptions" @change="handleChange">
     <template #option="{ value: val, label, style }">
       <span class="place-check-icon">
@@ -17,6 +17,9 @@
         {{ label }}
       </span>
     </template>
+    <template #suffixIcon>
+      <CaretDownOutlined style="color: rgba(0, 0, 0, 0.88)"/>
+    </template>
   </a-select>
 </template>
 
@@ -25,7 +28,7 @@ import { PropType, reactive, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-import { CheckOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -78,28 +81,9 @@ const handleChange = (value: string) => {
 }
 </script>
 <style lang="less">
-.heading-dropdown {
-  .ant-select-item {
-    line-height: initial;
-  }
-
-  .ant-select-item-option .ant-select-item-option-content {
-    display: flex;
-    align-items: center;
+.popover-heading-dropdown {
+  .ant-select-item-option-content {
     font-weight: 600;
-
-    .place-check-icon {
-      width: 15px;
-      font-size: 14px;
-      margin-right: 5px;
-    }
-  }
-}
-</style>
-<style scoped lang="less">
-.shadow-bg-wrapper {
-  :deep(.ant-select) {
-    width: 110px;
   }
 }
 </style>

@@ -9,10 +9,11 @@
 
 <template>
     <a-select
-      class="w-[110px]"
+      :bordered="false" 
+      class="w-[90px] shadow-ant-select"
       :value="currentFontSize"
       :disabled="isTitleActive"
-      popover-class-name="font-size-dropdown"
+      popupClassName="popover-check-dropdown"
       :options="fontSizeOptions"
       @change="handleChange"
     >
@@ -21,6 +22,9 @@
           <check-outlined v-if="currentFontSize === val" />
         </span>
         {{ label }}
+      </template>
+      <template #suffixIcon>
+        <CaretDownOutlined style="color: rgba(0, 0, 0, 0.88)"/>
       </template>
     </a-select>
 </template>
@@ -31,7 +35,7 @@ import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useAttributes } from '@/hooks/useAttributes'
-import { CheckOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -64,26 +68,5 @@ const handleChange = (value: number) => {
     .run()
 }
 </script>
-<style lang="less">
-.font-size-dropdown {
-  .ant-select-item {
-    line-height: initial;
-  }
-  .ant-select-item-option .ant-select-item-option-content {
-    display: flex;
-    align-items: center;
-    .place-check-icon {
-      width: 15px;
-      font-size: 14px;
-      margin-right: 5px;
-    }
-  }
-}
-</style>
-<style scoped lang="less">
-.shadow-bg-wrapper {
-  :deep(.ant-select) {
-    width: 110px;
-  }
-}
-</style>
+
+

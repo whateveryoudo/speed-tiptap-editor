@@ -22,7 +22,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { FontSize } from "./fontSize";
 import { Color } from "@tiptap/extension-color";
 import { BackgroundColor } from "./backgroundColor";
-import  FileHandler  from "./fileHandler";
+import FileHandler from "./fileHandler";
 import { Code } from "./code";
 import { Parse } from "./parse";
 import { Loading } from "./loading";
@@ -35,6 +35,7 @@ import { Tag } from "./tag";
 import { Mind } from "./mind";
 import { Mention } from "./mention";
 import { CodeBlock } from "./codeBlock";
+import { Callout } from "./callout";
 import CustomeFlowMap from "./flowMap/CustomeFlowMap";
 import { Table, TableRow, TableHeader } from "@tiptap/extension-table";
 import TableCell from "./tableCell";
@@ -83,13 +84,13 @@ export const defauktKit = [
         console.log(editor.isEditable);
         return editor.isEditable ? "请输入标题" : "未命名文档";
       }
-      if (node.type.name === "codeBlock") {
+      if (["codeBlock", "callout"].includes(node.type.name)) {
         return "";
       }
 
       if (!editor.isEditable) return "";
       // 这里不使用随机，比如选择颜色就会又执行这个方法导致placeholder一直变化
-      return '输入 / 唤起更多';
+      return "输入 / 唤起更多";
     },
     showOnlyCurrent: false,
     showOnlyWhenEditable: false,
@@ -114,6 +115,7 @@ export const defauktKit = [
   BackgroundColor,
   Mind,
   CodeBlock,
+  Callout,
   Code,
   Loading,
   QuickInsert,
@@ -137,7 +139,7 @@ export const defauktKit = [
   TaskList,
   TaskItem,
   Indent.configure({
-    types: ['paragraph', 'heading', 'listItem'],
+    types: ["paragraph", "heading", "listItem"],
     minIndent: 0,
     maxIndent: 8,
   }),
@@ -150,5 +152,5 @@ export const defauktKit = [
 export const knowledgeKit = [
   Title,
   DocumentWithHeading, // 用带 title 的 document
-  ...defauktKit.filter(ext => ext?.name !== 'doc'),
+  ...defauktKit.filter((ext) => ext?.name !== "doc"),
 ];

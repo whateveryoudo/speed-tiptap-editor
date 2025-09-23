@@ -24,6 +24,7 @@ import tagIcon from '@/assets/image/insert/tag.svg'
 import emojiIcon from '@/assets/image/insert/emoji.svg'
 import codeBlockIcon from '@/assets/image/insert/code-block.svg'
 import formulaIcon from '@/assets/image/insert/formula.svg'
+import calloutIcon from '@/assets/image/insert/callout.svg'
 export interface SubMenuGroup {
   key: string
   name: string
@@ -83,38 +84,38 @@ export const useCommand = () => {
         }
       ],
     },
-    {
-      key: 'board',
-      name: '画板类',
-      children: [
-        {
-          key: '2-1',
-          name: '思维导图',
-          size: 18,
-          imgIcon: mindIcon,
-          action: editor => {
-            editor?.chain().focus().setMind().run()
-            updateFlowState && updateMindState('visible', true)
-            updateFlowState && updateMindState('data')
-          },
-        },
-        {
-          key: '2-2',
-          name: '流程图',
-          imgIcon: flowIcon,
-          action: editor => {
-            editor
-              .chain()
-              .focus()
-              .setFlowMap()
-              // .setFlow({ width: '100%', defaultShowPicker: true, createUser: user.id })
-              .run()
-            updateFlowState && updateFlowState('visible', true)
-            updateFlowState && updateFlowState('data')
-          },
-        },
-      ],
-    },
+    // {
+    //   key: 'board',
+    //   name: '画板类',
+    //   children: [
+    //     {
+    //       key: '2-1',
+    //       name: '思维导图',
+    //       size: 18,
+    //       imgIcon: mindIcon,
+    //       action: editor => {
+    //         editor?.chain().focus().setMind().run()
+    //         updateFlowState && updateMindState('visible', true)
+    //         updateFlowState && updateMindState('data')
+    //       },
+    //     },
+    //     {
+    //       key: '2-2',
+    //       name: '流程图',
+    //       imgIcon: flowIcon,
+    //       action: editor => {
+    //         editor
+    //           .chain()
+    //           .focus()
+    //           .setFlowMap()
+    //           // .setFlow({ width: '100%', defaultShowPicker: true, createUser: user.id })
+    //           .run()
+    //         updateFlowState && updateFlowState('visible', true)
+    //         updateFlowState && updateFlowState('data')
+    //       },
+    //     },
+    //   ],
+    // },
     {
       key: 'programmer',
       name: '程序员专区',
@@ -129,7 +130,23 @@ export const useCommand = () => {
           },
         }
       ],
-    }
+    },
+    {
+      key: 'layout',
+      name: '布局和样式',
+      children: [
+        {
+          key: '4-1',
+          name: '高亮块',
+          size: 18,
+          imgIcon: calloutIcon,
+          action: editor => {
+            editor?.chain().focus().setCallout().run()
+          },
+        }
+      ],
+    },
+
   ])
   // 扁平项
   const flatLeafMenu = computed(() => {
