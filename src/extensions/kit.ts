@@ -13,7 +13,7 @@ import { Document as BaseDocument } from "./document";
 import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 import { Attachment } from "./attachment";
-import { Placeholder, Focus } from "@tiptap/extensions";
+import { Placeholder, Focus , Gapcursor } from "@tiptap/extensions";
 import { StarterKit } from "@tiptap/starter-kit";
 import type { Editor } from "@tiptap/core";
 import { Dragable } from "./dragable";
@@ -42,6 +42,7 @@ import TableCell from "./tableCell";
 import { TaskList } from "./taskList";
 import { TaskItem } from "@tiptap/extension-list";
 import { Indent } from "./indent";
+import { SearchAndReplace } from "./searchAndReplace";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
 
@@ -124,9 +125,15 @@ export const defauktKit = [
   Emoji,
   Parse,
   Mention,
+  // 开源 替换 搜索插件
+  SearchAndReplace.configure({
+    searchResultClass: "speed-tiptap-search-result",
+    disableRegex: true,
+  }),
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
+  Gapcursor,
   // 这里没使用tableKit,要扩展tableCell属性
   Table.configure({
     resizable: true,

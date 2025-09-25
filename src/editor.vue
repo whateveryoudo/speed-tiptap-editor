@@ -27,14 +27,11 @@
     <!-- table的选择气泡提示框 -->
     <TableBubbleMenu v-if="editor" :editor="editor" />
     <CalloutMenu v-if="editor" :editor="editor" />
-    <main>
-      <div :class="['content-wrap']" v-if="scene === 'knowledge'">
-        <editor-content :editor="editor" />
-      </div>
-      <editor-content :editor="editor" v-else />
+    <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
+      <editor-content :editor="editor" />
     </main>
-
-
+    <!-- 搜索替换弹框 -->
+    <SearchReplaceModal :editor="editor" v-if="editor" />
     <!-- <ShortcutGuideModal v-if="editor?.isEditable && !isPreview" /> -->
   </div>
 </template>
@@ -56,6 +53,8 @@ import { EditorPreviewImage } from '@/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
 import { message } from 'ant-design-vue'
+import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
+import { SEARCH_REPLACE_VISIBLE_KEY, UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY } from './keys'
 // import initContext from './context'
 // import { useUserStore } from '@/store/modules/user/user'
 // import { getRandomColor } from '@/helpers/color'
@@ -120,6 +119,12 @@ const emit = defineEmits(['update:title', 'update:content'])
 const previewInstance = ref<EditorPreviewImage | null>(null);
 provide('previewInstance', previewInstance);
 
+const searchReplaceVisible = ref(false);
+provide(SEARCH_REPLACE_VISIBLE_KEY, searchReplaceVisible);
+provide(UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY, (visible: boolean) => {
+  searchReplaceVisible.value = visible;
+});
+
 watch(
   () => props.hocuspocusProvider,
   val => {
@@ -172,7 +177,6 @@ const editor = useEditor({
     previewInstance.value = new EditorPreviewImage(editor);
   }
 })
-
 // 监听 content 变化，同步到编辑器
 watch(
   () => props.content,
@@ -221,6 +225,7 @@ console.log(editor.value)
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 
   &.knowledge {
     &>header {
@@ -234,9 +239,11 @@ console.log(editor.value)
       justify-content: center;
       display: flex;
 
-      .content-wrap {
+      // 知识库方式
+      &.knowledge-content-wrap {
         max-width: 750px;
-
+        margin: 0 auto;
+        justify-content: flex-start;
       }
 
       border: none;
@@ -255,6 +262,10 @@ console.log(editor.value)
     user-select: none;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+  }
+
+  .editor-content-wrap {
+    padding-top: 10px;
   }
 
   >main {
@@ -288,6 +299,7 @@ console.log(editor.value)
         border-top: 1px solid var(--ant-border-color);
       }
     }
+
   }
 
 }

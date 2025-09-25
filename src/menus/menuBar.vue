@@ -40,6 +40,8 @@
       <Emoji :editor="editor"/>
       <BlockQuote :editor="editor"/>
       <HorizontalRule :editor="editor"/>
+      <a-divider type="vertical" />
+      <FindAndReplace :editor="editor"/>
       <!-- 
       <Emoji :editor="editor" />
       <Blockquote :editor="editor" />
@@ -73,7 +75,7 @@ import BlockQuote from './blockQuote.vue'
 import HorizontalRule from './horizontalRule.vue'
 import Emoji from './emoji.vue'
 import Indent from './indent.vue'
-
+import FindAndReplace from './findAndReplace.vue'
 defineProps({
   editor: {
     type: Object as PropType<Editor>,

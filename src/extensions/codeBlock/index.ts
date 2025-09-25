@@ -12,6 +12,7 @@ import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
 import { common, createLowlight } from "lowlight";
 import { TextSelection } from "@tiptap/pm/state";
+// import { Selection } from "@tiptap/pm/state";
 // 添加一些其他语言
 
 export const lowlightInstance = createLowlight(common);
@@ -31,6 +32,11 @@ declare module "@tiptap/core" {
   }
 }
 export const CodeBlock = CodeBlockLowlight.extend({
+  addOptions() {
+      return {
+      ...this.parent?.(),
+    };
+  },
   addAttributes() {
     return {
       ...this.parent?.(),
@@ -62,22 +68,11 @@ export const CodeBlock = CodeBlockLowlight.extend({
     return VueNodeViewRenderer(Wrapper);
   },
   addKeyboardShortcuts() {
-    return {
-      // 处理删除键，防止删除最后一个字符时直接删除节点
-      Backspace: () => {
-        const { state } = this.editor.view;
-        const { selection } = state;
-        const { $from } = selection;
+    // 继承父级键盘快捷键
+    const parent = (this as any).parent.call(this);
 
-        // 检查是否在 CodeBlock 内部
-        if ($from.parent.type.name === "codeBlock") {
-          // 如果 CodeBlock 内容为空，阻止删除行为
-          if ($from.parent.textContent === "") {
-            return true; // 阻止默认删除行为，保持光标位置
-          }
-        }
-        return false;
-      },
+    return {
+      ...parent,
       // 处理 Ctrl+A，确保只在 CodeBlock 内部全选
       "Mod-a": () => {
         const { state, dispatch } = this.editor.view;
@@ -110,6 +105,6 @@ export const CodeBlock = CodeBlockLowlight.extend({
     };
   },
 }).configure({
-  lowlight: lowlightInstance,
   defaultLanguage: "auto",
+  lowlight: lowlightInstance,
 });

@@ -54,6 +54,7 @@ import { Tag } from "@/extensions/tag";
 import { useAttributes } from "@/hooks/useAttributes";
 import { type Editor } from "@tiptap/core";
 import ColorPicker from "@/components/colorPicker/index.vue";
+import { debounce } from "lodash-es";
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -97,11 +98,11 @@ const shouldShow = () => {
     isActiveTag.value
   );
 };
-// 标签文本改变
-const handleTextChange = (e: Event) => {
+// 标签文本改变(追加防抖，连续更新会导致气泡关闭)
+const handleTextChange = debounce((e: Event) => {
   const value = (e.target as HTMLInputElement).value;
   handleUpdateAttributes({ text: value });
-}
+}, 500)
 
 // 直接调用属性更新(这里追加setNodeSelection，保证更新属性后节点依然选中气泡不消失）
 const handleUpdateAttributes = (attrs: any) => {

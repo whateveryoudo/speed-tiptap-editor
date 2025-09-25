@@ -1,6 +1,6 @@
 import { Node } from "@tiptap/core";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
-import { NodeSelection } from '@tiptap/pm/state'
+import { NodeSelection } from "@tiptap/pm/state";
 import Wrapper from "./Wrapper.vue";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -47,7 +47,17 @@ export const Tag = Node.create({
     ];
   },
   parseHTML() {
-    return [{ tag: 'span[data-type="tag"]' }];
+    return [
+      {
+        tag: 'span[data-type="tag"]',
+        getAttrs: (dom) => {
+          return {
+            color: dom.style.color,
+            bgColor: dom.style.backgroundColor,
+          };
+        },
+      },
+    ];
   },
   addCommands() {
     return {
@@ -56,22 +66,26 @@ export const Tag = Node.create({
         ({ chain, state }) => {
           const { selection } = state;
           const { from } = selection;
-          
+
           // 使用更简单的方法：插入后直接选中
           return chain()
             .insertContent({ type: this.name, attrs })
             .command(({ tr, state }) => {
               // 在插入后，查找并选中刚插入的标签节点
-              
+
               // 从插入位置开始查找标签节点
-              state.doc.nodesBetween(from, state.doc.content.size, (node, pos) => {
-                if (node.type.name === this.name) {
-                  const nodeSelection = NodeSelection.create(tr.doc, pos);
-                  tr.setSelection(nodeSelection);
-                  return false; // 停止遍历
+              state.doc.nodesBetween(
+                from,
+                state.doc.content.size,
+                (node, pos) => {
+                  if (node.type.name === this.name) {
+                    const nodeSelection = NodeSelection.create(tr.doc, pos);
+                    tr.setSelection(nodeSelection);
+                    return false; // 停止遍历
+                  }
                 }
-              });
-              
+              );
+
               return true;
             })
             .run();

@@ -10,7 +10,6 @@ const props = defineProps<{
 const {
   isVisible,
   floatingElement,
-  handleEditorFocus,
   handleSelectionUpdate
 } = useTableBubbleMenu(props.editor)
 
@@ -18,18 +17,14 @@ const {
 // 组件挂载时设置事件监听器
 onMounted(() => {
   if (props.editor) {
-    // props.editor.on('focus', handleEditorFocus)
     props.editor.on('selectionUpdate', handleSelectionUpdate)
-    // props.editor.on('blur', hideBubbleMenu)
   }
 })
 
 // 组件卸载时清理事件监听器
 onUnmounted(() => {
   if (props.editor) {
-    // props.editor.off('focus', handleEditorFocus)
     props.editor.off('selectionUpdate', handleSelectionUpdate)
-    // props.editor.off('blur', hideBubbleMenu)
   }
 })
 </script>

@@ -1,4 +1,4 @@
-// 目前
+// 此hook为table专用固定气泡，直接点击时显示，与单元格选中和文本选中互斥
 import { ref, h, computed, onUnmounted, type VNode, nextTick } from 'vue'
 import { computePosition, offset, flip, shift, autoUpdate } from '@floating-ui/dom'
 import type { Editor } from '@tiptap/core'
@@ -353,15 +353,7 @@ export function useTableBubbleMenu(editor: Editor) {
     }
   }
 
-  // 监听编辑器焦点事件（大部分场景都不用监听focus, 靠selectionUpdate或者transaction判断）
-  const handleEditorFocus = () => {
-    // 当编辑器获得焦点时，检查是否在表格内
-    if (shouldShow.value) {
-      showBubbleMenu()
-    } else {
-      hideBubbleMenu()
-    }
-  }
+ 
 
   // 监听编辑器选择变化
   const handleSelectionUpdate = () => {
@@ -386,7 +378,6 @@ export function useTableBubbleMenu(editor: Editor) {
     getTableNodeInfo,
     showBubbleMenu,
     hideBubbleMenu,
-    handleEditorFocus,
     handleSelectionUpdate,
   }
 }

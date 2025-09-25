@@ -40,6 +40,25 @@
         </template>
         <a-button type="primary" size="small"> 自定义 </a-button>
       </a-popover>
+      <a-divider type="vertical" class="menu-divider" />
+      <a-tooltip title="头部图标">
+        <emoji-picker @triggerEmoji="(emoji: string) => handleUpdateAttributes({ icon: emoji })">
+          <a-button type="text" class="shadow-btn-wrapper">
+            <s-icon-font type="icon-kl-emoji" :size="18" />
+          </a-button>
+        </emoji-picker>
+      </a-tooltip>
+      <a-tooltip title="移除图标">
+        <a-button type="text" class="shadow-btn-wrapper" @click="handleUpdateAttributes({ icon: null })">
+          <MinusCircleOutlined />
+        </a-button>
+      </a-tooltip>
+      <a-divider type="vertical" class="menu-divider" />
+      <a-tooltip title="删除">
+        <a-button type="text" class="shadow-btn-wrapper" @click="handleDelNode(Callout.name)">
+          <DeleteOutlined />
+        </a-button>
+      </a-tooltip>
     </a-space>
   </div>
 </template>
@@ -51,6 +70,9 @@ import { useAttributes } from "@/hooks/useAttributes";
 import { type Editor } from "@tiptap/core";
 import ColorPicker from "@/components/colorPicker/index.vue";
 import { useNodeTopCenterBubble } from "@/bubbleMenus/useNodeTopCenterBubble";
+import { MinusCircleOutlined } from "@ant-design/icons-vue";
+import EmojiPicker from "@/components/emojiPicker/index.vue";
+import { useBubble } from "@/hooks/useBubble";
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -60,11 +82,12 @@ const props = defineProps({
 
 const fixedOptions = [
   { color: "#000", bgColor: "rgba(181,239,242,0.5)" },
-  { color: "rgb(200, 78, 67)", bgColor: "rgba(199,240,223,0.5)" },
-  { color: "rgb(63, 133, 255)", bgColor: "rgba(248,214,185,0.5)" },
-  { color: "rgb(240, 196, 23)", bgColor: "rgba(247,196,226,0.5)" },
+  { color: "#000", bgColor: "rgba(199,240,223,0.5)" },
+  { color: "#000", bgColor: "rgba(248,214,185,0.5)" },
+  { color: "#000", bgColor: "rgba(247,196,226,0.5)" },
   { color: "#000", bgColor: "rgba(217,201,248,0.5)" },
 ];
+const { handleDelNode } = useBubble(props?.editor, {});
 const attributes = useAttributes<{
   color: string;
   bgColor: string;
@@ -73,9 +96,9 @@ const attributes = useAttributes<{
   bgColor: "",
 });
 
-// 这里通过color和bgColor来判断选中的选项
+// 这里通过bgColor来判断选中的选项
 const selectedOptionIndex = computed(() => {
-  const tagetIndex = fixedOptions.findIndex(item => item.color === attributes.value.color && item.bgColor === attributes.value.bgColor);
+  const tagetIndex = fixedOptions.findIndex(item => item.bgColor === attributes.value.bgColor);
   if (tagetIndex === -1) {
     return 0;
   }
@@ -85,34 +108,32 @@ const isActiveCallout = computed(() => {
   return props.editor?.isActive(Callout.name);
 });
 // 固定气泡：定位到 callout 容器顶部中间
-const { isVisible, floatingElement, handleEditorFocus, showBubble, handleSelectionUpdate, handleTransaction } =
+const { isVisible, floatingElement, getAnchorFromSelection, showBubble, handleTransaction } =
   useNodeTopCenterBubble(props.editor as Editor, {
     nodeName: Callout.name,
     requireEmptySelection: true,
     extraShouldShow: (ed) => ed.isActive(Callout.name),
+    hideWhenScroll: true,
   })
 // 1) 监听容器内点击：直接显示（不等 selectionUpdate）
-const onDocMouseDown = () => {
+const onDocMouseDown = (e: MouseEvent) => {
   // 这里添加延迟，可能光标还没进入callout容器
   setTimeout(() => {
-    if (isActiveCallout.value) {
-      showBubble()
+    const anchor = getAnchorFromSelection();
+    if (anchor && anchor.contains(e.target as Node)) {
+      if (isActiveCallout.value) {
+        showBubble()
+      }
     }
   }, 100)
 }
 onMounted(() => {
   document.addEventListener('mousedown', onDocMouseDown, true)
-  // 这里不监听focus和 光标移动了，大部分逻辑都放到了isActive判断
-  // props.editor?.on('focus', handleEditorFocus)
-  // props.editor?.on('selectionUpdate', () => {
-  //   isVisible.value = false;
-  // })
+
   props.editor?.on('transaction', handleTransaction)
 })
 
 onUnmounted(() => {
-  // props.editor?.off('focus', handleEditorFocus)
-  // props.editor?.off('selectionUpdate', handleSelectionUpdate)
   props.editor?.off('transaction', handleTransaction)
 })
 

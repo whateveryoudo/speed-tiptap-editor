@@ -9,36 +9,48 @@
 import { Editor } from '@tiptap/core';
 
 export function deleteNode(nodeType: string, editor: Editor) {
+  const state = editor.state as any;
+  const view = (editor as any).view;
+  if (!state || !view) return false;
 
-  const { state } = editor;
-  const $pos = state.selection.$anchor;
+  const selection = state.selection as any;
 
-  if ($pos.depth) { // 这里有两个问题(不懂原理...)：图片扩展，block下 depth无image层， inline下指向了Paragraph，目前这里遍历的时候直接删除首层，不进行对比类型
-    // for (let d = $pos.depth; d > 0; d--) {
-    //   const node = $pos.node(d);
-    //   console.log(node, d);
-    //   if (node.type.name === nodeType) {
-    //     // @ts-ignore
-    //     if (editor.dispatchTransaction)
-    //       // @ts-ignore
-    //       editor.dispatchTransaction(state.tr.delete($pos.before(d), $pos.after(d)).scrollIntoView());
-    //     return true;
-    //   }
-    // }
-    const d = $pos.depth;
-    const node = $pos.node(d);
-    if (node) {
-      // @ts-ignore
-      if (editor.dispatchTransaction)
-        // @ts-ignore
-        editor.dispatchTransaction(state.tr.delete($pos.before(d), $pos.after(d)).scrollIntoView());
-      return true;
-    }
-  } else {
-    // @ts-ignore
-    const node = state.selection.node;
-    if (node && node.type.name === nodeType) {
-      editor.chain().deleteSelection().run();
+  // 1) 如果是 NodeSelection，且命中目标类型，直接删除
+  if ('node' in selection && selection.node && selection.node.type?.name === nodeType) {
+    view.dispatch(state.tr.delete(selection.from, selection.to).scrollIntoView());
+    return true;
+  }
+
+  const $pos = selection.$anchor;
+  if (!$pos) return false;
+
+  // 2) 处理内联 atom（如 p中包含image）：优先使用 nodeBefore / nodeAfter
+  const before = $pos.nodeBefore as any;
+  if (before && before.type?.name === nodeType) {
+    const from = $pos.pos - before.nodeSize;
+    const to = $pos.pos;
+    view.dispatch(state.tr.delete(from, to).scrollIntoView());
+    return true;
+  }
+
+  const after = $pos.nodeAfter as any;
+  if (after && after.type?.name === nodeType) {
+    const from = $pos.pos;
+    const to = $pos.pos + after.nodeSize;
+    view.dispatch(state.tr.delete(from, to).scrollIntoView());
+    return true;
+  }
+
+  // 3) 回退到块级：向上寻找匹配的父节点并删除整个节点
+  if ($pos.depth) {
+    for (let d = $pos.depth; d > 0; d--) {
+      const nodeAtDepth = $pos.node(d);
+      if (nodeAtDepth?.type?.name === nodeType) {
+        const from = $pos.before(d);
+        const to = from + nodeAtDepth.nodeSize;
+        view.dispatch(state.tr.delete(from, to).scrollIntoView());
+        return true;
+      }
     }
   }
 

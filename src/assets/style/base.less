@@ -8,6 +8,10 @@
   --speed-color-bg-dark-1: #242933;
   --speed-color-bg-dark-2: #3c424d;
   --speed-color-text-white-1: #e2e2e2;
+
+  // 搜索结果样式
+  --speed-color-search-result-background: rgb(255,255,195);
+  --speed-color-search-result-current-background: rgb(255,190,187);
 }
 .ProseMirror {
   font-family:
@@ -25,10 +29,10 @@
   &:focus-visible {
     outline: none;
   }
-  // 重置选中文字颜色，防止出现点击左侧拖拽文字变白
-  &.ProseMirror-hideselection ::selection {
-    color: var(--ant-color-text-base) !important;
-  }
+  // 重置选中文字颜色，防止出现点击左侧拖拽文字变白（先移除，会导致高亮节点内部文字点击变色）
+  // &.ProseMirror-hideselection ::selection {
+  //   color: var(--ant-color-text-base) !important;
+  // }
   summary {
     display: list-item;
   }
@@ -161,6 +165,13 @@
 
     p {
       margin: 0;
+    }
+  }
+  // 搜索结果样式
+  .speed-tiptap-search-result {
+    background-color: var(--speed-color-search-result-background);
+    &-current {
+      background: var(--speed-color-search-result-current-background);
     }
   }
 }

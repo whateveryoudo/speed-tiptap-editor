@@ -57,6 +57,9 @@
                 <CopyOutlined />
               </a-button>
             </s-question-tip>
+            <a-button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="handleDelNode('codeBlock')">
+              <DeleteOutlined />
+            </a-button>
           </a-space>
         </a-flex>
       </div>
@@ -65,7 +68,8 @@
         :style="{ height: height + 'px' }">
         <pre
           class='h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content'><NodeViewContent class="hljs" as="code" :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"/></pre>
-        <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
+          <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
+
       </div>
     </a-flex>
   </NodeViewWrapper>
@@ -77,6 +81,7 @@ import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
 import { useEdgeResize } from '@/hooks/useEdgeResize'
 import { lowlightInstance } from './index'
 import { copy } from '@/helpers/copy-to-clipboard'
+import { useBubble } from '@/hooks/useBubble'
 const props = defineProps(nodeViewProps)
 const title = ref('');
 const nodeAttrs = computed(() => props.node.attrs)
@@ -84,7 +89,7 @@ const isHover = ref(false)
 const onMouseEnter = () => (isHover.value = true)
 const onMouseLeave = () => (isHover.value = false)
 // 常用的编程语言列表
-
+const { handleDelNode } = useBubble(props.editor, {})
 const languages = lowlightInstance.listLanguages().map((language: string) => ({
   value: language,
   label: language
@@ -122,6 +127,7 @@ const copyCode = () => {
 <style lang="less" scoped>
 .code-block {
   position: relative;
+  margin-bottom: 10px;
 
   .code-block-wrapper {
     border: 1px solid var(--speed-color-border-gray);
