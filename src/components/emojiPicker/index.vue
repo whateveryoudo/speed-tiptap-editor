@@ -16,10 +16,10 @@
         <div class="flex-1 overflow-y-auto emoji-scroll-wrapper">
           <ul class="emoji-board-group-wrapper" v-if="filteredEmojiList.length > 0">
             <li v-for="(item, index) in filteredEmojiList" :key="index" class="emoji-board-group-item">
-              <span class="group-title" :id="'group-' + index">{{ item.title }}</span>
+              <span class="group-title" :id="item.key">{{ item.title }}</span>
               <ul class="emoji-board-list-wrapper">
                 <li v-for="(em, eIndex) in item.data" :key="eIndex" class="shadow-bg-wrapper emoji-board-list-item"
-                  @click="onSelectEmoji(em.text)">
+                  @click="onSelectEmoji(em)">
                   <a-tooltip :title="em.zh_cn" :arrow="false" placement="top">
                     <span>{{ em.text }}</span>
                   </a-tooltip>
@@ -31,8 +31,7 @@
         </div>
         <!-- 分组锚点导航（Antd Anchor） -->
         <a-anchor :getContainer="getEmojiScrollContainer" :affix="false" direction="horizontal" :showInkInFixed="false"
-          class="emoji-board-anchor">
-          <a-anchor-link v-for="(item, idx) in LIST" :key="item.title" :href="'#group-' + idx" :title="item.title" />
+          class="emoji-board-anchor" :items="LIST">
         </a-anchor>
       </a-flex>
     </template>
@@ -64,12 +63,12 @@ const recentUseList = ref<any[]>([]);
 const searchValue = ref('');
 const emojiWrapperRef = ref<HTMLElement | null>(null)
 const LIST = [
-  { title: '表情', data: EXPRESSIONES },
-  { title: '天气', data: SKY_WEATHER },
-  { title: '手势', data: GESTURES },
-  { title: '符号', data: SYMBOLS },
-  { title: '物体', data: OBJECTS },
-  { title: '运动', data: ACTIVITIES },
+  { title: '表情', data: EXPRESSIONES, key: 'expression', href: '#expression' },
+  { title: '天气', data: SKY_WEATHER, key: 'sky_weather', href: '#sky_weather' },
+  { title: '手势', data: GESTURES, key: 'gestures', href: '#gestures' },
+  { title: '符号', data: SYMBOLS, key: 'symbols', href: '#symbols' },
+  { title: '物体', data: OBJECTS, key: 'objects', href: '#objects' },
+  { title: '运动', data: ACTIVITIES, key: 'activities', href: '#activities' },
 ];
 const allEmojiList = computed(() => {
   return recentUseList.value.length > 0 ? [{ title: '最近使用', data: recentUseList.value }, ...LIST] : LIST;
@@ -86,14 +85,15 @@ const filteredEmojiList = computed(() => {
 });
 const emit = defineEmits(['triggerEmoji'])
 const visible = ref(false)
-const onSelectEmoji = (emoji: any) => {
-  emojiCache.put(emoji);
+const onSelectEmoji = (emojiItem: any) => {
+  // 这里存入对象
+  emojiCache.put(JSON.stringify({ text: emojiItem.text, zh_cn: emojiItem.zh_cn }));
   // 重新加载以获取最新顺序
   const cachedEmojis = emojiCache.get();
   if (Array.isArray(cachedEmojis)) {
-    recentUseList.value = cachedEmojis;
+    recentUseList.value = cachedEmojis.map(item => JSON.parse(item));
   }
-  emit('triggerEmoji', emoji)
+  emit('triggerEmoji', emojiItem.text)
   visible.value = false
 }
 // Anchor锚点导航需要的容器获取方法
@@ -103,7 +103,8 @@ const getEmojiScrollContainer = () => document.querySelector('.emoji-scroll-wrap
 onMounted(() => {
   const cachedEmojis = emojiCache.get();
   if (Array.isArray(cachedEmojis)) {
-    recentUseList.value = cachedEmojis;
+    // 反解析
+    recentUseList.value = cachedEmojis.map(item => JSON.parse(item));
   }
 });
 </script>

@@ -26,7 +26,7 @@
                   v-else />
               </a-button>
             </s-question-tip>
-            <a-input v-model="title" bordered="false" placeholder="请输入代码块名称" />
+            <a-input v-model="title" bordered="false" placeholder="请输入代码块名称(选填)" />
           </a-space>
           <a-space :size="5">
             <!-- 注意这里存入的是个对象 -->
@@ -133,7 +133,7 @@ const copyCode = () => {
     border: 1px solid var(--speed-color-border-gray);
   }
 
-  &.is-hover {
+  &.is-hover, &.has-focus {
     .code-block-wrapper {
       border-color: var(--ant-color-primary);
     }

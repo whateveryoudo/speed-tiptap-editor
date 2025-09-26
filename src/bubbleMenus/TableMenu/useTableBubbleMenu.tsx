@@ -166,15 +166,18 @@ export const bubbleTableItem = [
   tableMenuItemMaps['delete-row'],
   tableMenuItemMaps['delete-table'],
 ]
+interface UseTableBubbleMenuOptions {
+  scrollElem?: HTMLElement
+}
 
 
 // 表格固定气泡菜单
 
-export function useTableBubbleMenu(editor: Editor) {
+export function useTableBubbleMenu(editor: Editor, options?: UseTableBubbleMenuOptions = {}) {
   const isVisible = ref(false)
   const floatingElement = ref<HTMLElement | null>(null)
   let cleanup: (() => void) | null = null
-
+  const { scrollElem = document.querySelector('.editor-content-wrap') } = options
   // 检查点击是否在气泡菜单外部
   const isClickOutside = (event: MouseEvent): boolean => {
     if (!floatingElement.value) return true
@@ -295,8 +298,8 @@ export function useTableBubbleMenu(editor: Editor) {
       placement: 'top',
       middleware: [
         offset(8),
-        flip(),
-        shift({ padding: 8 })
+        flip({ boundary: scrollElem! }),
+        shift({ padding: 8, boundary: scrollElem! })
       ],
     })
 

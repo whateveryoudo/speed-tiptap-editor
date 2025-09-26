@@ -23,6 +23,7 @@ export const Tag = Node.create({
   marks: "",
   group: "inline",
   inline: true,
+  isolating: true,
   addAttributes() {
     return {
       text: {

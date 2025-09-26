@@ -3,11 +3,11 @@
  * @Date: 2022-11-22 19:38:48
  * @LastEditTime: 2022-12-05 15:16:34
  * @LastEditors: your name
- * @Description: CodeBlock 扩展 - Tiptap 3.0 版本，使用官方 lowlight 扩展
+ * @Description: CodeBlock 扩展 - Tiptap 3.0 版本，使用官方 lowlight 扩展（这里gapcursor存在体验问题，拉下来源码修改为isolating: true, https://github.com/ueberdosis/tiptap/issues/1195）
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\codeBlock\index.ts
  */
 
-import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
+import { CodeBlockLowlight } from "./codeBlockLowlightExtension";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
 import { common, createLowlight } from "lowlight";

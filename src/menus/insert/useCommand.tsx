@@ -34,6 +34,7 @@ export interface SubMenuGroup {
   imgIcon?: any
   hasMore?: boolean
   action?: (editor: Editor, payload?: any) => void
+  payload?: any;
 }
 export interface MenuGroup {
   key: string
@@ -65,15 +66,20 @@ export const useCommand = () => {
           imgIcon: tableIcon,
           hasMore: true,
           action: (editor, payload) => {
-            console.log(payload);
             // 如果没选择则默认3 * 3
             editor?.chain().insertTable({ rows: payload.rows || 3, cols: payload.cols || 3, withHeaderRow: true }).focus().run()
           },
+          // 追加默认参数
+          payload: {
+            rows: 3,
+            cols: 3,
+          }
         },
         {
           key: 'file',
           name: '附件',
           imgIcon: fileIcon,
+          payload: null,
           action: (editor,payload) => editor.chain().focus().uploadAttachment(payload).run(),
         },
         {

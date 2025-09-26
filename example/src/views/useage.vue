@@ -97,7 +97,7 @@ watch(
     </a-button>
   </a-space>
   <!-- 基础示例 -->
-  <div class="px-2 h-[400px]">
+  <div class="px-2 h-[600px]">
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" />

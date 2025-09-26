@@ -30,6 +30,7 @@ const props = defineProps({
 })
 const clear = () => {
   if (props.editor) {
+    debugger;
     props.editor.chain().focus().unsetAllMarks().run()
     props.editor.chain().focus().clearNodes().run()
   }

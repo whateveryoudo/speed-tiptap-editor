@@ -13,19 +13,9 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Editor } from "@tiptap/core";
-import { NodeViewWrapper, NodeViewContent } from "@tiptap/vue-3";
-const props = withDefaults(
-    defineProps<{
-        node: any;
-        editor: Editor;
-        updateAttributes: () => Record<string, any>;
-    }>(),
-    {
-        node: () => ({}),
-        updateAttributes: () => ({}),
-    }
-);
+import { NodeViewWrapper, NodeViewContent, nodeViewProps } from "@tiptap/vue-3";
+
+const props = defineProps(nodeViewProps);
 const nodeAttrs = computed(() => {
     return props.node?.attrs;
 });

@@ -41,7 +41,7 @@
 
         <a-tooltip title="尺寸设置">
             <div class="shadow-bg-wrapper">
-                <s-icon-font type="icon-measurement-1" :size="16" />
+                <s-icon-font type="icon-kl-measurement-1" :size="16" />
             </div>
         </a-tooltip>
     </a-popover>

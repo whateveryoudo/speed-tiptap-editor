@@ -141,7 +141,8 @@ const currentMenuItems = computed(() => {
 
 // 表格选择插入
 const handleTableSelect = (item: SubMenuGroup, payload: { rows: number, cols: number }) => {
-  console.log(payload);
+  // 将附加参数追加到payload中(用于气泡菜单)
+  item.payload = payload;
   handleEditorOpt(item, payload)
 }
 
@@ -169,16 +170,17 @@ const handleEditorOpt = (item?: SubMenuGroup, payload?: any) => {
 
 
   if (props.triggerType === 'bubble') {
-    props.command && props.command(item)
+    props.command && props.command(item);
   } else {
     item.action && item.action(props.editor, payload)
     emit('triggerVisible', false)
   }
+
 }
 // 文件/图片 选择
 const handleFileChange = (item: SubMenuGroup, event: any) => {
-  console.log(item, event)
   if (props.triggerType === 'bubble') {
+    item.payload = event?.target?.files;
     props.command && props.command(item)
   } else {
     item.action && item.action(props.editor, event?.target?.files)
@@ -271,13 +273,13 @@ defineExpose({
 <style scoped lang="less">
 .bubble-wrapper {
 
-  // 气泡提示需要自行添加样式
-  &.bubble {
-    background-color: #fff;
-    padding: 3px 10px;
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12%), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  }
+  // 气泡提示需要自行添加样式(这里去掉了 已经在useFloatingPopup.ts中添加了)
+  // &.bubble {
+  //   background-color: #fff;
+  //   padding: 3px 10px;
+  //   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12%), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+  //     0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  // }
 
   .recent-menu-items {
     :deep(.ant-btn) {

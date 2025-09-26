@@ -1,8 +1,7 @@
 import { Node } from "@tiptap/core";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
-import { TextSelection } from "@tiptap/pm/state";
-import { GapCursor } from "@tiptap/pm/gapcursor";
+import { TextSelection, NodeSelection } from "@tiptap/pm/state";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -18,7 +17,7 @@ export const Callout = Node.create({
   content: "paragraph+",
   defining: true,
   selectable: true,
-  // isolating: true,  这里允许删除自身
+  isolating: true,
   addAttributes: () => {
     return {
       bgColor: {
@@ -80,6 +79,23 @@ export const Callout = Node.create({
     };
   },
   addKeyboardShortcuts() {
+    // 提取公共逻辑：删除当前段落节点并选中前一个节点（同一事务，位置映射）
+    const deleteParagraphAndSelectPrev = (
+      state: any,
+      $from: any,
+      prevNode: any,
+      parentDepth: number
+    ) => {
+      const paraStart = $from.before(parentDepth);
+      const paraEnd = $from.after(parentDepth);
+      const prevNodeStartBefore = paraStart - prevNode.nodeSize;
+
+      let tr = state.tr.delete(paraStart, paraEnd);
+      const mappedPos = tr.mapping.map(prevNodeStartBefore, -1);
+      tr = tr.setSelection(NodeSelection.create(tr.doc, mappedPos));
+      return tr;
+    };
+
     return {
       // 处理 Ctrl+A，确保只在 Callout 内部全选
       "Mod-a": () => {
@@ -103,122 +119,85 @@ export const Callout = Node.create({
 
         return false;
       },
-      // 先屏蔽，内部带有输入的情况处理起来太麻烦
-      // 两步删除：先选中整块，再删除整块（Backspace - 段落开头）
-      // Backspace: () => {
-      //   const { state, dispatch } = this.editor.view;
-      //   const selection: any = state.selection;
-      //   const $from = selection.$from;
-      //   const isGap = state.selection instanceof GapCursor;
 
-      //   // 计算块级兄弟
-      //   const blockDepth = $from.depth;
-      //   const parentDepth = blockDepth - 1;
-      //   if (isGap) {
-      //     // GapCursor：用顶层（doc → depth 0 / before(1)）
-      //     const top = $from.node(0);
-      //     const index0 = $from.index(0);
-      //     if (index0 > 0) {
-      //       const prev = top.child(index0 - 1);
-      //       // 优先删除段落（无论是否为空），否则删除 callout
-      //       if (prev.type.name === 'paragraph') {
-      //         const leftEnd = $from.before(1);
-      //         const prevStart = leftEnd - prev.nodeSize;
-      //         dispatch(state.tr.delete(prevStart, leftEnd));
-      //         return true;
-      //       }
-      //       if (prev.type.name === this.name) {
-      //         const leftEnd = $from.before(1);
-      //         const prevStart = leftEnd - prev.nodeSize;
-      //         dispatch(state.tr.delete(prevStart, leftEnd));
-      //         return true;
-      //       }
-      //     }
-      //     return false;
-      //   }
+      // Backspace 处理：简化版本，只处理选中删除和空节点删除(目前只有block gap能生效，其余只能移动光标到开始位置进行添加内容)
+      Backspace: () => {
+        const { state, dispatch } = this.editor.view;
+        const { selection, doc } = state;
+        const { $from } = selection;
 
-      //   if (parentDepth < 0) return false;
-      //   const parent = $from.node(parentDepth);
-      //   const indexInParent = $from.index(parentDepth);
+        // 检查是否选中了 callout 节点
+        if (selection instanceof TextSelection && !selection.empty) {
+          const { from, to } = selection;
+          const selectedNode = doc.nodeAt(from);
+          if (selectedNode && selectedNode.type.name === this.name) {
+            // 选中了 callout 节点，删除整个节点
+            const tr = state.tr.delete(from, to);
+            dispatch(tr);
+            return true;
+          }
+        }
+        // 检查是否在段落中，且前面是 callout
+        if ($from.parent.type.name === "paragraph") {
+          const atStart = selection.empty && $from.parentOffset === 0;
+          if (atStart) {
+            const parent = $from.node($from.depth - 1);
+            const index = $from.index($from.depth - 1);
 
-      //   // 文本选区在块开头：优先删除上一个段落（不管是否为空），否则删除上一个 callout
-      //   const atStart = selection.empty && $from.parentOffset === 0;
-      //   if (!atStart) return false;
-      //   if (indexInParent <= 0) return false;
-      //   {
-      //     const prev = parent.child(indexInParent - 1);
-      //     const currentStart = $from.before(blockDepth);
-      //     if (prev.type.name === 'paragraph') {
-      //       const prevStart = currentStart - prev.nodeSize;
-      //       dispatch(state.tr.delete(prevStart, currentStart));
-      //       return true;
-      //     }
-      //     if (prev.type.name === this.name) {
-      //       const prevStart = currentStart - prev.nodeSize;
-      //       dispatch(state.tr.delete(prevStart, currentStart));
-      //       return true;
-      //     }
-      //   }
-      //   return false;
-      // },
+            if (index > 0) {
+              const prevNode = parent.child(index - 1);
+              if (prevNode.type.name === this.name) {
+                const parentDepth = $from.depth;
+                const tr = deleteParagraphAndSelectPrev(
+                  state,
+                  $from,
+                  prevNode,
+                  parentDepth
+                );
+                dispatch(tr);
+                return true;
+              }
+            }
+          }
+        }
 
-      // // 两步删除：先选中整块，再删除整块（Delete - 段落末尾）
-      // Delete: () => {
-      //   const { state, dispatch } = this.editor.view;
-      //   const selection: any = state.selection;
-      //   const $from = selection.$from;
-      //   const isGap = state.selection instanceof GapCursor;
+        // 检查是否在 callout 内部
+        let calloutDepth = -1;
+        for (let d = $from.depth; d >= 0; d--) {
+          const node = $from.node(d);
+          if (node.type.name === this.name) {
+            calloutDepth = d;
+            break;
+          }
+        }
 
-      //   // 计算块级兄弟
-      //   const blockDepth = $from.depth;
-      //   const parentDepth = blockDepth - 1;
-      //   if (isGap) {
-      //     // GapCursor：用顶层（doc → depth 0 / after(1)）
-      //     const top = $from.node(0);
-      //     const index0 = $from.index(0);
-      //     if (index0 < top.childCount) {
-      //       const next = top.child(index0);
-      //       // 优先删除段落（不管是否为空），否则删除 callout
-      //       if (next.type.name === 'paragraph') {
-      //         const rightStart = $from.after(1);
-      //         const rightEnd = rightStart + next.nodeSize;
-      //         dispatch(state.tr.delete(rightStart, rightEnd));
-      //         return true;
-      //       }
-      //       if (next.type.name === this.name) {
-      //         const rightStart = $from.after(1);
-      //         const rightEnd = rightStart + next.nodeSize;
-      //         dispatch(state.tr.delete(rightStart, rightEnd));
-      //         return true;
-      //       }
-      //     }
-      //     return false;
-      //   }
+        if (calloutDepth === -1) return false;
 
-      //   if (parentDepth < 0) return false;
-      //   const parent = $from.node(parentDepth);
-      //   const indexInParent = $from.index(parentDepth);
+        // 检查是否在 callout 内容的开头（这里处理）
+        const atStart = selection.empty && $from.parentOffset === 0;
+        if (!atStart) return false;
 
-      //   // 文本选区在块末尾：优先删除下一个段落（不管是否为空），否则删除下一个 callout
-      //   const atEnd = selection.empty && $from.parentOffset === $from.parent.nodeSize - 2;
-      //   if (!atEnd) return false;
-      //   if (indexInParent >= parent.childCount - 1) return false;
-      //   {
-      //     const next = parent.child(indexInParent + 1);
-      //     const nextStart = $from.after(blockDepth);
-      //     if (next.type.name === 'paragraph') {
-      //       const nextEnd = nextStart + next.nodeSize;
-      //       dispatch(state.tr.delete(nextStart, nextEnd));
-      //       return true;
-      //     }
-      //     if (next.type.name === this.name) {
-      //       const nextEnd = nextStart + next.nodeSize;
-      //       dispatch(state.tr.delete(nextStart, nextEnd));
-      //       return true;
-      //     }
-      //   }
-      //   return false;
-      // },
+        // 检查 callout 是否为空（只有一个空段落）
+        const calloutNode = $from.node(calloutDepth);
+        if (calloutNode.childCount === 1) {
+          const firstChild = calloutNode.firstChild;
+          if (
+            firstChild &&
+            firstChild.type.name === "paragraph" &&
+            firstChild.textContent === ""
+          ) {
+            // 空 callout，删除整个节点
+            const calloutStart = $from.before(calloutDepth);
+            const calloutEnd = $from.after(calloutDepth);
+            const tr = state.tr.delete(calloutStart, calloutEnd);
+            dispatch(tr);
+            return true;
+          }
+        }
+
+        // 其他情况让默认行为处理
+        return false;
+      },
     };
   },
 });
