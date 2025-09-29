@@ -189,7 +189,7 @@ export const CodeBlock = Node.create<CodeBlockOptions>({
         const { state, dispatch } = this.editor.view;
         const { selection } = state;
         const { $from } = selection;
-        // 检查是否在段落中，且前面是 callout
+        // 检查是否在段落中，且前面是 codeBlock
         if ($from.parent.type.name === "paragraph") {
           const atStart = selection.empty && $from.parentOffset === 0;
           if (atStart) {
@@ -199,17 +199,25 @@ export const CodeBlock = Node.create<CodeBlockOptions>({
             if (index > 0) {
               const prevNode = parent.child(index - 1);
               if (prevNode.type.name === this.name) {
-                // 与 Delete 一致：删除当前段落节点，再选中前面的  codeBlock（同一事务+映射位置）
+                // 检查当前段落是否还有内容
+                const currentParagraph = $from.parent;
+                const hasContent = currentParagraph.childCount > 0;
+                
                 const parentDepth = $from.depth;
                 const paraStart = $from.before(parentDepth);
                 const paraEnd = $from.after(parentDepth);
-                const calloutPosBefore = paraStart - prevNode.nodeSize;
+                const codeBlockPosBefore = paraStart - prevNode.nodeSize;
 
-                let tr = state.tr.delete(paraStart, paraEnd);
-                const mappedCalloutPos = tr.mapping.map(calloutPosBefore, -1);
-                tr = tr.setSelection(
-                  NodeSelection.create(tr.doc, mappedCalloutPos)
-                );
+                let tr = state.tr;
+                if (hasContent) {
+                  // 如果段落还有内容，只选中前一个 codeBlock 节点，不删除段落
+                  tr = tr.setSelection(NodeSelection.create(state.doc, codeBlockPosBefore));
+                } else {
+                  // 如果段落为空，删除段落并选中前一个 codeBlock 节点
+                  tr = tr.delete(paraStart, paraEnd);
+                  const mappedCodeBlockPos = tr.mapping.map(codeBlockPosBefore, -1);
+                  tr = tr.setSelection(NodeSelection.create(tr.doc, mappedCodeBlockPos));
+                }
                 dispatch(tr);
                 return true;
               }

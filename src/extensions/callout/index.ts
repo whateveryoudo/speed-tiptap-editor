@@ -84,15 +84,22 @@ export const Callout = Node.create({
       state: any,
       $from: any,
       prevNode: any,
-      parentDepth: number
+      parentDepth: number,
+      shouldDeleteParagraph: boolean = true
     ) => {
       const paraStart = $from.before(parentDepth);
       const paraEnd = $from.after(parentDepth);
       const prevNodeStartBefore = paraStart - prevNode.nodeSize;
 
-      let tr = state.tr.delete(paraStart, paraEnd);
-      const mappedPos = tr.mapping.map(prevNodeStartBefore, -1);
-      tr = tr.setSelection(NodeSelection.create(tr.doc, mappedPos));
+      let tr = state.tr;
+      if (shouldDeleteParagraph) {
+        tr = tr.delete(paraStart, paraEnd);
+        const mappedPos = tr.mapping.map(prevNodeStartBefore, -1);
+        tr = tr.setSelection(NodeSelection.create(tr.doc, mappedPos));
+      } else {
+        // 只选中前一个节点，不删除段落
+        tr = tr.setSelection(NodeSelection.create(tr.doc, prevNodeStartBefore));
+      }
       return tr;
     };
 
@@ -147,12 +154,17 @@ export const Callout = Node.create({
             if (index > 0) {
               const prevNode = parent.child(index - 1);
               if (prevNode.type.name === this.name) {
+                // 检查当前段落是否还有内容
+                const currentParagraph = $from.parent;
+                const hasContent = currentParagraph.childCount > 0;
+                
                 const parentDepth = $from.depth;
                 const tr = deleteParagraphAndSelectPrev(
                   state,
                   $from,
                   prevNode,
-                  parentDepth
+                  parentDepth,
+                  !hasContent // 如果段落有内容则不删除，否则删除
                 );
                 dispatch(tr);
                 return true;

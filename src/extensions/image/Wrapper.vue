@@ -11,18 +11,19 @@
     <!-- <div v-if="nodeAttrs.error" :class="styles.wrapper">
       <a-typography-text>{{ nodeAttrs.error }}</a-typography-text>
     </div> -->
-    <div v-if="!nodeAttrs.src" class="wrapper">
+    <div v-if="!nodeAttrs.src" :class="['wrapper', uploadFailed ? 'upload-failed' : '']">
       <a-spin :spinning="uploadLoading">
-        <img :src="ImgPlaceholder" alt="请选择图片" style="width: 200px; height: auto">
+        <img :class="uploadFailed ? 'upload-failed' : ''" :src="ImgPlaceholder" alt="请选择图片"
+          style="width: 150px; height: auto">
       </a-spin>
     </div>
     <!-- <Resizeable v-else :editor="editor" class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
       :height="nodeAttrs.height" :maxWidth="maxWidth" @changeEnd="updateImageAttrs">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </Resizeable> -->
-    <drager v-else :selected="selected" :boundary="false" :disabled="!isEditable"
-      :width="Number(node.attrs.width)" :height="Number(node.attrs.height)" :min-width="14" :min-height="14"
-      :max-width="maxWidth" :max-height="maxWidth" @resize="onResize" @focus="selected = true">
+    <drager v-else :selected="selected" :boundary="false" :disabled="!isEditable" :width="Number(node.attrs.width)"
+      :height="Number(node.attrs.height)" :min-width="14" :min-height="14" :max-width="maxWidth" :max-height="maxWidth"
+      @resize="onResize" @focus="selected = true">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </drager>
 
@@ -35,16 +36,22 @@ import { NodeViewWrapper } from '@tiptap/vue-3'
 import { Editor } from '@tiptap/core'
 import Drager from 'es-drager'
 import ImgPlaceholder from '@/assets/image/img-placeholder.png'
+import axios from 'axios'
 import {
   getEditorContainerDOMSize,
   getImageWidthHeight,
 } from '@/prose-utils'
 import { useCustomUpload } from 'speed-components-ui/hooks'
-const speedTiptapConfig = inject(
-  "speed-tiptap-config",
+import { message } from 'ant-design-vue';
+// 初始化注入的对象
+const speedUseTiptapConfig = inject(
+  "speedUseTiptapConfig",
   ref({})
 ) as Ref<any>;
+// 顶层组件注入对象
+const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
 const previewInstance = inject('previewInstance') as Ref<any>
+const uploadFailed = ref(false);
 const props = defineProps({
   node: {
     type: Object,
@@ -69,39 +76,123 @@ const nodeAttrs = computed(() => {
   return props.node?.attrs
 })
 // 定义上传选项
-const uploadOptions = ref({
-  // 上传后的回调
-  afterUpload: async (files: any[]) => {
-    console.log("上传完成:", files);
-    const file = files[0];
-    const getPreviewUrl = speedTiptapConfig?.value?.apis?.getPreviewUrl;
+const uploadOptions = computed(() => {
+  const rawAccept =
+    speedTiptapConfig?.value?.upload?.accept ||
+    speedTiptapConfig?.value?.image?.accept ||
+    speedUseTiptapConfig?.value?.image?.accept ||
+    undefined
+  // 兼容字符串或数组；其余情况返回空数组
+  const acceptTypes = Array.isArray(rawAccept)
+    ? rawAccept
+    : typeof rawAccept === 'string'
+      ? rawAccept.split(',')
+      : []
+  return {
+    acceptTypes,
+    maxSize: speedTiptapConfig?.value?.upload?.maxSize || speedTiptapConfig?.value?.image?.maxSize || speedUseTiptapConfig?.value?.image?.maxSize,
+    // 传入ajax方法
+    apis: {
+      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti,
+      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle,
+      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.image?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.image?.uploadApis?.fileDel,
+      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.image?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.image?.uploadApis?.fileDownload,
+    },
+    // 上传后的回调
+    afterUpload: async (files: any[], res: any) => {
+      if (!res?.success) {
+        message.error(res?.message);
+        uploadFailed.value = true;
+        return;
+      }
+      console.log("上传完成:", files);
+      const file = files[0];
+      // 兼容3种情况（顶层注入image、组件注入upload、组件注入apis）,优先级：顶层注入image > 组件注入upload > 组件注入apis
+      const getPreviewUrl = speedTiptapConfig?.value?.upload?.uploadApis?.getPreviewUrl
+        || speedTiptapConfig?.value?.image?.uploadApis?.getPreviewUrl
+        || speedUseTiptapConfig?.value?.apis?.getPreviewUrl;
 
-    const imgUrl = getPreviewUrl ? getPreviewUrl(file.id) : '';
-    console.log('imgUrl', imgUrl);
-    const size = await getImageWidthHeight(imgUrl)
+      const imgUrl = getPreviewUrl ? getPreviewUrl(file.id) : '';
+      console.log('imgUrl', imgUrl);
+      const size = await getImageWidthHeight(imgUrl)
 
-    // 保存原始尺寸和当前尺寸
-    props.updateAttributes && props.updateAttributes({ 
-      ...size, 
-      src: imgUrl,
-      originalWidth: size.width,  // 保存原始宽度
-      originalHeight: size.height // 保存原始高度
-    })
-
-  },
+      // 保存原始尺寸和当前尺寸
+      props.updateAttributes && props.updateAttributes({
+        ...size,
+        src: imgUrl,
+        originalWidth: size.width,  // 保存原始宽度
+        originalHeight: size.height // 保存原始高度
+      })
+    },
+    uploadError: (error: any) => {
+      message.error(error.message);
+      uploadFailed.value = true;
+    }
+  }
 });
 
 // 使用自定义上传hook
-const { customRequest, handleDelFile, uploadLoading, files } =
+const { customRequest, handleDelFile, beforeUpload, uploadLoading, files } =
   useCustomUpload(uploadOptions);
-
+// 手动上传的beforeUpload(这里仅处理单个文件判断)
+const manualBeforeUpload = (file: File | File[]) => {
+  const beforeUpload = speedTiptapConfig?.value?.image?.beforeUpload || speedTiptapConfig?.value?.upload?.beforeUpload || speedUseTiptapConfig?.value?.image?.beforeUpload;
+  const fileItem = Array.isArray(file) ? file[0] : file;
+  if (beforeUpload) {
+    return beforeUpload(fileItem)
+  }
+  // 通用拦截判断(调用hook)
+  return beforeUpload(fileItem);
+}
 // 处理文件选择
 const startUpload = (file: File) => {
-  // 如果后端支持多文件上传，则直接上传
-  customRequest({
-    file
-  });
-};
+  // 这里直接用action判断
+  const action = speedTiptapConfig?.value?.image?.action || speedTiptapConfig?.value?.upload?.action || speedUseTiptapConfig?.value?.apis?.fileUploadSingle;
+  if (!action) {
+    customRequest({
+      file
+    });
+  } else { // 手动上传，需要用户传入一些信息（不建议使用此方案，大部分不建议直接配置url地址，而是传入方法）
+    if (manualBeforeUpload(file)) {
+      const headers = speedTiptapConfig?.value?.image?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.apis?.headers;
+      const data = speedTiptapConfig?.value?.image?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.apis?.data;
+      axios.post(action, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          ...headers
+        },
+        data: typeof data === 'function' ? data(file) : data
+      }).then(async (res: any) => {
+        if (!res?.success) {
+          message.error(res?.message);
+          uploadFailed.value = true;
+          return;
+        }
+        const file = Array.isArray(res.data) ? res.data[0] : res.data;
+        // 兼容3种情况（顶层注入image、组件注入upload、组件注入apis）,优先级：顶层注入image > 组件注入upload > 组件注入apis
+        const getPreviewUrl = speedTiptapConfig?.value?.upload?.uploadApis?.getPreviewUrl
+          || speedTiptapConfig?.value?.image?.uploadApis?.getPreviewUrl
+          || speedUseTiptapConfig?.value?.apis?.getPreviewUrl;
+
+        const imgUrl = getPreviewUrl ? getPreviewUrl(file.id) : '';
+        console.log('imgUrl', imgUrl);
+        const size = await getImageWidthHeight(imgUrl)
+        // 保存原始尺寸和当前尺寸
+        props.updateAttributes && props.updateAttributes({
+          ...size,
+          src: imgUrl,
+          originalWidth: size.width,  // 保存原始宽度
+          originalHeight: size.height // 保存原始高度
+        })
+      }).catch((err) => {
+        console.log(err)
+        message.error(err);
+        uploadFailed.value = true;
+      })
+    }
+
+  };
+}
 // const { error, src, alt, textAlign, width, height } = toRefs(props.node.attrs)
 const maxWidth = getEditorContainerDOMSize(props.editor)?.width
 // const selectFile = () => {
@@ -153,7 +244,6 @@ const updateImageAttrs = (size: any) => {
 //   }
 // }
 const handlePreivew = () => {
-  debugger;
   if (!isEditable.value) {
     // 调用全局图片预览
     if (previewInstance.value) {
@@ -187,12 +277,17 @@ watch(() => nodeAttrs.value.file, (file: File) => {
 
   .wrapper {
     display: flex;
-    padding: 8px 16px;
+    padding-left: 6px;
+    padding-right: 6px;
     cursor: pointer;
     border: 1px solid var(--ant-color-border);
     border-radius: var(--ant-border-radius);
     justify-content: space-between;
     align-items: center;
+
+    &.upload-failed {
+      border-color: var(--ant-color-error);
+    }
   }
 
   :deep(.es-drager) {

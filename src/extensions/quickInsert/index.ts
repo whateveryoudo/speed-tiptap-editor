@@ -10,7 +10,7 @@ import { Node } from "@tiptap/core";
 import { PluginKey, Plugin } from "@tiptap/pm/state";
 import { EXTENSION_PRIORITY_HIGHEST } from "@/enums/constants";
 import Suggestion from "@tiptap/suggestion";
-import BaseList from "@/menus/insert/baseList.vue";
+import BaseList from "@/menus/insert/baseList";
 import { useCommand, type SubMenuGroup } from "@/menus/insert/useCommand";
 import { VueRenderer } from "@tiptap/vue-3";
 import { useFloatingPopup } from "@/hooks/useFloatingPopup";

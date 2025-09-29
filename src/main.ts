@@ -9,6 +9,7 @@ import type { App, Component } from "vue";
 import { computed, ref } from "vue";
 import SpeedTiptapEditor from "./editor.vue";
 import SpeedComponents from "speed-components-ui/components";
+import { type ResponseType} from "speed-components-ui";
 import { useAntdCssVars } from "speed-components-ui/hooks";
 import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
@@ -26,11 +27,11 @@ export interface GlobalConfig {
   };
   registerGlobal?: boolean;
   iconfontUrl?: string;
+  transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
 }
 
 // 默认配置
 const defaultConfig: GlobalConfig = {
-  apis: {},
   registerGlobal: true,
   iconfontUrl: "",
 };
@@ -63,11 +64,15 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   }
   app.component(SpeedTooltip.name as string, SpeedTooltip);
   // 注入响应式配置
-  app.provide("speed-tiptap-config", currentConfig);
+  app.provide("speedUseTiptapConfig", currentConfig);
   // 注册SpeedComponents
   app.use(SpeedComponents, {
-    iconfontUrl: "//at.alicdn.com/t/c/font_3786040_inqzhuydrr8.js",
-    apis: currentConfig.value.apis
+    iconfontUrl: [
+      "//at.alicdn.com/t/c/font_3786040_rhp3ozkktyi.js",
+      currentConfig.value.iconfontUrl,
+    ],
+    apis: currentConfig.value.apis,
+    transformRequestRes: currentConfig.value.transformRequestRes,
   });
   // 使用 Ant Design Vue CSS 变量
   const cleanup = useAntdCssVars();

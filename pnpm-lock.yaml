@@ -150,8 +150,8 @@ importers:
         specifier: ^3.0.3
         version: 3.1.0
       speed-components-ui:
-        specifier: ^0.1.24
-        version: 0.1.24(@algolia/client-search@5.27.0)(@types/node@20.19.0)(async-validator@4.2.5)(less@4.3.0)(postcss@8.5.4)(search-insights@2.17.3)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
+        specifier: ^0.1.26
+        version: 0.1.26(@algolia/client-search@5.27.0)(@types/node@20.19.0)(async-validator@4.2.5)(less@4.3.0)(postcss@8.5.4)(search-insights@2.17.3)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
       toggle-selection:
         specifier: ^1.0.6
         version: 1.0.6
@@ -3068,8 +3068,8 @@ packages:
     resolution: {integrity: sha512-1POYv7uv2gXoyGFpBCmpDVSNV74IfsWlDW216UPjbWufNf+bSU6GdbDsxdcxtfwb4xlI3yxzOTKClUosxARYrQ==}
     engines: {node: '>=0.10.0'}
 
-  speed-components-ui@0.1.24:
-    resolution: {integrity: sha512-0XUTdyxxhp+NC3eSeKXFU2k8M6F1hZWKfQlraQn/i7n1htQyy7LmOIOCXid0zwl5x1GdnwxiTq8onKbz6ghmJw==}
+  speed-components-ui@0.1.26:
+    resolution: {integrity: sha512-7P0N4pvHE0BYHos3Ntn1Apyo8sdCCNZIe7Ui588JVE+Yl18wVttCIYgH8Ir9VTigdkx60uLO1syRxrjVh+RrXQ==}
     peerDependencies:
       vue: ^3.4.0
 
@@ -6599,7 +6599,7 @@ snapshots:
 
   speakingurl@14.0.1: {}
 
-  speed-components-ui@0.1.24(@algolia/client-search@5.27.0)(@types/node@20.19.0)(async-validator@4.2.5)(less@4.3.0)(postcss@8.5.4)(search-insights@2.17.3)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3)):
+  speed-components-ui@0.1.26(@algolia/client-search@5.27.0)(@types/node@20.19.0)(async-validator@4.2.5)(less@4.3.0)(postcss@8.5.4)(search-insights@2.17.3)(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3)):
     dependencies:
       '@ant-design/icons-vue': 7.0.1(vue@3.5.16(typescript@5.8.3))
       '@highlightjs/vue-plugin': 2.1.2(highlight.js@11.11.1)(vue@3.5.16(typescript@5.8.3))

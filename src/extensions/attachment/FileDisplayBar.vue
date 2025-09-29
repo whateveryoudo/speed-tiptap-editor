@@ -7,15 +7,14 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\attachment\FileDisplayBar.vue
 -->
 <template>
-  <a-flex :class="['display-wrap max-w-[400px]', displayMode === 'card' && 'card']" align="center" justify="space-between">
+  <a-flex :class="['display-wrap max-w-[400px]', displayMode === 'card' && 'card']" align="center"
+    justify="space-between">
     <a-flex class="min-w-0 flex-1" align="center" gap="small">
-      <s-icon-font
-        v-if="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons]"
+      <s-icon-font v-if="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons]"
         :icon-render="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons].icon"
-        :color="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons].color"
-      />
+        :color="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons].color" />
       <span class="flex-1 flex gap-1 items-center min-w-0">
-        <span class="truncate" :title="fileName" >{{ fileName }}</span>
+        <span class="truncate" :title="fileName">{{ fileName }}</span>
         <span class="size-text flex-shrink-0">({{ normalizeFileSize(fileSize || 0) }})</span>
       </span>
     </a-flex>
@@ -45,8 +44,14 @@ import {
   CodeOutlined,
 } from "@ant-design/icons-vue";
 import { type IFileItem } from "speed-components-ui/hooks";
-import { message } from "ant-design-vue";
-const speedTiptapConfig = inject("speed-tiptap-config", ref({})) as Ref<any>;
+// 初始化注入的对象
+const speedUseTiptapConfig = inject(
+  "speedUseTiptapConfig",
+  ref({})
+) as Ref<any>;
+// 顶层组件注入对象
+const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+
 const props = withDefaults(
   defineProps<{
     fileType: string;
@@ -68,9 +73,12 @@ const emit = defineEmits<{
   (e: "download", file: IFileItem): void;
 }>();
 const handlePreview = () => {
-  const getOfficePreviewUrl = speedTiptapConfig?.value?.apis?.getOfficePreviewUrl;
+  const getFilePreviewUrl = speedTiptapConfig?.value?.upload?.uploadApis?.getFilePreviewUrl
+    || speedTiptapConfig?.value?.image?.uploadApis?.getFilePreviewUrl
+    || speedUseTiptapConfig?.value?.apis?.getFilePreviewUrl;
 
-  props.fileId && window.open(getOfficePreviewUrl ? getOfficePreviewUrl(props.fileId) : "");
+
+  props.fileId && window.open(getFilePreviewUrl ? getFilePreviewUrl(props.fileId) : "");
 };
 const fileTypeIcons = {
   audio: { icon: () => <AudioOutlined />, color: '#48a25e' },
@@ -100,9 +108,11 @@ const handleDownLoad = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .size-text {
     color: var(--ant-color-text-tertiary);
   }
+
   &.card {
     max-width: none;
     width: 100%;

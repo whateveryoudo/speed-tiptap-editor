@@ -9,7 +9,7 @@
 <template>
   <div :class="['wrap', scene]">
     <!-- 工具栏 -->
-    <menu-bar v-if="menubar && editor" class="header" :editor="editor" />
+    <menu-bar :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header" :editor="editor" />
     <!-- 扩展modal显示-mind -->
     <!-- <extend-mind-modal
       v-if="editor"
@@ -18,7 +18,7 @@
       :visible="mindState.visible"
       @triggerData="(data: any) => handleUpdateMindState('data', data)"
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
-    <TextMenu v-if="editor" :editor="editor" />
+    <TextMenu v-if="editor && textBubbleMenu?.enabled" :editor="editor" />
     <TagMenu v-if="editor" :editor="editor" />
     <ImageMenu v-if="editor" :editor="editor" />
     <AttachmentMenu v-if="editor" :editor="editor"></AttachmentMenu>
@@ -37,9 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, PropType, provide } from 'vue'
-import MenuBar from './menus/menuBar.vue'
-import { knowledgeKit, defauktKit } from './extensions/kit'
+import { watch, ref, PropType, provide, computed, VNode } from 'vue'
+import MenuBar from './menus'
+import { getKnowledgeKit, getDefauktKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TableMenu from '@/bubbleMenus/TableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/TableMenu/Bubble.vue'
@@ -48,13 +48,14 @@ import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu } from '@/bub
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
-import { collaborationEditorProps } from './type'
+import { type CollaborationEditorProps } from './type'
 import { EditorPreviewImage } from '@/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
 import { SEARCH_REPLACE_VISIBLE_KEY, UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY } from './keys'
+import { ToolBarConfig } from './type'
 // import initContext from './context'
 // import { useUserStore } from '@/store/modules/user/user'
 // import { getRandomColor } from '@/helpers/color'
@@ -68,53 +69,24 @@ onKeyStroke(e => {
 defineOptions({
   name: 'SpeedTiptapEditor',
 })
-const props = withDefaults(defineProps<{
-  /**
-   * 场景:支持富文本和知识库两种场景
-   */
-  scene?: 'default' | 'knowledge'
-  /**
-   * 内容
-   */
-  content?: string
-  /**
-   * 标题
-   */
-  title?: string
-  /**
-   * 文档 id
-   */
-  docId?: string
-  /**
-   * 类型
-   */
-  docType?: "document" | "template"
-  /**
-   * 是否可编辑
-   */
-  editable?: boolean
-  /**
-   * 是否需要菜单
-   */
-  menubar?: boolean
-  /**
-   * 是否隐藏评论功能
-   */
-  hideComment?: boolean
-  /**
-   * hocuspocusProvider
-   */
-  hocuspocusProvider?: Record<string, any>
-}>(), {
+
+// TODO: theme
+const props = withDefaults(defineProps<CollaborationEditorProps>(), {
   scene: "default",
   content: "",
   docType: "document",
   editable: true,
   menubar: true,
   hideComment: true,
+  placeholder: "输入 / 唤起更多",
+  textBubbleMenu: () => ({
+    enabled: true
+  })
 })
-
-
+const speedTiptapConfigCpt = computed(() => {
+  return props;
+})
+provide('speedTiptapConfig', speedTiptapConfigCpt); // 向下传递配置
 const emit = defineEmits(['update:title', 'update:content'])
 const previewInstance = ref<EditorPreviewImage | null>(null);
 provide('previewInstance', previewInstance);
@@ -131,8 +103,6 @@ watch(
     console.log(val)
   },
 )
-console.log(props?.hocuspocusProvider)
-console.log(props.scene)
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
@@ -160,7 +130,7 @@ const editor = useEditor({
   },
 
   extensions: [
-    ...(props.scene === 'knowledge' ? knowledgeKit : defauktKit),
+    ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefauktKit(props)),
     // Collaboration.configure({
     //   document: props?.hocuspocusProvider?.document ?? {},
     // }),

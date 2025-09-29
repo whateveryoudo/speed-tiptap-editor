@@ -7,13 +7,13 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\clearNodeAndMarks.vue
 -->
 <template>
-  <a-tooltip title="格式刷">
+  <a-tooltip title="清除格式">
     <a-button
       class="shadow-btn-wrapper"
       @click="clear"
       type="text"
     >
-      <clear-outlined class="text-[16px]"/>
+      <s-icon-font color="rgba(0, 0, 0, 0.88)" type="icon-kl-remove-format" :size="16"/>
     </a-button>
   </a-tooltip>
 </template>

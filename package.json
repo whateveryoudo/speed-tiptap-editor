@@ -115,7 +115,7 @@
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.3",
     "scroll-into-view-if-needed": "^3.0.3",
-    "speed-components-ui": "^0.1.24",
+    "speed-components-ui": "^0.1.26",
     "toggle-selection": "^1.0.6",
     "viewerjs": "^1.11.7",
     "vitepress": "^1.0.0",

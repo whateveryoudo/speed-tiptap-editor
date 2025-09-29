@@ -45,7 +45,7 @@ import { Indent } from "./indent";
 import { SearchAndReplace } from "./searchAndReplace";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
-
+import { FormatPainter } from "./formatPainter";
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
 });
@@ -59,7 +59,7 @@ const placeholders = [
 ];
 
 // 默认文档（无 title）
-export const defauktKit = [
+export const getDefauktKit = (props: any) => [
   // 使用 StarterKit 作为基础，禁用需要自定义的扩展
   StarterKit.configure({
     // 禁用一些扩展，因为我们要使用自定义版本
@@ -91,7 +91,7 @@ export const defauktKit = [
 
       if (!editor.isEditable) return "";
       // 这里不使用随机，比如选择颜色就会又执行这个方法导致placeholder一直变化
-      return "输入 / 唤起更多";
+      return props.placeholder;
     },
     showOnlyCurrent: false,
     showOnlyWhenEditable: false,
@@ -125,6 +125,7 @@ export const defauktKit = [
   Emoji,
   Parse,
   Mention,
+  FormatPainter,
   // 开源 替换 搜索插件
   SearchAndReplace.configure({
     searchResultClass: "speed-tiptap-search-result",
@@ -156,8 +157,8 @@ export const defauktKit = [
 ];
 
 // 知识库
-export const knowledgeKit = [
+export const getKnowledgeKit = (props: any) => [
   Title,
   DocumentWithHeading, // 用带 title 的 document
-  ...defauktKit.filter((ext) => ext?.name !== "doc"),
+  ...getDefauktKit(props).filter((ext) => ext?.name !== "doc"),
 ];

@@ -7,12 +7,18 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\ImageMenu\index.vue
 -->
 <template>
-  <BubbleContainer
-    :editor="editor"
-    plugin-key="image-bubble-menu"
-    :should-show="shouldShow"
-  >
+  <BubbleContainer :editor="editor" plugin-key="image-bubble-menu" :should-show="shouldShow">
     <a-space :size="5">
+
+      <!-- 尺寸设置 -->
+      <SizeSetting v-if="isActiveImage" :editor="editor" />
+      <!-- 直接调用通用的居中配置 -->
+      <align v-if="isActiveImage" :editor="editor"></align>
+      <a-tooltip v-if="isActiveImage" title="预览">
+        <div :class="['shadow-bg-wrapper']" @click="handlePreivew">
+          <eye-outlined />
+        </div>
+      </a-tooltip>
       <a-tooltip title="复制">
         <div :class="['shadow-bg-wrapper']" @click="handleCopyNode(Image.name)">
           <copy-outlined />
@@ -23,15 +29,6 @@
           <delete-outlined />
         </div>
       </speed-tooltip>
-      <!-- 尺寸设置 -->
-      <SizeSetting v-if="isActiveImage" :editor="editor" />
-      <!-- 直接调用通用的居中配置 -->
-      <align v-if="isActiveImage" :editor="editor"></align>
-      <a-tooltip v-if="isActiveImage" title="预览">
-        <div :class="['shadow-bg-wrapper']" @click="handlePreivew">
-          <eye-outlined />
-        </div>
-      </a-tooltip>
     </a-space>
   </BubbleContainer>
 </template>

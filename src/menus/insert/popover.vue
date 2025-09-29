@@ -13,7 +13,11 @@
     trigger="click"
     placement="bottomLeft">
     <template #content>
-      <base-list :editor="editor" trigger-type="menu" @triggerVisible="(val:boolean) => open = val"/>
+      <base-list 
+        :editor="editor" 
+        :insert-menu-config="insertMenuConfig"
+        trigger-type="menu" 
+        @triggerVisible="(val:boolean) => open = val"/>
     </template>
     <a-tooltip>
       <template #title> 插入 </template>
@@ -27,7 +31,7 @@
 <script setup lang="tsx">
 import { PropType, ref } from 'vue'
 import { Editor } from '@tiptap/core'
-import BaseList from './baseList.vue'
+import BaseList from './baseList.tsx'
 
 import {
   PlusCircleFilled,
@@ -38,6 +42,10 @@ defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
+  },
+  insertMenuConfig: {
+    type: Object as PropType<Record<string, any>>,
+    default: undefined,
   },
 })
 const open = ref(false)

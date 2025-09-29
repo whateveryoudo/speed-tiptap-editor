@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
 import { useGlobalStore } from "#example/store/index";
 import { speedTiptapLogin } from "#example/api/user";
+import { fileDownload, fileUploadSingle, fileUploadMulti, fileDel } from "#example/api/attachement";
 const route = useRoute();
 const router = useRouter();
 // const content = ref('<p></p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mdh0zic00qt3z0yuiqar?token=speed-test-token" width="240" height="264" file="[object File]"><p>asdas</p><p>asdasdasdsa</p><p>asdasdas</p><p>asdsadas</p>');
@@ -13,7 +14,7 @@ const content = ref(
   '<div data-type="callout" data-bg-color="rgba(217,201,248,0.5)" data-color="#000000" style="background-color: rgba(217,201,248,0.5); color: #000000;"><p>我是测试高亮块</p><p>啊啊啊</p></div><p></p>'
 );
 
-const onUpdate = (content) => {
+const onUpdate = (content: string) => {
   console.log(content);
 };
 const currentDemo = ref();
@@ -41,7 +42,7 @@ const demos = [
     description: "AI编写（待开发）",
   },
 ];
-const checkDemo = (name) => {
+const checkDemo = (name: string) => {
   console.log(currentDemo.value, name);
   if (currentDemo.value === name) {
     return;
@@ -72,6 +73,33 @@ const handleOpenJwtChange = async (checked: boolean) => {
     localStorage.setItem("speed-tiptap-token", token);
   }
 };
+
+const simpleProps = {
+  upload: {
+    uploadApis: {
+      fileDownload: fileDownload,
+      fileUploadSingle: fileUploadSingle,
+      fileUploadMulti: fileUploadMulti,
+      fileDel: fileDel,
+      // 主要用于图片预览
+      getPreviewUrl: (fileId: string) => {
+        // 实际情况替换为实际地址(此处为本地启动的node附件服务)
+        const globalStore = useGlobalStore();
+        const token = globalStore.openJwt ? localStorage.getItem('speed-tiptap-token') : 'speed-test-token'; // 未开启jwt 则使用一个模拟值
+        return "//localhost:3005/attachment/preview/" + fileId + `?token=${token}`;
+      },
+      // 主要用于文件预览
+      getFilePreviewUrl: (fileId: string) => {
+        // 实际情况替换为实际地址(此处为本地启动的node附件服务)
+        const globalStore = useGlobalStore();
+        const token = globalStore.openJwt ? localStorage.getItem('speed-tiptap-token') : 'speed-test-token'; // 未开启jwt 则使用一个模拟值
+        return "//localhost:3005/onlyoffice/filePreview/" + fileId + `?token=${token}`;
+      },
+      
+    },
+  }
+}
+
 watch(
   () => route.query.demoType,
   (newVal) => {
@@ -98,7 +126,8 @@ watch(
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2 h-[600px]">
-    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'" />
+    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'"
+      v-bind="simpleProps" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
