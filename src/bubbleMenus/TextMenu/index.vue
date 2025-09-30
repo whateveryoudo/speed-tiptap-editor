@@ -71,6 +71,9 @@ const shouldShow = ({ editor, state }: { editor: any; state: any }) => {
         return false
     }
 
+    // 新增：拖拽场景下不显示气泡
+    if ((editor.storage as any).__dragging) return false
+
     // 确保有选择内容
     if (state.selection.empty) {
         return false

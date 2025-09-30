@@ -11,8 +11,10 @@ const router = useRouter();
 const content = ref(
   // '<p>测试下表格</p><table style="min-width: 125px"><colgroup><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"><col style="min-width: 25px"></colgroup><tbody><tr><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th><th colspan="1" rowspan="1"><p></p></th></tr><tr><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td><td colspan="1" rowspan="1"><p></p></td></tr></tbody></table><p><img crossorigin="anonymous" src="//localhost:3005/attachment/preview/mfqgzacd3u35cf1w3nd?token=speed-test-token" width="240" height="264" file="[object File]" originalwidth="240" originalheight="264"></p><p><div class="attachment" displaymode="title" file="[object File]" filename="测试excel新建表单 (1).xlsx" filesize="10142" filetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" fileid="mf1vxwsnbrna0ezoi8m"></div></p><p></p>'
   // '<pre><code class="language-auto"></code></pre><p></p>'
-  '<div data-type="callout" data-bg-color="rgba(217,201,248,0.5)" data-color="#000000" style="background-color: rgba(217,201,248,0.5); color: #000000;"><p>我是测试高亮块</p><p>啊啊啊</p></div><p></p>'
+  // '<div data-type="callout" data-bg-color="rgba(217,201,248,0.5)" data-color="#000000" style="background-color: rgba(217,201,248,0.5); color: #000000;"><p>我是测试高亮块</p><p>啊啊啊</p></div><p></p>'
+  ''
 );
+const json = ref({ "type": "doc", "content": [{ "type": "callout", "attrs": { "bgColor": "rgba(217,201,248,0.5)", "color": "#000000", "icon": null }, "content": [{ "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "我是测试高亮块" }] }, { "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "啊啊啊" }] }] }, { "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "1" }] }] });
 
 const onUpdate = (content: string) => {
   console.log(content);
@@ -95,7 +97,7 @@ const simpleProps = {
         const token = globalStore.openJwt ? localStorage.getItem('speed-tiptap-token') : 'speed-test-token'; // 未开启jwt 则使用一个模拟值
         return "//localhost:3005/onlyoffice/filePreview/" + fileId + `?token=${token}`;
       },
-      
+
     },
   }
 }
@@ -126,8 +128,8 @@ watch(
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2 h-[600px]">
-    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'"
-      v-bind="simpleProps" />
+    <SpeedTiptapEditor v-model:json="json" v-model:content="content" v-model:title="title"
+      v-if="currentDemo === 'simple'" v-bind="simpleProps" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
@@ -135,7 +137,7 @@ watch(
     <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'ai'" scene="ai" />
   </div>
   <div>
-    <a-space>标题:<a-input v-model:value="title" /></a-space>{{ content }}
+    <a-space>标题:<a-input v-model:value="title" /></a-space>{{ json }}
   </div>
 </template>
 

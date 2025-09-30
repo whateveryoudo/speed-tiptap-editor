@@ -1,7 +1,9 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./src/router";
-import SpeedTiptapEditor from "../src/main";
+import SpeedTiptapEditor from "../src";
+// import SpeedTiptapEditor from "../dist/speed-tiptap-editor-index.es.js";
+// import "../dist/style.css";
 import { createPinia } from 'pinia';
 import { useGlobalStore } from '#example/store/index';
 import "uno.css";
@@ -13,6 +15,7 @@ import {
   fileDel,
 } from "./src/api/attachement";
 // 配置一些请求地址，用于上传文件
+console.log(SpeedTiptapEditor);
 createApp(App)
   .use(router)
   .use(createPinia())

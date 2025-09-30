@@ -100,7 +100,7 @@ export default defineComponent({
           .map(key => findMenuItem(key))
           .filter((item): item is SubMenuGroup => item !== undefined)
       }
-      if (item.key === 'img' || item.key === 'file') {
+      if (item.key === 'image' || item.key === 'file') {
         // 查找下方的input，并触发点击
         const inputRef = inputRefs.value[item.key]
         if (inputRef) {
@@ -258,9 +258,9 @@ export default defineComponent({
                                 {subItem.iconRender ? (
                                   <s-icon-font icon-render={subItem.iconRender} />
                                 ) : subItem.iconType ? (
-                                  <s-icon-font size={subItem.size} type={subItem.iconType} />
-                                ) : subItem.imgIcon ? (
-                                  <img src={subItem.imgIcon} alt="" />
+                                  <s-icon-font size={subItem.size} imgModule={subItem.imgModule} type={subItem.iconType} />
+                                ) : subItem.imgModule ? (
+                                  <img src={subItem.imgModule} alt="" />
                                 ) : null}
                               </span>
                               {subItem.name}
@@ -279,19 +279,19 @@ export default defineComponent({
                               <s-icon-font icon-render={subItem.iconRender} />
                             ) : subItem.iconType ? (
                               <s-icon-font size={subItem.size} type={subItem.iconType} />
-                            ) : subItem.imgIcon ? (
-                              <img src={subItem.imgIcon} alt="" />
+                            ) : subItem.imgModule ? (
+                              <img src={subItem.imgModule} alt="" />
                             ) : null}
                           </span>
                           {subItem.name}
                           {/* file,img隐藏一个input，点击后选择文件 */}
-                          {['file', 'img'].includes(subItem.key) && (
+                          {['file', 'image'].includes(subItem.key) && (
                             <input 
                               ref={(el) => { if (el) inputRefs.value[subItem.key] = el as HTMLInputElement }}
                               onChange={(event: any) => handleFileChange(subItem, event)}
                               multiple
                               type="file"
-                              accept={subItem.key === 'img' 
+                              accept={subItem.key === 'image' 
                                 ? image?.accept ?? ".svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic"
                                 : subItem.key === 'file' 
                                 ? file?.accept ?? ".docx,.doc,.txt,.lake,.lakebook,.lakesheet,.pdf,.xls,.xlsx,.xlsm,.csv,.pptx,.ppt,.pages,.numbers,.key,.keynote,.md,.mark,.markdown,.xmind,.mindnode,.mmap,.mm,.rp,.psd,.sketch,.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,.heif,.ts,.mp3,.mpga,.wav,.bat,.c,.cpp,.css,.go,.h,.java,.js,.json,.jsonl,.log,.m,.mkd,.php,.py,.r,.sh,.sql,.xml,.jmx,.yaml,.yml,.ipynb,.mp4"

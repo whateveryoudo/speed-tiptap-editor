@@ -70,7 +70,7 @@ const nodeAttrs = computed(() => {
 const uploadOptions = computed(() => {
   const rawAccept =
     speedTiptapConfig?.value?.upload?.accept ||
-    speedTiptapConfig?.value?.image?.accept ||
+    speedTiptapConfig?.value?.file?.accept ||
     speedUseTiptapConfig?.value?.image?.accept ||
     undefined
   // 兼容字符串或数组；其余情况返回空数组
@@ -81,13 +81,13 @@ const uploadOptions = computed(() => {
       : []
   return {
     acceptTypes,
-    maxSize: speedTiptapConfig?.value?.upload?.maxSize || speedTiptapConfig?.value?.image?.maxSize || speedUseTiptapConfig?.value?.image?.maxSize,
+    maxSize: speedTiptapConfig?.value?.upload?.maxSize || speedTiptapConfig?.value?.file?.maxSize || speedUseTiptapConfig?.value?.file?.maxSize,
     // 传入ajax方法
     apis: {
-      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti,
-      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle,
-      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.image?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.image?.uploadApis?.fileDel,
-      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.image?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.image?.uploadApis?.fileDownload,
+      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.file?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.file?.uploadApis?.fileUploadMulti,
+      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.file?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.file?.uploadApis?.fileUploadSingle,
+      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.file?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.file?.uploadApis?.fileDel,
+      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.file?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.file?.uploadApis?.fileDownload,
     },
     // 上传后的回调
     afterUpload: async (files: any[], res: any) => {
@@ -115,30 +115,30 @@ const uploadOptions = computed(() => {
 });
 
 // 使用自定义上传hook
-const { customRequest, uploadLoading, handleDownloadFile } =
+const { customRequest, uploadLoading, beforeUpload: commonBeforeUpload, handleDownloadFile } =
   useCustomUpload(uploadOptions);
 // 手动上传的beforeUpload(这里仅处理单个文件判断)
 const manualBeforeUpload = (file: File | File[]) => {
-  const beforeUpload = speedTiptapConfig?.value?.image?.beforeUpload || speedTiptapConfig?.value?.upload?.beforeUpload || speedUseTiptapConfig?.value?.image?.beforeUpload;
+  const beforeUpload = speedTiptapConfig?.value?.file?.beforeUpload || speedTiptapConfig?.value?.upload?.beforeUpload || speedUseTiptapConfig?.value?.file?.beforeUpload;
   const fileItem = Array.isArray(file) ? file[0] : file;
   if (beforeUpload) {
     return beforeUpload(fileItem)
   }
   // 通用拦截判断(调用hook)
-  return beforeUpload(fileItem);
+  return commonBeforeUpload(fileItem as any);
 }
 // 处理文件选择
 const startUpload = (file: File) => {
   // 这里直接用action判断
-  const action = speedTiptapConfig?.value?.image?.action || speedTiptapConfig?.value?.upload?.action || speedUseTiptapConfig?.value?.apis?.fileUploadSingle;
+  const action = speedTiptapConfig?.value?.file?.action || speedTiptapConfig?.value?.upload?.action || speedUseTiptapConfig?.value?.apis?.fileUploadSingle;
   if (!action) {
     customRequest({
       file
     });
   } else { // 手动上传，需要用户传入一些信息（不建议使用此方案，大部分不建议直接配置url地址，而是传入方法）
     if (manualBeforeUpload(file)) {
-      const headers = speedTiptapConfig?.value?.image?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.apis?.headers;
-      const data = speedTiptapConfig?.value?.image?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.apis?.data;
+      const headers = speedTiptapConfig?.value?.file?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.apis?.headers;
+      const data = speedTiptapConfig?.value?.file?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.apis?.data;
       axios.post(action, {
         headers: {
           'Content-Type': 'multipart/form-data',

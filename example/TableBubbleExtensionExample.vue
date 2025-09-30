@@ -6,7 +6,7 @@ import { Table } from '@tiptap/extension-table'
 import TableRow from '../src/extensions/tableRow'
 import TableCell from '../src/extensions/tableCell'
 import TableHeader from '../src/extensions/tableHeader'
-import { TableBubbleMenu } from '../src/bubbleMenus/TableMenu/useTableBubbleMenu'
+import { TableBubbleMenu } from '../src/bubbleMenus/tableMenu/useTableBubbleMenu'
 
 // 创建编辑器实例，包含表格气泡菜单扩展
 const editor = new Editor({

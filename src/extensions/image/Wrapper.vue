@@ -132,7 +132,7 @@ const uploadOptions = computed(() => {
 });
 
 // 使用自定义上传hook
-const { customRequest, handleDelFile, beforeUpload, uploadLoading, files } =
+const { customRequest, beforeUpload: commonBeforeUpload, uploadLoading } =
   useCustomUpload(uploadOptions);
 // 手动上传的beforeUpload(这里仅处理单个文件判断)
 const manualBeforeUpload = (file: File | File[]) => {
@@ -142,7 +142,7 @@ const manualBeforeUpload = (file: File | File[]) => {
     return beforeUpload(fileItem)
   }
   // 通用拦截判断(调用hook)
-  return beforeUpload(fileItem);
+  return commonBeforeUpload(fileItem as any);
 }
 // 处理文件选择
 const startUpload = (file: File) => {

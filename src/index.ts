@@ -14,6 +14,8 @@ import { useAntdCssVars } from "speed-components-ui/hooks";
 import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
 import SpeedTooltip from "./components/SpeedTooltip/index.vue";
+// 导入 UnoCSS 样式
+import 'uno.css'
 // 组件列表
 const components: Component[] = [SpeedTiptapEditor];
 

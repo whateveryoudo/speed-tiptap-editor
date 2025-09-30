@@ -31,7 +31,7 @@ export interface SubMenuGroup {
   size?: number
   iconRender?: (opt?: any) => VNode
   iconType?: string
-  imgIcon?: any
+  imgModule?: any
   hasMore?: boolean
   action?: (editor: Editor, payload?: any) => void
   payload?: any;
@@ -46,13 +46,13 @@ export interface MenuGroup {
   order?: number
 }
 export interface InsertMenuItemConfig {
-  groupKey: string
+  groupKey?: string
   key: string
   name: string
   size?: number
   iconRender?: (opt?: any) => VNode
   iconType?: string
-  imgIcon?: any
+  imgModule?: any
   hasMore?: boolean
   action?: (editor: Editor, payload?: any) => void
   payload?: any
@@ -85,15 +85,15 @@ export const useCommand = (config?: InsertMenuConfig) => {
       span: 12,
       children: [
         {
-          key: 'img',
+          key: 'image',
           name: '图片',
-          imgIcon: imgIcon,
+          imgModule: imgIcon,
           action: (editor,payload) => editor.chain().focus().uploadImage(payload).run(),
         },
         {
           key: 'table',
           name: '表格',
-          imgIcon: tableIcon,
+          imgModule: tableIcon,
           hasMore: true,
           action: (editor, payload) => {
             // 如果没选择则默认3 * 3
@@ -108,14 +108,14 @@ export const useCommand = (config?: InsertMenuConfig) => {
         {
           key: 'file',
           name: '附件',
-          imgIcon: fileIcon,
+          imgModule: fileIcon,
           payload: null,
           action: (editor,payload) => editor.chain().focus().uploadAttachment(payload).run(),
         },
         {
           key: 'tag',
           name: '标签',
-          imgIcon: tagIcon,
+          imgModule: tagIcon,
           action: (editor,payload) => editor.chain().focus().insertTag(payload).run(),
         }
       ],
@@ -128,7 +128,7 @@ export const useCommand = (config?: InsertMenuConfig) => {
     //       key: '2-1',
     //       name: '思维导图',
     //       size: 18,
-    //       imgIcon: mindIcon,
+    //       imgModule: mindIcon,
     //       action: editor => {
     //         editor?.chain().focus().setMind().run()
     //         updateFlowState && updateMindState('visible', true)
@@ -138,7 +138,7 @@ export const useCommand = (config?: InsertMenuConfig) => {
     //     {
     //       key: '2-2',
     //       name: '流程图',
-    //       imgIcon: flowIcon,
+    //       imgModule: flowIcon,
     //       action: editor => {
     //         editor
     //           .chain()
@@ -160,7 +160,7 @@ export const useCommand = (config?: InsertMenuConfig) => {
           key: 'codeBlock',
           name: '代码块',
           size: 18,
-          imgIcon: codeBlockIcon,
+          imgModule: codeBlockIcon,
           action: editor => {
             editor?.chain().focus().setCodeBlock().run()
           },
@@ -175,7 +175,7 @@ export const useCommand = (config?: InsertMenuConfig) => {
           key: 'callout',
           name: '高亮块',
           size: 18,
-          imgIcon: calloutIcon,
+          imgModule: calloutIcon,
           action: editor => {
             editor?.chain().focus().setCallout().run()
           },
@@ -210,7 +210,7 @@ export const useCommand = (config?: InsertMenuConfig) => {
         size: c.size,
         iconRender: c.iconRender,
         iconType: c.iconType,
-        imgIcon: c.imgIcon,
+        imgModule: c.imgModule,
         hasMore: c.hasMore,
         action: c.action,
         payload: c.payload,
@@ -261,7 +261,7 @@ export const useCommand = (config?: InsertMenuConfig) => {
         size: it.size,
         iconRender: it.iconRender,
         iconType: it.iconType,
-        imgIcon: it.imgIcon,
+        imgModule: it.imgModule,
         hasMore: it.hasMore,
         action: it.action,
         payload: it.payload,

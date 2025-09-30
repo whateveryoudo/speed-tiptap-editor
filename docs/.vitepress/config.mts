@@ -24,7 +24,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "指南", link: "/guide/" },
-      { text: "apis", link: "/apis/" },
+      { text: "配置", link: "/config/toolbar" },
       { text: "示例", link: "/demos/simple" },
     ],
     sidebar: {
@@ -37,14 +37,15 @@ export default defineConfig({
           ],
         },
       ],
-      "/apis/": [
+      "/config/": [
         {
-          text: "插件",
+          text: "基础",
           items: [
-            {
-              text: "Doc",
-              link: "/apis/doc/index",
-            },
+            { text: "工具栏", link: "/config/toolbar" },
+            { text: "图片上传", link: "/config/image" },
+            { text: "文件上传", link: "/config/file" },
+            { text: "字体大小", link: "/config/font-size" },
+            { text: "文本气泡菜单", link: "/config/bubble-text" },
           ],
         },
       ],
@@ -94,7 +95,7 @@ export default defineConfig({
             importStyle: false,
             resolveIcons: true,
           }),
-        ]
+        ],
       }),
     ],
   },

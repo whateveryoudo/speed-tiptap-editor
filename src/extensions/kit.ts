@@ -13,10 +13,9 @@ import { Document as BaseDocument } from "./document";
 import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 import { Attachment } from "./attachment";
-import { Placeholder, Focus , Gapcursor } from "@tiptap/extensions";
+import { Placeholder, Focus, Gapcursor } from "@tiptap/extensions";
 import { StarterKit } from "@tiptap/starter-kit";
 import type { Editor } from "@tiptap/core";
-import { Dragable } from "./dragable";
 import { Link } from "./link";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { FontSize } from "./fontSize";
@@ -126,6 +125,7 @@ export const getDefauktKit = (props: any) => [
   Parse,
   Mention,
   FormatPainter,
+  FormatPainter,
   // 开源 替换 搜索插件
   SearchAndReplace.configure({
     searchResultClass: "speed-tiptap-search-result",
@@ -154,6 +154,7 @@ export const getDefauktKit = (props: any) => [
   Superscript,
   Subscript,
   Tag,
+  
 ];
 
 // 知识库

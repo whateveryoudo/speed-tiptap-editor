@@ -44,7 +44,11 @@ export interface CollaborationEditorProps {
   /**
    * 内容
    */
-  content: string;
+  content?: string;
+  /**
+   * json
+   */
+  json?: any;
   /**
    * 文档 id
    */

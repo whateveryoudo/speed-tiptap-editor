@@ -1,4 +1,3 @@
-
 // 定义一些常用变量
 :root {
   --speed-color-border-gray: #e8e8e8;
@@ -10,9 +9,10 @@
   --speed-color-text-white-1: #e2e2e2;
 
   // 搜索结果样式
-  --speed-color-search-result-background: rgb(255,255,195);
-  --speed-color-search-result-current-background: rgb(255,190,187);
+  --speed-color-search-result-background: rgb(255, 255, 195);
+  --speed-color-search-result-current-background: rgb(255, 190, 187);
 }
+
 .ProseMirror {
   font-family:
     "Chinese Quote", "Segoe UI", Roboto, RobotoNum, "PingFang SC",
@@ -29,6 +29,7 @@
   &:focus-visible {
     outline: none;
   }
+
   // 重置选中文字颜色，防止出现点击左侧拖拽文字变白（先移除，会导致高亮节点内部文字点击变色）
   // &.ProseMirror-hideselection ::selection {
   //   color: var(--ant-color-text-base) !important;
@@ -36,7 +37,7 @@
   summary {
     display: list-item;
   }
-  
+
   blockquote,
   dd,
   dl,
@@ -52,7 +53,7 @@
   pre {
     margin: 0;
   }
- 
+
   a {
     color: var(--ant-color-primary);
     text-decoration: underline;
@@ -78,6 +79,7 @@
   sup {
     top: -0.5em;
   }
+
   // 去掉p的默认样式
   p {
     margin-bottom: 0.75rem;
@@ -113,10 +115,12 @@
       content: "";
     }
   }
+
   // 表格样式（目前没找到定制方案，请误在其他地方使用此类名）
   .tableWrapper {
     margin-bottom: 10px;
   }
+
   table {
     border-collapse: collapse;
     table-layout: fixed;
@@ -133,7 +137,7 @@
       box-sizing: border-box;
       position: relative;
 
-      > * {
+      >* {
         margin-bottom: 0;
       }
     }
@@ -170,14 +174,36 @@
       margin: 0;
     }
   }
+
   // 搜索结果样式
   .speed-tiptap-search-result {
     background-color: var(--speed-color-search-result-background);
+
     &-current {
       background: var(--speed-color-search-result-current-background);
     }
   }
+
+
 }
+
+// .ProseMirror-selectednode,
+// .ProseMirror-selectednoderange {
+//   position: relative;
+
+//   &::before {
+//     position: absolute;
+//     pointer-events: none;
+//     z-index: -1;
+//     content: '';
+//     top: -0.25rem;
+//     left: -0.25rem;
+//     right: -0.25rem;
+//     bottom: -0.25rem;
+//     background-color: #70cff850;
+//     border-radius: 0.2rem;
+//   }
+// }
 
 .resize-cursor {
   cursor: ew-resize;
@@ -192,9 +218,3 @@ body[theme-mode="dark"] {
     }
   }
 }
-
-
-
-
-
-

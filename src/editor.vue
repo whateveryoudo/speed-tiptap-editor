@@ -27,6 +27,8 @@
     <!-- table的选择气泡提示框 -->
     <TableBubbleMenu v-if="editor" :editor="editor" />
     <CalloutMenu v-if="editor" :editor="editor" />
+    <!-- 节点拖拽 -->
+    <DragNodeMenu v-if="editor" :editor="editor" />
     <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
       <editor-content :editor="editor" />
     </main>
@@ -41,10 +43,10 @@ import { watch, ref, PropType, provide, computed, VNode } from 'vue'
 import MenuBar from './menus'
 import { getKnowledgeKit, getDefauktKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
-import TableMenu from '@/bubbleMenus/TableMenu/index.vue'
-import TableBubbleMenu from '@/bubbleMenus/TableMenu/Bubble.vue'
+import TableMenu from '@/bubbleMenus/tableMenu/index.vue'
+import TableBubbleMenu from '@/bubbleMenus/tableMenu/Bubble.vue'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu } from '@/bubbleMenus'
+import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@/bubbleMenus'
 
 // import Collaboration from '@tiptap/extension-collaboration'
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
@@ -55,7 +57,6 @@ import { onKeyStroke } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
 import { SEARCH_REPLACE_VISIBLE_KEY, UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY } from './keys'
-import { ToolBarConfig } from './type'
 // import initContext from './context'
 // import { useUserStore } from '@/store/modules/user/user'
 // import { getRandomColor } from '@/helpers/color'
@@ -87,7 +88,7 @@ const speedTiptapConfigCpt = computed(() => {
   return props;
 })
 provide('speedTiptapConfig', speedTiptapConfigCpt); // 向下传递配置
-const emit = defineEmits(['update:title', 'update:content'])
+const emit = defineEmits(['update:title', 'update:content', 'update:json'])
 const previewInstance = ref<EditorPreviewImage | null>(null);
 provide('previewInstance', previewInstance);
 
@@ -106,15 +107,18 @@ watch(
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
-  content: props.content, // 初始化时设置内容
+  content: props.json, // 初始化时设置内容
   editorProps: {
+    // 追加class，用于设定样式
     attributes: {
-      class: 'is-withauthor is-editable',
+      class: props.scene === 'knowledge' ? 'editor-content has-drag-handle' : 'editor-content',
     },
   },
   onUpdate({ editor }) {
     // 编辑器内容变化时，同步到外部
     const html = editor.getHTML()
+    const json = editor.getJSON()
+    emit('update:json', json)
     emit('update:content', html)
 
     // 原有的标题更新逻辑
@@ -157,6 +161,15 @@ watch(
   }
 )
 
+// json
+watch(
+  () => props.json,
+  (newJson) => {
+    if (editor.value && newJson !== editor.value.getJSON()) {
+      editor.value.commands.setContent(newJson, false)
+    }
+  }
+)
 
 // 监听 title 变化，同步到编辑器标题
 watch(
@@ -204,16 +217,12 @@ console.log(editor.value)
       border-bottom: 1px solid var(--ant-color-border);
     }
 
-
     &>main {
-      justify-content: center;
-      display: flex;
 
       // 知识库方式
       &.knowledge-content-wrap {
-        max-width: 750px;
+        max-width: 1000px;
         margin: 0 auto;
-        justify-content: flex-start;
       }
 
       border: none;
@@ -251,25 +260,13 @@ console.log(editor.value)
     box-sizing: border-box;
     position: relative; // 为 BubbleMenu 提供定位上下文
 
-    .content-wrap {
-      width: 100%;
-      position: relative; // 确保内容区域也有定位上下文
-
-      &>div {
-        position: relative; // 无结构的style??
-      }
-
-
-      &.isFullWidth {
-        max-width: 100%;
-      }
-
-      .commentWrap {
-        padding: 16px 0 64px;
-        border-top: 1px solid var(--ant-border-color);
+    :deep(.editor-content) {
+      // 带有句柄的需要增加padding
+      &.has-drag-handle {
+        padding-left: 50px;
+        padding-right: 50px;
       }
     }
-
   }
 
 }

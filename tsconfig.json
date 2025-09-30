@@ -22,6 +22,6 @@
     },
     "types": ["node", "vite/client", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/bubbleMenus/TableMenu/initTableIcon.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/bubbleMenus/tableMenu/initTableIcon.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 } 
