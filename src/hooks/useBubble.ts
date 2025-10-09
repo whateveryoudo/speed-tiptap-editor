@@ -51,9 +51,20 @@ export const useBubble = (editor: Editor, handleBubbleOptions: HandleBubbleOptio
       copyNode(name, editor)
     }
   }
+  const handleCutNode = (name?: string | MouseEvent) => {
+    // 剪切 = 复制 + 删除
+    if (name && typeof name !== 'string' && name.target) {
+      copyNode(nodeName, editor)
+      deleteNode(nodeName, editor)
+    } else if (typeof name === 'string') {
+      copyNode(name, editor)
+      deleteNode(name, editor)
+    }
+  }
   return {
     getRenderRect,
     handleDelNode,
     handleCopyNode,
+    handleCutNode,
   }
 }

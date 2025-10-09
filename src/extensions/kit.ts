@@ -69,7 +69,6 @@ export const getDefauktKit = (props: any) => [
     blockquote: false,
     horizontalRule: false,
     link: false,
-    // paste: false  // 禁用默认的 paste 扩展，使用自定义的 Parse 扩展
     // 保留 StarterKit 中的其他扩展
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
@@ -81,7 +80,6 @@ export const getDefauktKit = (props: any) => [
   Placeholder.configure({
     placeholder: ({ node, editor, pos, hasAnchor }) => {
       if (node.type.name === "title") {
-        console.log(editor.isEditable);
         return editor.isEditable ? "请输入标题" : "未命名文档";
       }
       if (["codeBlock", "callout"].includes(node.type.name)) {

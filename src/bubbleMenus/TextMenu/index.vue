@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, ref } from 'vue'
 import BubbleContainer from '../BubbleContainer.vue'
 import Bold from '@/menus/bold.vue'
 import Italic from '@/menus/italic.vue'
@@ -54,6 +54,7 @@ const props = withDefaults(defineProps<{
 }>(), {
     editor: () => ({}),
 })
+const globalTiptapStorage = inject('globalTiptapStorage', ref<Record<string, any>>({}));
 const bubbleMenuMap = {
     bold: Bold,
     italic: Italic,
@@ -72,7 +73,7 @@ const shouldShow = ({ editor, state }: { editor: any; state: any }) => {
     }
 
     // 新增：拖拽场景下不显示气泡
-    if ((editor.storage as any).__dragging) return false
+    if (globalTiptapStorage.value.__dragging) return false
 
     // 确保有选择内容
     if (state.selection.empty) {

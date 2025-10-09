@@ -24,13 +24,6 @@ lowlightInstance.registerAlias({
   tsx: "typescript",
 });
 
-declare module "@tiptap/core" {
-  interface Commands<ReturnType> {
-    codeBlockNode: {
-      setCodeBlock: () => ReturnType;
-    };
-  }
-}
 export const CodeBlock = CodeBlockLowlight.extend({
   addOptions() {
       return {
@@ -92,16 +85,6 @@ export const CodeBlock = CodeBlockLowlight.extend({
         }
         return false;
       },
-    };
-  },
-  addCommands() {
-    return {
-      setCodeBlock:
-        () =>
-        ({ commands }) => {
-          // 插入一个高亮块
-          return commands.setNode(this.name);
-        },
     };
   },
 }).configure({

@@ -280,8 +280,6 @@ watch(() => nodeAttrs.value.file, (file: File) => {
     padding-left: 6px;
     padding-right: 6px;
     cursor: pointer;
-    border: 1px solid var(--ant-color-border);
-    border-radius: var(--ant-border-radius);
     justify-content: space-between;
     align-items: center;
 

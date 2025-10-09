@@ -6,7 +6,7 @@ import { TextSelection, NodeSelection } from "@tiptap/pm/state";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     callout: {
-      setCallout: () => ReturnType;
+      setCallout: (text?: string) => ReturnType;
     };
   }
 }
@@ -65,14 +65,24 @@ export const Callout = Node.create({
   },
   addCommands() {
     return {
+      // 直接文本初始化
       setCallout:
-        () =>
+        (text?: string) =>
         ({ chain }) => {
           return chain()
             .focus()
             .insertContent({
               type: this.name,
-              content: [{ type: "paragraph" }],
+              content: [
+                text
+                  ? {
+                      type: "paragraph",
+                      content: text ? [{ type: "text", text }] : [],
+                    }
+                  : {
+                      type: "paragraph",
+                    },
+              ],
             })
             .run();
         },
@@ -157,7 +167,7 @@ export const Callout = Node.create({
                 // 检查当前段落是否还有内容
                 const currentParagraph = $from.parent;
                 const hasContent = currentParagraph.childCount > 0;
-                
+
                 const parentDepth = $from.depth;
                 const tr = deleteParagraphAndSelectPrev(
                   state,

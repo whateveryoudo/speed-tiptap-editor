@@ -97,7 +97,12 @@ provide(SEARCH_REPLACE_VISIBLE_KEY, searchReplaceVisible);
 provide(UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY, (visible: boolean) => {
   searchReplaceVisible.value = visible;
 });
-
+const globalTiptapStorage = ref<Record<string, any>>({}); // 模拟一个编辑器的全局存储，用于某些没有加入扩展的请求（如：drag-handle）
+provide('globalTiptapStorage', globalTiptapStorage);
+const updateGlobalTiptapStorageFunc = (key: string, value: any) => {
+  globalTiptapStorage.value[key] = value;
+};
+provide('updateGlobalTiptapStorageFunc', updateGlobalTiptapStorageFunc);
 watch(
   () => props.hocuspocusProvider,
   val => {
@@ -261,6 +266,7 @@ console.log(editor.value)
     position: relative; // 为 BubbleMenu 提供定位上下文
 
     :deep(.editor-content) {
+
       // 带有句柄的需要增加padding
       &.has-drag-handle {
         padding-left: 50px;

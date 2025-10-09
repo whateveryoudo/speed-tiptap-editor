@@ -1,3 +1,4 @@
+// 已废弃，直接采用组件的方式
 import { Extension } from '@tiptap/core'
 import { Plugin, PluginKey, Selection } from '@tiptap/pm/state'
 import { NodeSelection } from '@tiptap/pm/state'
