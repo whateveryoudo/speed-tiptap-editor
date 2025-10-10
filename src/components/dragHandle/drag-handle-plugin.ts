@@ -330,6 +330,15 @@ export const DragHandlePlugin = ({
             const outerNode = getOuterNode(editor.state.doc, domNodePos);
             const outerNodePos = getOuterNodePos(editor.state.doc, domNodePos); // TODO: needed?
 
+            // 如果是 title 节点，不显示拖拽标识
+            if (outerNode?.type.name === 'title') {
+              hideHandle();
+              currentNode = null;
+              currentNodePos = -1;
+              onNodeChange?.({ editor, node: null, pos: -1 });
+              return;
+            }
+
             currentNode = outerNode;
             currentNodePos = outerNodePos;
 
@@ -445,6 +454,15 @@ export const DragHandlePlugin = ({
 
               const domNodePos = view.posAtDOM(domNode, 0);
               const outerNode = getOuterNode(editor.state.doc, domNodePos);
+
+              // 如果是 title 节点，不显示拖拽标识
+              if (outerNode?.type.name === 'title') {
+                hideHandle();
+                currentNode = null;
+                currentNodePos = -1;
+                onNodeChange?.({ editor, node: null, pos: -1 });
+                return;
+              }
 
               if (outerNode !== currentNode) {
                 const outerNodePos = getOuterNodePos(

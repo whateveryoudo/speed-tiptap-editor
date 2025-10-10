@@ -289,7 +289,7 @@ export default defineComponent({
                             <input 
                               ref={(el) => { if (el) inputRefs.value[subItem.key] = el as HTMLInputElement }}
                               onChange={(event: any) => handleFileChange(subItem, event)}
-                              multiple
+                              multiple={subItem.key === 'image' ? image?.multiple ?? true : (file?.multiple ?? true)}
                               type="file"
                               accept={subItem.key === 'image' 
                                 ? image?.accept ?? ".svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic"

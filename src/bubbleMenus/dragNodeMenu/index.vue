@@ -49,7 +49,8 @@
                                 </a-menu-item>
                             </a-popover>
                             <template v-else>
-                                <a-menu-item v-if="item.type !== 'divider'" :key="item.key">
+                                <a-menu-item v-if="item.type !== 'divider'" :key="item.key"
+                                    :danger="item.key === 'delete'">
                                     <component :is="item.icon" class="mr-2" />
                                     {{ item.label }}
                                 </a-menu-item>
@@ -216,7 +217,7 @@ const nodeChangeActivedMap = computed(() => {
         h4: isH4Active.value,
         h5: isH5Active.value,
         h6: isH6Active.value,
-        text: isTextActive.value && !isCalloutActive.value,
+        text: isTextActive.value && !isCalloutActive.value && !isCodeBlockActive.value && !isBulletListActive.value && !isOrderedListActive.value && !isTaskListActive.value,
         callout: isCalloutActive.value,
         codeBlock: isCodeBlockActive.value,
         bulletList: isBulletListActive.value,

@@ -8,17 +8,22 @@
 -->
 <template>
   <NodeViewWrapper :class="[nodeAttrs.displayMode !== 'card' && 'inline-block']">
-    <div v-if="isEditable && !nodeAttrs.fileId" :class="['wrap', uploadFailed ? 'upload-failed' : '']">
+    <div v-if="isEditable && !nodeAttrs.fileId" :class="['wrap', uploadFailed ? 'upload-failed' : '']"
+      @click="uploadAgain">
       <a-spin :spinning="uploadLoading">
-        <a-typography-text style="cursor: pointer">
-          <a-progress v-if="showProgress" :percent="percent" showInfo></a-progress>
-          <span v-else>
+        <!-- 先不要进度条 -->
+        <a-typography-text style="cursor: pointer" @click="uploadAgain">
+          <!-- <a-progress v-if="showProgress" :percent="percent" showInfo></a-progress> -->
+          <span>
             {{ uploadLoading ? "正在上传中" : "请选择文件" }}
           </span>
         </a-typography-text>
       </a-spin>
     </div>
     <file-display-bar v-if="nodeAttrs.fileId" v-bind="nodeAttrs" @download="handleDownloadFile" />
+    <input ref="AttachmentInput" @change="handleFileChange" type="file"
+      :accept="fileConfig?.accept ?? '.docx,.doc,.txt,.lake,.lakebook,.lakesheet,.pdf,.xls,.xlsx,.xlsm,.csv,.pptx,.ppt,.pages,.numbers,.key,.keynote,.md,.mark,.markdown,.xmind,.mindnode,.mmap,.mm,.rp,.psd,.sketch,.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,.heif,.ts,.mp3,.mpga,.wav,.bat,.c,.cpp,.css,.go,.h,.java,.js,.json,.jsonl,.log,.m,.mkd,.php,.py,.r,.sh,.sql,.xml,.jmx,.yaml,.yml,.ipynb,.mp4'"
+      hidden />
   </NodeViewWrapper>
 </template>
 
@@ -54,7 +59,7 @@ const speedUseTiptapConfig = inject(
 ) as Ref<any>;
 // 顶层组件注入对象
 const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
-
+const { file: fileConfig } = speedTiptapConfig.value;
 const isEditable = computed(() => {
   return props.editor?.isEditable;
 });
@@ -168,7 +173,13 @@ const startUpload = (file: File) => {
 
   };
 };
-
+const AttachmentInput = ref<HTMLInputElement>()
+const uploadAgain = () => {
+  AttachmentInput.value?.click()
+}
+const handleFileChange = (event: any) => {
+  startUpload(event?.target?.files[0])
+}
 onMounted(() => {
   // 监听下载事件
   props.editor?.on('attachment:download', ({ fileId }: { fileId: string }) => {
@@ -194,5 +205,10 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid transparent;
+
+  &.upload-failed {
+    border-color: var(--ant-color-error);
+  }
 }
 </style>

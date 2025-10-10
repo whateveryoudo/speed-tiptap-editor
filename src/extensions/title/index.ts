@@ -37,7 +37,6 @@ export const Title = Node.create<TitleOptions>({
   group: 'block',
   defining: true,
   isolating: true,
-  showGapCursor: true,
   marks: '', // 禁用样式修改
   addOptions() {
     return {

@@ -11,7 +11,7 @@
     <!-- <div v-if="nodeAttrs.error" :class="styles.wrapper">
       <a-typography-text>{{ nodeAttrs.error }}</a-typography-text>
     </div> -->
-    <div v-if="!nodeAttrs.src" :class="['wrapper', uploadFailed ? 'upload-failed' : '']">
+    <div v-if="!nodeAttrs.src" :class="['wrapper', uploadFailed ? 'upload-failed' : '']"  @click="uploadAgain">
       <a-spin :spinning="uploadLoading">
         <img :class="uploadFailed ? 'upload-failed' : ''" :src="ImgPlaceholder" alt="请选择图片"
           style="width: 150px; height: auto">
@@ -26,6 +26,9 @@
       @resize="onResize" @focus="selected = true">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </drager>
+    <!-- 隐藏一个input,上传失败后允许重新点击上传，这里不允许选多张 -->
+    <input ref="ImageInput" @change="handleFileChange" type="file"
+      :accept="imageConfig?.accept ?? '.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic'" hidden />
 
   </NodeViewWrapper>
 </template>
@@ -50,6 +53,7 @@ const speedUseTiptapConfig = inject(
 ) as Ref<any>;
 // 顶层组件注入对象
 const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+const { image: imageConfig } = speedTiptapConfig.value;
 const previewInstance = inject('previewInstance') as Ref<any>
 const uploadFailed = ref(false);
 const props = defineProps({
@@ -68,6 +72,7 @@ const props = defineProps({
   },
 })
 const selected = ref(false)
+const ImageInput = ref<HTMLInputElement>()
 const isEditable = computed(() => {
   return props.editor?.isEditable
 })
@@ -260,6 +265,13 @@ const handlePreivew = () => {
 //   },
 //   { flush: 'post' },
 // )
+
+const uploadAgain = () => {
+  ImageInput.value?.click()
+}
+const handleFileChange = (event: any) => {
+  startUpload(event?.target?.files[0])
+}
 watch(() => nodeAttrs.value.file, (file: File) => {
   if (file && !nodeAttrs.value.src) {
     startUpload(file)
@@ -282,7 +294,7 @@ watch(() => nodeAttrs.value.file, (file: File) => {
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-
+    border: 1px solid transparent;
     &.upload-failed {
       border-color: var(--ant-color-error);
     }

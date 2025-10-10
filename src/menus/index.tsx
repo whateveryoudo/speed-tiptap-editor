@@ -25,17 +25,22 @@ import HorizontalRule from './horizontalRule.vue'
 import Emoji from './emoji.vue'
 import Indent from './indent.vue'
 import FindAndReplace from './findAndReplace.vue'
+import Table from './insert/table.vue'
+import Image from './insert/image.vue'
+import File from './insert/file.vue'
 
 // 定义场景配置
 const sceneConfigs = {
   default: [
-    'insert',
-    '|',
     'undo', 'redo', 'clearNodeAndMarks',
     '|',
-    'heading', 'fontSize','bold', 'italic', 'underline', 'strike',
+    'heading', 'fontSize', 'bold', 'italic', 'underline', 'strike',
     '|',
     'textColor', 'backgroundColor',
+    '|',
+    'image',
+    'file',
+    'table',
     '|',
     'align',
     '|',
@@ -57,6 +62,9 @@ const sceneConfigs = {
     'bold', 'italic', 'underline', 'strike', 'moreText',
     '|',
     'textColor', 'backgroundColor',
+    '|',
+    'image',
+    'file',
     '|',
     'link',
     '|',
@@ -100,6 +108,9 @@ const componentMap = {
   blockquote: BlockQuote,
   horizontalRule: HorizontalRule,
   findAndReplace: FindAndReplace,
+  table: Table,
+  image: Image,
+  file: File,
 }
 
 export default defineComponent({
@@ -141,7 +152,7 @@ export default defineComponent({
 
       // 获取场景配置
       const sceneKeys = sceneConfigs[props.scene] || sceneConfigs.default
-      
+
       // 如果有排除键，从场景配置中排除
       if (props.excludeKeys) {
         return sceneKeys.filter(key => !props.excludeKeys!.includes(key))
@@ -155,25 +166,25 @@ export default defineComponent({
     const processedToolbarKeys = computed(() => {
       const keys = realToolbarKeys.value
       const result: Array<{ key: string; showDivider: boolean }> = []
-      
+
       for (let i = 0; i < keys.length; i++) {
         const currentKey = keys[i]
         const nextKey = keys[i + 1]
-        
+
         // 如果当前是分隔符，跳过
         if (currentKey === '|') {
           continue
         }
-        
+
         // 检查是否需要显示分隔符
         const showDivider = nextKey === '|' && i + 1 < keys.length
-        
+
         result.push({
           key: currentKey,
           showDivider
         })
       }
-      
+
       return result
     })
 
