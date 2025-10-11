@@ -1,3 +1,5 @@
+import { Editor } from "@tiptap/core";
+
 type R = Record<string, unknown>;
 
 export const isPureText = (content: R | R[] | undefined | null): boolean => {
@@ -14,3 +16,8 @@ export const isPureText = (content: R | R[] | undefined | null): boolean => {
 
   return content['type'] === 'text';
 };
+
+export const getSelectedText = (editor: Editor) => {
+  const { from, to } = editor.state.selection
+  return editor.state.doc.textBetween(from, to, ' ')
+} 

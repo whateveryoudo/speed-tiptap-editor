@@ -70,7 +70,7 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   // 注册SpeedComponents
   app.use(SpeedComponents, {
     iconfontUrl: [
-      "//at.alicdn.com/t/c/font_3786040_hndmiza8b6f.js",
+      "//at.alicdn.com/t/c/font_3786040_y1lnmi92y7.js",
       currentConfig.value.iconfontUrl,
     ],
     apis: currentConfig.value.apis,

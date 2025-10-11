@@ -7,24 +7,27 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\textMenu.vue
 -->
 <template>
-    <BubbleContainer :editor="editor" :should-show="shouldShow" plugin-key="text-bubble-menu">
-        <a-space :size="5">
+    <BubbleContainer :editor="editor" :bubble-class-name="aiBubbleMenuVisible ? 'ai-bubble-out-container' : ''" :should-show="shouldShow" plugin-key="text-bubble-menu">
+        <a-space :size="5" v-if="!aiBubbleMenuVisible">
             <template v-for="item in bubbleMenuItems" :key="item">
                 <template v-if="typeof item === 'string'">
                     <a-divider v-if="item === '|'" type="vertical" class="menu-divider" />
                     <component :is="bubbleMenuMap[item as keyof typeof bubbleMenuMap]" trigger-type="bubble" v-else
-                        :editor="editor" />
+                        :editor="editor" @show-ai-bubble="aiBubbleMenuVisible = true" />
                 </template>
                 <!-- 先不要选中样式 -->
-                <a-tooltip v-else :title="item.title">
-                    <a-button type="text" class="shadow-btn-wrapper" :class="[isTitleActive && 'disabled']"
-                        @click="() => item.action?.(editor)" :disabled="isTitleActive">
-                        <s-icon-font :type="item.icon" />
-                    </a-button>
-                </a-tooltip>
+                <template v-else>
+                    <a-tooltip :title="item.title">
+                        <a-button type="text" class="shadow-btn-wrapper" :class="[isTitleActive && 'disabled']"
+                            @click="() => item.action?.(editor)" :disabled="isTitleActive">
+                            <s-icon-font :type="item.icon" />
+                        </a-button>
+                    </a-tooltip>
+                </template>
             </template>
-
         </a-space>
+        <!-- ai 二级气泡 -->
+        <AiBubbleMenu v-else :editor="editor" />
     </BubbleContainer>
 </template>
 
@@ -46,6 +49,8 @@ import FontSize from '@/menus/fontSize.vue'
 import TextColor from '@/menus/textColor.vue'
 import BackgroundColor from '@/menus/backgroundColor.vue'
 import { type CollaborationEditorProps } from '@/type'
+import Ai from '@/menus/ai/index.vue'
+import AiBubbleMenu from '@/menus/ai/ai-bubble-menu.vue'
 import { useActive } from '@/hooks/useActive'
 const OTHER_BUBBLE_MENU_TYPES = [Title.name, Callout.name, CodeBlock.name, Link.name, Tag.name, Attachment.name, Image.name]
 const props = withDefaults(defineProps<{
@@ -55,6 +60,7 @@ const props = withDefaults(defineProps<{
     editor: () => ({}),
 })
 const globalTiptapStorage = inject('globalTiptapStorage', ref<Record<string, any>>({}));
+const aiBubbleMenuVisible = ref(false)
 const bubbleMenuMap = {
     bold: Bold,
     italic: Italic,
@@ -63,6 +69,7 @@ const bubbleMenuMap = {
     fontSize: FontSize,
     textColor: TextColor,
     backgroundColor: BackgroundColor,
+    ai: Ai,
 }
 const isTitleActive = useActive(props.editor, Title.name)
 // editor.state 与  editor.view.state??
@@ -94,13 +101,15 @@ const shouldShow = ({ editor, state }: { editor: any; state: any }) => {
     return true
 }
 const defaultBubbleMenuItems = [
+    'ai',
+    '|',
     'bold',
     'italic',
     'underline',
     'strike',
     'fontSize',
     'textColor',
-    'backgroundColor'
+    'backgroundColor',
 ]
 const bubbleMenuItems = computed(() => {
     return props.textBubbleMenu?.items ?? defaultBubbleMenuItems

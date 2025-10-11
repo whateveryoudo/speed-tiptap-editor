@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AAlert: typeof import('ant-design-vue/es')['Alert']
     AAnchor: typeof import('ant-design-vue/es')['Anchor']
     AAnchorLink: typeof import('ant-design-vue/es')['AnchorLink']
     AButton: typeof import('ant-design-vue/es')['Button']
@@ -35,6 +36,7 @@ declare module 'vue' {
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATag: typeof import('ant-design-vue/es')['Tag']
+    ATextarea: typeof import('ant-design-vue/es')['Textarea']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     BgColorsOutlined: typeof import('@ant-design/icons-vue')['BgColorsOutlined']
@@ -50,6 +52,7 @@ declare module 'vue' {
     DeleteOutlined: typeof import('@ant-design/icons-vue')['DeleteOutlined']
     DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
     DownOutlined: typeof import('@ant-design/icons-vue')['DownOutlined']
+    EnterOutlined: typeof import('@ant-design/icons-vue')['EnterOutlined']
     FileSearchOutlined: typeof import('@ant-design/icons-vue')['FileSearchOutlined']
     FileTextOutlined: typeof import('@ant-design/icons-vue')['FileTextOutlined']
     ItalicOutlined: typeof import('@ant-design/icons-vue')['ItalicOutlined']

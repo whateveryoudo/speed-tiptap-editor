@@ -40,8 +40,8 @@ const demos = [
   },
   {
     name: "ai",
-    title: "AI编写（待开发）",
-    description: "AI编写（待开发）",
+    title: "AI编写",
+    description: "AI编写",
   },
 ];
 const checkDemo = (name: string) => {
@@ -49,10 +49,7 @@ const checkDemo = (name: string) => {
   if (currentDemo.value === name) {
     return;
   }
-  if (name === "ai") {
-    message.info("功能待开发");
-    return;
-  }
+
   router.push({
     path: "/",
     query: {
@@ -133,8 +130,9 @@ watch(
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
-      scene="collaboration" />
-    <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'ai'" scene="ai" />
+      scene="knowledge" />
+    <SpeedTiptapEditor v-model:content="content" @update="onUpdate" v-else-if="currentDemo === 'ai'"
+      scene="knowledge" />
   </div>
   <div>
     <a-space>标题:<a-input v-model:value="title" /></a-space>{{ json }}

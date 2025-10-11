@@ -13,7 +13,7 @@
     :should-show="shouldShow"
     :plugin-key="pluginKey"
   >
-    <div class="bubble-menu-wrapper">
+    <div :class="['bubble-menu-wrapper', bubbleClassName || '']">
       <slot />
     </div>
   </BaseBubbleMenu>
@@ -43,6 +43,7 @@ type BubbleMenuOptions = {
 
 const props = withDefaults(
   defineProps<{
+    bubbleClassName?: string
     editor: Editor;
     shouldShow: ({ editor, state }: { editor: any; state: any }) => boolean;
     options?: BubbleMenuOptions;
