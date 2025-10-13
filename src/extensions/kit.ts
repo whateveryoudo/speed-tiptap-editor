@@ -58,7 +58,7 @@ const placeholders = [
 ];
 
 // 默认文档（无 title）
-export const getDefauktKit = (props: any) => [
+export const getDefaultKit = (props: any) => [
   // 使用 StarterKit 作为基础，禁用需要自定义的扩展
   StarterKit.configure({
     // 禁用一些扩展，因为我们要使用自定义版本
@@ -159,5 +159,5 @@ export const getDefauktKit = (props: any) => [
 export const getKnowledgeKit = (props: any) => [
   Title,
   DocumentWithHeading, // 用带 title 的 document
-  ...getDefauktKit(props).filter((ext) => ext?.name !== "doc"),
+  ...getDefaultKit(props).filter((ext) => ext?.name !== "doc"),
 ];

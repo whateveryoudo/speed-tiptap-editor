@@ -1,20 +1,26 @@
 <template>
-    <a-flex class="w-[350px]" vertical :gap="10">
-        <div v-if="session.status !== 'idle' && session.result" class="ai-result-wrapper">
+    <div @click="emit('closeMenuBubble')" class="w-[600px] flex flex-col gap-2">
+        <div @click.stop v-if="session.status !== 'idle' && session.result" class="ai-result-wrapper">
             <VMdPreview :text="session.result" />
         </div>
         <!-- 顶部提示词输入 -->
-        <div :class="['ai-input']">
+        <div @click.stop :class="['ai-input']">
             <img :src="AiPromptIcon" alt="ai-prompt-icon"
                 :class="['w-[18px] h-[auto] prompt-icon', isProcessing ? 'loading-rotate' : '']" />
             <div class="input-wrapper">
-                <textarea ref="textAreaRef" v-model="inputValue"
-                    :placeholder="isProcessing ? pendingText : '向智能助手提问...'" :maxlength="1000" :rows="3"
-                    @keydown.enter="inputSendSession" />
+                <div class="textarea-wrapper">
+                    <span v-if="isProcessing" class="pending-text">{{ pendingText }}
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                        <span class="dot">.</span>
+                    </span>
+                    <a-textarea v-else ref="textAreaRef" auto-size v-model:value="inputValue" placeholder="向智能助手提问..."
+                        :maxlength="1000" @press-enter="inputSendSession" />
+
+                </div>
             </div>
             <a-button v-if="inputValue && !isProcessing" type="text"
-                class="align-self-end text-[var(--ant-color-text-secondary)] px-[6px] py-[5px]"
-                @click="handleSendClick">
+                class="self-end text-[var(--ant-color-text-secondary)] px-[6px] py-[5px]" @click="handleSendClick">
                 <template #icon>
                     <span
                         class="mr-2 border border-solid border-gray-300 w-[18px] h-[18px] leading-[18px] flex rounded-[4px]">
@@ -24,34 +30,44 @@
                 发送
             </a-button>
             <a-button v-if="isProcessing" type="text"
-                class="align-self-end text-[var(--ant-color-text-secondary)] px-[6px] py-[5px]"
-                @click="cancelProcess">
+                class="self-end text-[var(--ant-color-text-secondary)] px-[6px] py-[5px]" @click="cancelProcess">
                 <template #icon>
                     <span
-                        class="mr-2 border border-solid border-gray-300 w-[30px] h-[18px] leading-[18px] flex rounded-[4px]">
+                        class="mr-2 border border-solid border-gray-300 w-[40px] h-[18px] leading-[18px] flex rounded-[4px]">
                         <span class="text-[var(--ant-color-text-secondary)]">ESC</span>
                     </span>
                 </template>
                 停止
             </a-button>
+            <a-tooltip title="关闭" @click="emit('closeMenuBubble')">
+                <CloseOutlined />
+            </a-tooltip>
         </div>
-        <a-menu class="w-[200px] ai-commands-menu" :items="finishedItems" v-if="session.status === 'success'" />
-        <!-- 快捷指令菜单 -->
-        <a-menu class="w-[200px] ai-commands-menu" :disabled="isProcessing" v-else>
-            <template v-for="item in aiCommandsItems" :key="item.key">
-                <a-menu-divider v-if="item.type === 'divider'"></a-menu-divider>
-                <a-menu-item :key="item.key" v-else :disabled="isProcessing"
-                    @click="handleAICommand(item.key as AIAction)">
-                    <s-icon-font :size="16" :type="item.icon" class="mr-2" />
-                    {{ item.label }}
-                </a-menu-item>
-            </template>
-        </a-menu>
-    </a-flex>
+        <!-- 这里追加一个div,阻止冒泡 -->
+        <div @click.stop class="w-[200px]">
+            <!-- 生成结果,或者取消后的操作菜单 -->
+
+            <a-menu v-if="['cancelled', 'success'].includes(session.status)"
+                @click="({ key }: any) => handleResultAction(key)" :selectable="false" class="ai-commands-menu"
+                :items="finishedItems" />
+            <!-- 快捷指令菜单 -->
+            <a-menu v-else @click="({ key }: any) => handleAICommand(key as AIAction)" :selectable="false"
+                class="ai-commands-menu" :disabled="isProcessing">
+                <template v-for="item in aiCommandsItems" :key="item.key">
+                    <a-menu-divider v-if="item.type === 'divider'"></a-menu-divider>
+                    <a-menu-item :key="item.key" v-else :disabled="isProcessing">
+                        <s-icon-font :size="16" :type="item.icon" class="mr-2" />
+                        {{ item.label }}
+                    </a-menu-item>
+                </template>
+            </a-menu>
+        </div>
+
+    </div>
 </template>
 
 <script setup lang="tsx">
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { message } from 'ant-design-vue'
 import type { Editor } from '@tiptap/core'
 import { useAiAssistant, type AIAction, type AIProcessOptions } from '@/hooks/useAiAssistant'
@@ -60,12 +76,18 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import hljs from 'highlight.js';
 import { getSelectedText } from '@/prose-utils/text'
-import { CheckOutlined, SyncOutlined } from '@ant-design/icons-vue';
+import { CheckOutlined, SyncOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { markdownToJSON } from '@/helpers/markdown-to-json'
+import type { Extensions } from '@tiptap/core'
 
 // Props 定义
 const props = defineProps<{
     editor: Editor
 }>()
+
+// 方式1：从父组件注入扩展配置（推荐）⭐
+const aiExtensions = inject<Extensions>('aiExtensions')!
+
 VMdPreview.use(githubTheme, {
     Hljs: hljs,
 });
@@ -78,7 +100,9 @@ const {
     pendingText
 } = useAiAssistant()
 const isProcessing = computed(() => session.value.status === 'pending')
-
+const emit = defineEmits<{
+    (e: 'closeMenuBubble'): void,
+}>()
 /**
  * 保存最后一次的 AI 操作参数，用于重新生成
  */
@@ -127,20 +151,17 @@ const finishedItems = [
         label: '替换选中内容',
         key: 'replace',
         icon: () => <CheckOutlined />,
-        onClick: () => handleResultAction('replace')
     },
     {
         label: '插入到选区下方',
         key: 'insert-below',
         icon: () => <CheckOutlined />,
-        onClick: () => handleResultAction('insert-below')
     },
     { type: 'divider' as const },
     {
         label: '重新生成',
         key: 'regenerate',
         icon: () => <SyncOutlined />,
-        onClick: () => handleResultAction('regenerate')
     },
 ]
 
@@ -192,18 +213,50 @@ const handleSendClick = () => {
 
 /**
  * 替换选中的文本
+ * 将 Markdown 转为 Tiptap JSON 格式后插入（原生格式，最佳实践）
  */
-const replaceSelectedText = (text: string) => {
-    const { from, to } = props.editor.state.selection
-    props.editor.chain().focus().deleteRange({ from, to }).insertContent(text).run()
+const replaceSelectedText = (markdownText: string) => {
+    try {
+        const { from, to } = props.editor.state.selection
+        
+        // 转换为 Tiptap 原生 JSON 格式
+        const jsonDoc = markdownToJSON(markdownText, aiExtensions)
+        
+        // 🎯 关键：只取 content 数组，不要外层 doc 节点
+        // generateJSON 返回：{ type: 'doc', content: [...] }
+        // 插入时只需要：[...]
+        const content = jsonDoc.content || []
+        
+        // 使用原生 JSON 格式插入，性能最优
+        props.editor.chain().focus().deleteRange({ from, to }).insertContent(content).run()
+        message.success('已替换选中内容')
+    } catch (error) {
+        console.error('转换 Markdown 失败:', error)
+        message.error('内容转换失败，请重试')
+    }
 }
 
 /**
  * 插入内容到选区下方
+ * 将 Markdown 转为 Tiptap JSON 格式后插入（原生格式，最佳实践）
  */
-const insertBelowSelection = (text: string) => {
-    const { to } = props.editor.state.selection
-    props.editor.chain().focus().insertContentAt(to, '\n\n' + text).run()
+const insertBelowSelection = (markdownText: string) => {
+    try {
+        const { to } = props.editor.state.selection
+        
+        // 转换为 Tiptap 原生 JSON 格式
+        const jsonDoc = markdownToJSON(markdownText, aiExtensions)
+        
+        // 🎯 关键：只取 content 数组
+        const content = jsonDoc.content || []
+
+        // 使用原生 JSON 格式插入
+        props.editor.chain().focus().insertContentAt(to, content).run()
+        message.success('已插入到选区下方')
+    } catch (error) {
+        console.error('转换 Markdown 失败:', error)
+        message.error('内容转换失败，请重试')
+    }
 }
 
 /**
@@ -216,7 +269,6 @@ const handleResultAction = async (action: string) => {
             return
         }
         replaceSelectedText(session.value.result)
-        message.success('已替换选中内容')
         resetSession()
     } else if (action === 'insert-below') {
         if (!session.value.result) {
@@ -240,31 +292,48 @@ const handleResultAction = async (action: string) => {
 /* ✅ 平滑的逆时针圆形轨迹动画（小幅度） */
 @keyframes orbit {
     0% {
-        transform: translate(0, -2px);           /* 正上方 12点 */
+        transform: translate(0, -2px);
+        /* 正上方 12点 */
     }
+
     12.5% {
-        transform: translate(-1.4px, -1.4px);    /* 左上 10点半 */
+        transform: translate(-1.4px, -1.4px);
+        /* 左上 10点半 */
     }
+
     25% {
-        transform: translate(-2px, 0);           /* 正左 9点 */
+        transform: translate(-2px, 0);
+        /* 正左 9点 */
     }
+
     37.5% {
-        transform: translate(-1.4px, 1.4px);     /* 左下 7点半 */
+        transform: translate(-1.4px, 1.4px);
+        /* 左下 7点半 */
     }
+
     50% {
-        transform: translate(0, 2px);            /* 正下 6点 */
+        transform: translate(0, 2px);
+        /* 正下 6点 */
     }
+
     62.5% {
-        transform: translate(1.4px, 1.4px);      /* 右下 4点半 */
+        transform: translate(1.4px, 1.4px);
+        /* 右下 4点半 */
     }
+
     75% {
-        transform: translate(2px, 0);            /* 正右 3点 */
+        transform: translate(2px, 0);
+        /* 正右 3点 */
     }
+
     87.5% {
-        transform: translate(1.4px, -1.4px);     /* 右上 1点半 */
+        transform: translate(1.4px, -1.4px);
+        /* 右上 1点半 */
     }
+
     100% {
-        transform: translate(0, -2px);           /* 回到正上方 12点 */
+        transform: translate(0, -2px);
+        /* 回到正上方 12点 */
     }
 }
 </style>
@@ -288,10 +357,18 @@ const handleResultAction = async (action: string) => {
             outline: none;
             border: none;
             height: 100%;
-            padding: 5px;
+            padding: 0 5px;
             width: 100%;
             resize: none;
             background-color: transparent;
+        }
+
+        // 去掉focus样式
+
+        :deep(.ant-input:focus),
+        :deep(.ant-input-focused) {
+            box-shadow: none;
+            border: none;
         }
     }
 
@@ -312,11 +389,112 @@ const handleResultAction = async (action: string) => {
     overflow-y: auto;
     padding: 12px;
 
+    .result-tip {
+        padding: 6px 8px;
+        background: rgba(24, 144, 255, 0.06);
+        border-left: 2px solid #1890ff;
+        border-radius: 4px;
+        margin-bottom: 12px;
+    }
+
+    :deep(.github-markdown-body) {
+        p {
+            margin: 10px 0;
+        }
+    }
+
 }
 
 .prompt-icon {
     &.loading-rotate {
-        animation: orbit 1.2s linear infinite;  /* 逆时针绕圈 */
+        animation: orbit 1.2s linear infinite;
+        /* 逆时针绕圈 */
+    }
+}
+
+/* 循环省略号动画：三个点依次出现并循环 */
+.pending-text {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.pending-text .dot {
+    display: inline-block;
+    width: 4px;
+    margin-left: 2px;
+    opacity: 0;
+}
+
+// 显示循环点位动画
+/* 需求：开始三点都隐藏 → 1 出现 → 2 出现 → 3 出现 → 都隐藏 → 循环 */
+.pending-text .dot:nth-of-type(1) {
+    animation: dot1Cycle 1.5s infinite both;
+}
+
+.pending-text .dot:nth-of-type(2) {
+    animation: dot2Cycle 1.5s infinite both;
+}
+
+.pending-text .dot:nth-of-type(3) {
+    animation: dot3Cycle 1.5s infinite both;
+}
+
+@keyframes dot1Cycle {
+
+    /* 开始隐藏 */
+    0%,
+    9% {
+        opacity: 0;
+    }
+
+    /* dot1 出现并保持，直到统一隐藏阶段 */
+    10%,
+    90% {
+        opacity: 1;
+    }
+
+    /* 统一隐藏 */
+    91%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes dot2Cycle {
+
+    0%,
+    39% {
+        opacity: 0;
+    }
+
+    40%,
+    90% {
+        opacity: 1;
+    }
+
+    91%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes dot3Cycle {
+
+    0%,
+    69% {
+        opacity: 0;
+    }
+
+    70%,
+    90% {
+        opacity: 1;
+    }
+
+    91%,
+    100% {
+        opacity: 0;
     }
 }
 </style>

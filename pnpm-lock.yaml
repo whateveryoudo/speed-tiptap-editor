@@ -120,8 +120,8 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
       '@tiptap/vue-3':
-        specifier: 3.0.6
-        version: 3.0.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(vue@3.5.16(typescript@5.8.3))
+        specifier: 3.6.6
+        version: 3.6.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(vue@3.5.16(typescript@5.8.3))
       '@tiptap/y-tiptap':
         specifier: ^3.0.0
         version: 3.0.0(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
@@ -1009,6 +1009,12 @@ packages:
       '@tiptap/core': ^3.0.6
       '@tiptap/pm': ^3.0.6
 
+  '@tiptap/extension-bubble-menu@3.6.6':
+    resolution: {integrity: sha512-O+V+9T4encURWEccn17koU4rPBHA9QuyWErvx+XnVnC+cabhAcEVJEeCD5SjU4KarLBmnmw+bhDARe+AuR8WSw==}
+    peerDependencies:
+      '@tiptap/core': ^3.6.6
+      '@tiptap/pm': ^3.6.6
+
   '@tiptap/extension-bullet-list@3.0.6':
     resolution: {integrity: sha512-psY+ZlC0hp1HCqNgZgpdyQkWlIQlhpgxXMs/NqyrH4zM62ds4531QIpbltvFqLVFLk8/KkKW5X5T1spfndzfUQ==}
     peerDependencies:
@@ -1078,12 +1084,12 @@ packages:
       '@tiptap/extension-text-style': ^3.4.0
       '@tiptap/pm': ^3.4.0
 
-  '@tiptap/extension-floating-menu@3.0.6':
-    resolution: {integrity: sha512-HXmuRSrTVPtxBTbg+MZdevoNbPsHo9Yv0zg/k3zVP30FylMmdC6a9V8sqTu3sSiX3Of1pEsJ3/P1xWonnhFhTA==}
+  '@tiptap/extension-floating-menu@3.6.6':
+    resolution: {integrity: sha512-2ZKhBIgCs88Mju/9Kv4ngY5D1luwX7Fb8yemc6kXp9pYNFfJnXYeVP/110dRHJUbRrKtGXmnz8I5cgL/nqGEVQ==}
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': ^3.0.6
-      '@tiptap/pm': ^3.0.6
+      '@tiptap/core': ^3.6.6
+      '@tiptap/pm': ^3.6.6
 
   '@tiptap/extension-gapcursor@3.0.6':
     resolution: {integrity: sha512-i9flYYMHbGJUiPcbutfk6L5fsnJsrJwv9XpQEiP3Bl2rCcOe3HdF+1Chvk/FuGfvbQov9voO8P86RvBhkI/y8g==}
@@ -1222,12 +1228,12 @@ packages:
       '@tiptap/core': ^3.0.6
       '@tiptap/pm': ^3.0.6
 
-  '@tiptap/vue-3@3.0.6':
-    resolution: {integrity: sha512-AEOu0MnjT0McvQQQ5vWkfZlsBAe0BDp21jFgPMjZm2RMo6WeIcslZJ8j0kp3tbFKPXjk10Su+2/VPwqXi8Cz8Q==}
+  '@tiptap/vue-3@3.6.6':
+    resolution: {integrity: sha512-NT/6vAWNzr7QPSyJnwbFTVZSKxUmtQtxvot4xfOhm2sZy2c9yaFipLADKEeYTgHSbs9KpHQtds4dr6XNoCgIrQ==}
     peerDependencies:
       '@floating-ui/dom': ^1.0.0
-      '@tiptap/core': ^3.0.6
-      '@tiptap/pm': ^3.0.6
+      '@tiptap/core': ^3.6.6
+      '@tiptap/pm': ^3.6.6
       vue: ^3.0.0
 
   '@tiptap/y-tiptap@3.0.0':
@@ -5288,6 +5294,13 @@ snapshots:
       '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
       '@tiptap/pm': 3.0.6
 
+  '@tiptap/extension-bubble-menu@3.6.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)':
+    dependencies:
+      '@floating-ui/dom': 1.7.2
+      '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
+      '@tiptap/pm': 3.0.6
+    optional: true
+
   '@tiptap/extension-bullet-list@3.0.6(@tiptap/extension-list@3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6))':
     dependencies:
       '@tiptap/extension-list': 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
@@ -5350,7 +5363,7 @@ snapshots:
       '@tiptap/extension-text-style': 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))
       '@tiptap/pm': 3.0.6
 
-  '@tiptap/extension-floating-menu@3.0.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)':
+  '@tiptap/extension-floating-menu@3.6.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)':
     dependencies:
       '@floating-ui/dom': 1.7.2
       '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
@@ -5513,15 +5526,15 @@ snapshots:
       '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
       '@tiptap/pm': 3.0.6
 
-  '@tiptap/vue-3@3.0.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(vue@3.5.16(typescript@5.8.3))':
+  '@tiptap/vue-3@3.6.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(vue@3.5.16(typescript@5.8.3))':
     dependencies:
       '@floating-ui/dom': 1.7.2
       '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
       '@tiptap/pm': 3.0.6
       vue: 3.5.16(typescript@5.8.3)
     optionalDependencies:
-      '@tiptap/extension-bubble-menu': 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
-      '@tiptap/extension-floating-menu': 3.0.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
+      '@tiptap/extension-bubble-menu': 3.6.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
+      '@tiptap/extension-floating-menu': 3.6.6(@floating-ui/dom@1.7.2)(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)
 
   '@tiptap/y-tiptap@3.0.0(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)':
     dependencies:

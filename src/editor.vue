@@ -30,7 +30,7 @@
     <!-- 节点拖拽 -->
     <DragNodeMenu v-if="editor" :editor="editor" />
     <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
-      <editor-content :editor="editor" />
+      <editor-content :editor="editor" class="h-full"/>
     </main>
     <!-- 搜索替换弹框 -->
     <SearchReplaceModal :editor="editor" v-if="editor" />
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { watch, ref, PropType, provide, computed, VNode } from 'vue'
 import MenuBar from './menus'
-import { getKnowledgeKit, getDefauktKit } from './extensions/kit'
+import { getKnowledgeKit, getDefaultKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TableMenu from '@/bubbleMenus/tableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/tableMenu/Bubble.vue'
@@ -109,6 +109,8 @@ watch(
     console.log(val)
   },
 )
+// 向下传入ai文本扩展（注：这里不需要tite扩展）
+provide('aiExtensions', getDefaultKit(props));
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
@@ -139,7 +141,7 @@ const editor = useEditor({
   },
 
   extensions: [
-    ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefauktKit(props)),
+    ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
     // Collaboration.configure({
     //   document: props?.hocuspocusProvider?.document ?? {},
     // }),
@@ -266,7 +268,7 @@ console.log(editor.value)
     position: relative; // 为 BubbleMenu 提供定位上下文
 
     :deep(.editor-content) {
-
+      min-height: 100%;
       // 带有句柄的需要增加padding
       &.has-drag-handle {
         padding-left: 50px;

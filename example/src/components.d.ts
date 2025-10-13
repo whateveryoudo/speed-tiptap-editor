@@ -47,6 +47,7 @@ declare module 'vue' {
     CaretRiOutlined: typeof import('@ant-design/icons-vue')['CaretRiOutlined']
     CaretUpOutlined: typeof import('@ant-design/icons-vue')['CaretUpOutlined']
     CheckOutlined: typeof import('@ant-design/icons-vue')['CheckOutlined']
+    CloseOutlined: typeof import('@ant-design/icons-vue')['CloseOutlined']
     CodeOutlined: typeof import('@ant-design/icons-vue')['CodeOutlined']
     CopyOutlined: typeof import('@ant-design/icons-vue')['CopyOutlined']
     DeleteOutlined: typeof import('@ant-design/icons-vue')['DeleteOutlined']

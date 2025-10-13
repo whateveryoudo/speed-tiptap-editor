@@ -93,7 +93,7 @@ export const useAiAssistant = () => {
       summary: '总结',
       custom: '处理'
     }
-    pendingText.value = `正在${actionLabels[options.action]}...`
+    pendingText.value = `正在${actionLabels[options.action]}`
 
     try {
       await fetchEventSource(`${API_BASE_URL}/ai/stream`, {

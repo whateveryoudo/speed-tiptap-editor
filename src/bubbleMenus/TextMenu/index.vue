@@ -7,13 +7,14 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\textMenu.vue
 -->
 <template>
-    <BubbleContainer :editor="editor" :bubble-class-name="aiBubbleMenuVisible ? 'ai-bubble-out-container' : ''" :should-show="shouldShow" plugin-key="text-bubble-menu">
+    <BubbleContainer :editor="editor" :bubble-class-name="aiBubbleMenuVisible ? 'ai-bubble-out-container' : ''"
+        :should-show="shouldShow" plugin-key="text-bubble-menu">
         <a-space :size="5" v-if="!aiBubbleMenuVisible">
             <template v-for="item in bubbleMenuItems" :key="item">
                 <template v-if="typeof item === 'string'">
                     <a-divider v-if="item === '|'" type="vertical" class="menu-divider" />
                     <component :is="bubbleMenuMap[item as keyof typeof bubbleMenuMap]" trigger-type="bubble" v-else
-                        :editor="editor" @show-ai-bubble="aiBubbleMenuVisible = true" />
+                        :editor="editor" @show-ai-bubble="showAiBubble" />
                 </template>
                 <!-- 先不要选中样式 -->
                 <template v-else>
@@ -27,12 +28,12 @@
             </template>
         </a-space>
         <!-- ai 二级气泡 -->
-        <AiBubbleMenu v-else :editor="editor" />
+        <AiBubbleMenu v-else :editor="editor" @closeMenuBubble="handleCloseMenuBubble" />
     </BubbleContainer>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import BubbleContainer from '../BubbleContainer.vue'
 import Bold from '@/menus/bold.vue'
 import Italic from '@/menus/italic.vue'
@@ -61,6 +62,23 @@ const props = withDefaults(defineProps<{
 })
 const globalTiptapStorage = inject('globalTiptapStorage', ref<Record<string, any>>({}));
 const aiBubbleMenuVisible = ref(false)
+
+
+// 监听编辑器选区变化，管理 AI 气泡状态
+const handleSelectionUpdate = () => {
+    aiBubbleMenuVisible.value = false;
+}
+
+onMounted(() => {
+    // 监听编辑器的选区更新事件
+    props.editor.on('selectionUpdate', handleSelectionUpdate)
+})
+
+onUnmounted(() => {
+    // 清理事件监听
+    props.editor.off('selectionUpdate', handleSelectionUpdate)
+})
+
 const bubbleMenuMap = {
     bold: Bold,
     italic: Italic,
@@ -114,5 +132,17 @@ const defaultBubbleMenuItems = [
 const bubbleMenuItems = computed(() => {
     return props.textBubbleMenu?.items ?? defaultBubbleMenuItems
 })
+const handleCloseMenuBubble = () => {
+    // 取消选区：将光标折叠到选区末尾
+    const { to } = props.editor.state.selection
+    props.editor.chain().focus().setTextSelection(to).run()
+}
+// 显示ai二级气泡
+const showAiBubble = async () => {
+    aiBubbleMenuVisible.value = true;
+    // 等待 DOM 更新后再触发位置更新
+    await nextTick()
+    props.editor.commands.setMeta('bubbleMenu', 'updatePosition')
+}
 </script>
 <style scoped lang="less"></style>

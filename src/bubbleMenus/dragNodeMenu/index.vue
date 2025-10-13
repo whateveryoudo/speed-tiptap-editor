@@ -230,7 +230,6 @@ const nodeChangeActivedMap = computed(() => {
 function onNodeChange(
     payload: { node: any; editor: Editor; pos: number } | null
 ) {
-    console.log(payload?.node);
     // 清除上一个高亮
     if (lastHoverDom) {
         lastHoverDom.classList.remove("speed-tiptap-drag-node-hover");
