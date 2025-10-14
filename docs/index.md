@@ -10,8 +10,8 @@ hero:
       text: 快速开始
       link: /guide/quickstart
     - theme: alt
-      text: apis列表
-      link: /apis/
+      text: 查看配置
+      link: /config/
 
 features:
   - icon: ⚡️

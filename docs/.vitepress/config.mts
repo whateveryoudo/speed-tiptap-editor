@@ -48,6 +48,12 @@ export default defineConfig({
             { text: "文本气泡菜单", link: "/config/bubble-text" },
           ],
         },
+        {
+          text: 'AI相关',
+          items: [
+            { text: "基础", link: "/config/ai" },
+          ],
+        }
       ],
       "/demos/": [
         {

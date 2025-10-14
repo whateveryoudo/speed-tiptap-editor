@@ -100,6 +100,7 @@ const {
     pendingText
 } = useAiAssistant()
 const isProcessing = computed(() => session.value.status === 'pending')
+
 const emit = defineEmits<{
     (e: 'closeMenuBubble'): void,
 }>()
@@ -218,15 +219,15 @@ const handleSendClick = () => {
 const replaceSelectedText = (markdownText: string) => {
     try {
         const { from, to } = props.editor.state.selection
-        
+
         // 转换为 Tiptap 原生 JSON 格式
         const jsonDoc = markdownToJSON(markdownText, aiExtensions)
-        
+
         // 🎯 关键：只取 content 数组，不要外层 doc 节点
         // generateJSON 返回：{ type: 'doc', content: [...] }
         // 插入时只需要：[...]
         const content = jsonDoc.content || []
-        
+
         // 使用原生 JSON 格式插入，性能最优
         props.editor.chain().focus().deleteRange({ from, to }).insertContent(content).run()
         message.success('已替换选中内容')
@@ -243,10 +244,10 @@ const replaceSelectedText = (markdownText: string) => {
 const insertBelowSelection = (markdownText: string) => {
     try {
         const { to } = props.editor.state.selection
-        
+
         // 转换为 Tiptap 原生 JSON 格式
         const jsonDoc = markdownToJSON(markdownText, aiExtensions)
-        
+
         // 🎯 关键：只取 content 数组
         const content = jsonDoc.content || []
 
@@ -398,6 +399,8 @@ const handleResultAction = async (action: string) => {
     }
 
     :deep(.github-markdown-body) {
+        font-size: 14px; // 调整md预览字体大小
+
         p {
             margin: 10px 0;
         }

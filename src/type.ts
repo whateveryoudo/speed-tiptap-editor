@@ -11,11 +11,11 @@ import type { Editor } from "@tiptap/core";
 export type ToolBarConfig =
   | string
   | {
-      key: string;
-      title: string;
-      icon: string | VNode;
-      options?: ToolBarConfig[];
-    };
+    key: string;
+    title: string;
+    icon: string | VNode;
+    options?: ToolBarConfig[];
+  };
 // 编辑器props
 // 上传配置（image | file | upload）
 interface IUploadConfig {
@@ -97,11 +97,19 @@ export interface CollaborationEditorProps {
     enabled?: boolean;
     items?: (
       | {
-          icon: string | VNode;
-          title: string;
-          action?: (editor: Editor) => void;
-        }
+        icon: string | VNode;
+        title: string;
+        action?: (editor: Editor) => void;
+      }
       | string
     )[];
   };
+  // ai配置
+  ai?: {
+    doubao?: {
+      url: string;
+      header?: Record<string, any>
+      bodyParams?: (action: string, content: string, customPrompt: string) => Record<string, any>
+    }
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "speed-tiptap-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "基于 Ant Design Vue + Tiptap 的富文本编辑器",
   "main": "example/main.ts",
   "exports": {

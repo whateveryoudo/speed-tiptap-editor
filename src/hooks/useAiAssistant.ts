@@ -2,7 +2,7 @@
  * AI 助手 Hook - 专门为富文本编辑器 AI 功能设计
  * 基于 @microsoft/fetch-event-source 实现流式处理
  */
-import { ref, computed } from 'vue'
+import { ref, inject, type Ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 
@@ -31,7 +31,13 @@ class FatalError extends Error { }
 const EventStreamContentType = 'text/event-stream'
 
 export const useAiAssistant = () => {
-  const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3005'
+  // 顶层组件注入对象
+  const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+  console.log(speedTiptapConfig.value);
+  if (!speedTiptapConfig.value.ai || !speedTiptapConfig.value.ai.doubao) {
+    message.warning('请先配置大模型请求接口');
+  }
+  const aiConfig = speedTiptapConfig.value?.ai;
 
   // 当前会话状态
   const session = ref<AISessionInfo>({
@@ -73,7 +79,10 @@ export const useAiAssistant = () => {
   const processTextStream = async (
     options: AIProcessOptions
   ): Promise<boolean> => {
-
+    if (!aiConfig || !aiConfig.doubao) {
+      message.warning('请先配置大模型请求接口');
+      return false
+    }
     if (session.value.status === 'pending') {
       message.warning('AI 正在处理中，请稍候...')
       return false
@@ -93,15 +102,17 @@ export const useAiAssistant = () => {
       summary: '总结',
       custom: '处理'
     }
-    pendingText.value = `正在${actionLabels[options.action]}`
+    pendingText.value = `正在${actionLabels[options.action]}`;
 
+    // TODO:兼容多种大模型
     try {
-      await fetchEventSource(`${API_BASE_URL}/ai/stream`, {
+      await fetchEventSource(aiConfig?.doubao?.url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...(aiConfig?.doubao?.header ?? {})
         },
-        body: JSON.stringify({
+        body: aiConfig?.bodyParams ? JSON.stringify(aiConfig.bodyParams(options.action, options.content, options.customPrompt)) : JSON.stringify({
           action: options.action,
           content: options.content,
           customPrompt: options.customPrompt
