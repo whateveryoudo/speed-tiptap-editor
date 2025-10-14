@@ -11,6 +11,7 @@ import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 export default defineConfig(({ command, mode }) => {
   const isLib = process.env.BUILD_MODE === "lib";
   const exampleEnv = loadEnv(mode, process.cwd() + "/example"); // example的变量
+  console.log(exampleEnv.VITE_RELEASE_URL)
   return {
     root: isLib ? "." : "example",
     base: exampleEnv.VITE_RELEASE_URL,
