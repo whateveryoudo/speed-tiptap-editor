@@ -39,6 +39,7 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.52.11",
     "@types/fs-extra": "^11.0.4",
     "@types/highlight.js": "^10.1.0",
     "@types/markdown-it": "^14.1.2",
