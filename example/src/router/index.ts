@@ -1,9 +1,8 @@
-import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { speedTiptapLogin } from "../api/user";
 import { useGlobalStore } from '#example/store/index';
-
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(import.meta.env.VITE_RELEASE_URL),
   routes: [
     {
       path: "/",

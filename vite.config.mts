@@ -10,14 +10,10 @@ import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const isLib = process.env.BUILD_MODE === "lib";
-  console.log(process.env.VITE_APP_BASE_URL);
   const exampleEnv = loadEnv(mode, process.cwd() + "/example"); // example的变量
   return {
     root: isLib ? "." : "example",
-    base:
-      process.env.NODE_ENV === "production"
-        ? "/speed-tiptap-editor/example/"
-        : "",
+    base: exampleEnv.VITE_RELEASE_URL,
     plugins: [
       vue(),
       vueJsx(),
@@ -45,30 +41,30 @@ export default defineConfig(({ command, mode }) => {
     },
     build: isLib
       ? {
-          lib: {
-            entry: ["src/index.ts"],
-            name: "SpeedTiptapEditor",
-            fileName: (format, entryName) =>
-              `speed-tiptap-editor-${entryName}.${format}.js`,
-          },
-          rollupOptions: {
-             external:
-               process.env.BUILD_MODE === "lib" ? ["vue"] : [],
-            output: {
-              globals: {
-                vue: "Vue",
-              },
-              dir: "dist",
-              assetFileNames: (assetInfo) => {
-                if (assetInfo.name === "style.css") return "style.css";
-                return assetInfo.name;
-              },
+        lib: {
+          entry: ["src/index.ts"],
+          name: "SpeedTiptapEditor",
+          fileName: (format, entryName) =>
+            `speed-tiptap-editor-${entryName}.${format}.js`,
+        },
+        rollupOptions: {
+          external:
+            process.env.BUILD_MODE === "lib" ? ["vue"] : [],
+          output: {
+            globals: {
+              vue: "Vue",
+            },
+            dir: "dist",
+            assetFileNames: (assetInfo) => {
+              if (assetInfo.name === "style.css") return "style.css";
+              return assetInfo.name;
             },
           },
-        }
-      : {
-          outDir: "dist-example",
         },
+      }
+      : {
+        outDir: "dist-example",
+      },
     server: {
       port: 3003,
       proxy: {
