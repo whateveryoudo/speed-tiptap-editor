@@ -15,7 +15,7 @@ const content = ref(
   ''
 );
 // const json = ref({ "type": "doc", "content": [{ "type": "callout", "attrs": { "bgColor": "rgba(217,201,248,0.5)", "color": "#000000", "icon": null }, "content": [{ "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "我是测试高亮块" }] }, { "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "啊啊啊" }] }] }, { "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "1" }] }] });
-const json = ref({});
+// const json = ref({});
 const onUpdate = (content: string) => {
   console.log(content);
 };
@@ -163,9 +163,10 @@ watch(
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2 h-[600px]">
-    <SpeedTiptapEditor v-model:json="json" v-model:content="content" v-model:title="title"
+    <SpeedTiptapEditor  v-model:content="content" v-model:title="title"
       v-if="currentDemo === 'simple'" v-bind="simpleProps" />
-    <SpeedTiptapEditor v-model:json="json" v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
+      <!-- 先不要绑定json 会导致实时变化 -->
+    <SpeedTiptapEditor  v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" v-bind="knowledgeProps" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
       scene="knowledge" />
