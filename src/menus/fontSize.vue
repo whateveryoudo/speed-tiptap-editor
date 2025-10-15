@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <a-select :bordered="false" class="w-[90px] shadow-ant-select" :value="currentFontSize" :disabled="isTitleActive"
+  <a-select :bordered="false" class="w-[80px] shadow-ant-select" :value="currentFontSize" :disabled="isTitleActive"
     popupClassName="popover-check-dropdown" :options="fontSizeOptions" @change="handleChange">
     <template #option="{ value: val, label }">
       <span class="place-check-icon">
@@ -17,7 +17,7 @@
       {{ label }}
     </template>
     <template #suffixIcon>
-      <CaretDownOutlined style="color: rgba(0, 0, 0, 0.88)" />
+      <CaretDownOutlined :style="{ color: !isTitleActive ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
     </template>
   </a-select>
 </template>

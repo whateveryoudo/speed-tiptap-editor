@@ -251,7 +251,6 @@ export function useTableBubbleMenu(editor: Editor, options?: UseTableBubbleMenuO
     let tableDOM: HTMLElement | null = null
     try {
       const tableNodeDOM = editor.view.nodeDOM(tablePos) as HTMLElement
-      console.log('Found table node:', tableNodeDOM);
       if (tableNodeDOM && tableNodeDOM.nodeName === 'TABLE') {
         tableDOM = tableNodeDOM
       } else {

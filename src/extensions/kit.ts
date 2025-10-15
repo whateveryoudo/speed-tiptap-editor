@@ -15,7 +15,6 @@ import { Image } from "./image";
 import { Attachment } from "./attachment";
 import { Placeholder, Focus, Gapcursor } from "@tiptap/extensions";
 import { StarterKit } from "@tiptap/starter-kit";
-import type { Editor } from "@tiptap/core";
 import { Link } from "./link";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { FontSize } from "./fontSize";

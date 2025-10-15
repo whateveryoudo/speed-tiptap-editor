@@ -117,6 +117,7 @@
     "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
     "lowlight": "^3.3.0",
+    "mammoth": "^1.11.0",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.3",
     "scroll-into-view-if-needed": "^3.0.3",

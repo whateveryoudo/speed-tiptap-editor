@@ -11,9 +11,11 @@
     <a-button
       class="shadow-btn-wrapper"
       @click="clear"
+      :class="[isTitleActive && 'disabled']"
       type="text"
+      :disabled="isTitleActive"
     >
-      <s-icon-font color="rgba(0, 0, 0, 0.88)" type="icon-kl-remove-format" :size="16"/>
+      <s-icon-font type="icon-kl-remove-format" :size="16"/>
     </a-button>
   </a-tooltip>
 </template>
@@ -21,13 +23,16 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 import { Editor } from '@tiptap/core'
-import { ClearOutlined } from '@ant-design/icons-vue'
+import { Title } from '@/extensions/title'
+import { useActive } from '@/hooks/useActive'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
 })
+const isTitleActive = useActive(props.editor, Title.name)
+
 const clear = () => {
   if (props.editor) {
     debugger;

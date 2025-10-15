@@ -28,6 +28,7 @@ import FindAndReplace from './findAndReplace.vue'
 import Table from './insert/table.vue'
 import Image from './insert/image.vue'
 import File from './insert/file.vue'
+import Import from './import/index.vue'
 
 // 定义场景配置
 const sceneConfigs = {
@@ -55,7 +56,7 @@ const sceneConfigs = {
   knowledge: [
     'insert',
     '|',
-    'undo', 'redo', 'clearNodeAndMarks',
+    'undo', 'redo', 'format-painter','clearNodeAndMarks',
     '|',
     'heading', 'fontSize',
     '|',
@@ -79,6 +80,8 @@ const sceneConfigs = {
     'blockquote', 'horizontalRule',
     '|',
     'findAndReplace',
+    '|',
+    'import',
   ]
 }
 
@@ -111,6 +114,7 @@ const componentMap = {
   table: Table,
   image: Image,
   file: File,
+  import: Import,
 }
 
 export default defineComponent({
@@ -190,7 +194,7 @@ export default defineComponent({
 
     return () => (
       <header class="menu-header-wrapper">
-        <Space>
+        <Space size={8}>
           {processedToolbarKeys.value.map(({ key, showDivider }) => {
             const Component = componentMap[key as keyof typeof componentMap]
             return (

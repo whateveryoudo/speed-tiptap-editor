@@ -165,7 +165,7 @@ watch(
   <div class="px-2 h-[600px]">
     <SpeedTiptapEditor v-model:json="json" v-model:content="content" v-model:title="title"
       v-if="currentDemo === 'simple'" v-bind="simpleProps" />
-    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
+    <SpeedTiptapEditor v-model:json="json" v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" v-bind="knowledgeProps" />
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
       scene="knowledge" />

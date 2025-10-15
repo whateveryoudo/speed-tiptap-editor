@@ -7,8 +7,9 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\heading.vue
 -->
 <template>
-  <a-select :dropdownMatchSelectWidth="false" :bordered="false" class="w-[90px] shadow-ant-select" :value="current" :disabled="isTitleActive" popupClassName="popover-check-dropdown popover-heading-dropdown"
-    :options="headingOptions" @change="handleChange">
+  <a-select :dropdownMatchSelectWidth="false" :bordered="false" class="w-[80px] shadow-ant-select" :value="current"
+    :disabled="isTitleActive" popupClassName="popover-check-dropdown popover-heading-dropdown" :options="headingOptions"
+    @change="handleChange">
     <template #option="{ value: val, label, style }">
       <span class="place-check-icon">
         <check-outlined v-if="current === val" />
@@ -18,7 +19,7 @@
       </span>
     </template>
     <template #suffixIcon>
-      <CaretDownOutlined style="color: rgba(0, 0, 0, 0.88)"/>
+      <CaretDownOutlined :style="{ color: !isTitleActive ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
     </template>
   </a-select>
 </template>

@@ -28,10 +28,11 @@ export const Parse = Extension.create({
             }
             if (!event.clipboardData) return false
 
-            const files = Array.from(event.clipboardData.files)
+            const files = Array.from(event.clipboardData.files) // 别的qq 微信复制的文件
             const node = event.clipboardData.getData('text/node')
             const text = event.clipboardData.getData('text/plain')
             const { state, dispatch } = view
+            console.log(files);
             if (node) {
               const json = safeJSONParse(node)
               const tr = view.state.tr
@@ -43,6 +44,8 @@ export const Parse = Extension.create({
               )
               return true
             }
+
+          
 
             if (isValidURL(text)) {
               if (!state.selection.empty) {

@@ -3,7 +3,7 @@
  * @Date: 2023-01-09 09:47:50
  * @LastEditTime: 2023-01-09 10:33:52
  * @LastEditors: your name
- * @Description:
+ * @Description: 这里没用之前的上传方法了，直接调用的扩展的指令
  * @FilePath: \we-knowledge-base\src\tiptap\prose-utils\upload.ts
  */
 import { Editor } from '@tiptap/core'
@@ -99,18 +99,11 @@ const uploadAttachment = async ({ file, fileInfo, editor }: FnProps & { fileInfo
 export const handleFileEvent = ({ file, editor }: FnProps) => {
   if (!file) return false
 
-  const fileInfo = {
-    fileName: extractFilename(file.name),
-    fileSize: file.size,
-    fileType: file.type,
-    fileExt: extractFileExtension(file.name),
-  }
-
   if (acceptedMimes.image.includes(file?.type)) {
-    uploadImage({ file, editor, fileInfo })
+    // 调用图片上传指令
+    editor.commands.uploadImage(file);
     return true
   }
-
-  uploadAttachment({ file, editor, fileInfo })
+  editor.commands.uploadAttachment(file);
   return true
 }

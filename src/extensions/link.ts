@@ -39,7 +39,7 @@ export const Link = BuiltInLink.extend({
     ];
   },
 }).configure({
-  openOnClick: false,
+  openOnClick: true,
   linkOnPaste: true,
   autolink: true,
 });

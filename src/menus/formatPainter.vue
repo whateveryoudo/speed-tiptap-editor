@@ -9,8 +9,10 @@
 <template>
   <a-tooltip title="格式刷">
     <a-button class="shadow-btn-wrapper" @click="toggleFormatPainter" type="text"
-      :class="[isActive ? 'is-active' : '']">
-      <s-icon-font color="rgba(0, 0, 0, 0.88)" type="icon-kl-format-painter" :size="16" />
+      :class="[isActive ? 'is-active' : '', isTitleActive && 'disabled']"
+      :disabled="isTitleActive"
+      >
+      <FormatPainterOutlined />
     </a-button>
   </a-tooltip>
 </template>
@@ -18,6 +20,9 @@
 <script setup lang="ts">
 import { PropType, ref, watch } from 'vue'
 import { Editor } from '@tiptap/core'
+import { Title } from '@/extensions/title'
+import { useActive } from '@/hooks/useActive'
+import { FormatPainterOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -44,6 +49,7 @@ const toggleFormatPainter = () => {
   }
 
 }
+const isTitleActive = useActive(props.editor, Title.name)
 
 // 定义更新函数，确保在清理时能访问到
 let updateFormatPainterState: (() => void) | null = null
