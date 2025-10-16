@@ -13,7 +13,7 @@ import { Document as BaseDocument } from "./document";
 import { Paragraph } from "./paragraph";
 import { Image } from "./image";
 import { Attachment } from "./attachment";
-import { Placeholder, Focus, Gapcursor } from "@tiptap/extensions";
+import { Placeholder, Focus } from "@tiptap/extensions";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Link } from "./link";
 import { TextStyle } from "@tiptap/extension-text-style";
@@ -122,7 +122,6 @@ export const getDefaultKit = (props: any) => [
   Parse,
   Mention,
   FormatPainter,
-  FormatPainter,
   // 开源 替换 搜索插件
   SearchAndReplace.configure({
     searchResultClass: "speed-tiptap-search-result",
@@ -131,7 +130,6 @@ export const getDefaultKit = (props: any) => [
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
-  Gapcursor,
   // 这里没使用tableKit,要扩展tableCell属性
   Table.configure({
     resizable: true,

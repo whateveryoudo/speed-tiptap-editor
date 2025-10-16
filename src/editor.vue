@@ -114,7 +114,7 @@ provide('aiExtensions', getDefaultKit(props));
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
-  content: props.json, // 初始化时设置内容
+  content: props.content,
   editorProps: {
     // 追加class，用于设定样式
     attributes: {
@@ -124,17 +124,21 @@ const editor = useEditor({
   onUpdate({ editor }) {
     // 编辑器内容变化时，同步到外部
     const html = editor.getHTML()
-    const json = editor.getJSON()
-    emit('update:json', json)
+    console.log(html);
     emit('update:content', html)
 
     // 原有的标题更新逻辑
     try {
-      const title = editor.state.doc?.content?.firstChild?.content.firstChild?.textContent
-      emit(
-        'update:title',
-        title,
-      )
+      if (props.scene === 'knowledge') {
+        // 判断是否存在标题节点
+        const titleNode = editor.state.doc?.content?.firstChild?.content.firstChild
+        if (titleNode) {
+          emit(
+            'update:title',
+            titleNode.textContent,
+          )
+        }
+      }
     } catch (e) {
       //
     }
@@ -163,26 +167,18 @@ watch(
   () => props.content,
   (newContent) => {
     if (editor.value && newContent !== editor.value.getHTML()) {
-      editor.value.commands.setContent(newContent, false)
+      editor.value.commands.setContent(newContent)
     }
   }
 )
 
-// json
-watch(
-  () => props.json,
-  (newJson) => {
-    if (editor.value && newJson !== editor.value.getJSON()) {
-      editor.value.commands.setContent(newJson, false)
-    }
-  }
-)
 
 // 监听 title 变化，同步到编辑器标题
 watch(
   () => props.title,
   (newTitle) => {
     if (editor.value && newTitle) {
+      debugger;
       const { state } = editor.value
       const { doc } = state
       const firstChild = doc.firstChild
@@ -203,7 +199,6 @@ watch(
     }
   }
 )
-console.log(editor.value)
 
 </script>
 

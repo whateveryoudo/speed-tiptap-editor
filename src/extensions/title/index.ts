@@ -68,7 +68,7 @@ export const Title = Node.create<TitleOptions>({
     return [
       'h1',
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, nodeAttrsToDataset(node)),
-      ['div', 0],
+      0, // 直接渲染内联内容，避免在 h1 内包裹 div（防止导出的时候出现无法识别的问题）
     ];
   },
 

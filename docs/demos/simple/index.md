@@ -1,7 +1,7 @@
-<script setup>
+<script setup>image导出功能
 </script>
 
-### 基础示例
+### 基础示例(已废弃，直接跳转单独部署的页面)
 
 [查看示例](http://localhost:3000/){target="_blank"} 
 

@@ -11,7 +11,7 @@ hero:
       link: /guide/quickstart
     - theme: alt
       text: 查看配置
-      link: /config/
+      link: /config/toolbar
 
 features:
   - icon: ⚡️

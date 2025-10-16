@@ -1,5 +1,5 @@
 <template>
-    <s-full-modal  :width="currentView==='select' ? 450 : 500" :footer="false" :visible="visible" @cancel="emit('update:visible', false)" height="auto" title="文件导入">
+    <s-full-modal  :width="500" :footer="false" :visible="visible" @cancel="emit('update:visible', false)" height="auto" title="文件导入">
         <!-- 返回按钮 -->
         <a-flex v-if="currentView === 'progress'">
             <a-space class="cursor-pointer text-[var(--ant-color-text-secondary)]"  @click="currentView = 'select'">
@@ -30,7 +30,7 @@
         </div>
 
         <!-- 进度界面 -->
-        <div v-show="currentView === 'progress' && importTasks.length > 0" class="space-y-4">
+        <div v-show="currentView === 'progress' && importTasks.length > 0">
             <!-- 导入任务列表 -->
             <div v-for="task in importTasks" :key="task.id" class="flex items-center justify-between p-3 border rounded-lg">
                 <div class="flex items-center gap-3">
@@ -77,13 +77,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { type Editor } from '@tiptap/core'
 import { ArrowLeftOutlined, CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons-vue'
 import WordIcon from '@/assets/image/menus/word.svg'
 import MarkdownIcon from '@/assets/image/menus/markdown.svg'
+import SpeedIcon from '@/assets/image/menus/speed.svg'
 import { handleWordFileSelect } from '@/helpers/wordImport'
 import { handleMarkdownFileSelect } from '@/helpers/markdownImport'
+import { handleSpeedFileSelect } from '@/helpers/speedImport'
 const props = withDefaults(defineProps<{
     visible: boolean
     editor: Editor
@@ -125,20 +127,31 @@ const importItems = ref([
         icon: MarkdownIcon,
         desc: '.md,.mark,.markdown'
     },
+    {
+        label: 'Speed Editor文档',
+        value: 'speed',
+        icon: SpeedIcon,
+        desc: '.sd,.speed'
+    },
 ])
 
 /**
  * 处理导入类型选择
  * 根据用户选择的文件类型调用相应的导入处理函数
- * @param value 导入类型值（'word' | 'markdown'）
+ * @param value 导入类型值（'word' | 'markdown' | 'speed'）
  */
 const handleImport = (value: string) => {
+    // 清空导入任务记录
+    importTasks.value = []
     switch (value) {
         case 'word':
             handleWordImport()
             break
         case 'markdown':
             handleMarkdownImport()
+            break
+        case 'speed':
+            handleSpeedImport()
             break
     }
 }
@@ -197,7 +210,7 @@ const handleImportWithTask = (
             currentView.value = 'progress'
         },
         (progress: number) => updateCurrentTask({ progress }),
-        (json: any) => updateCurrentTask({ status: 'success', progress: 100 }),
+        () => updateCurrentTask({ status: 'success', progress: 100 }),
         (error: any) => updateCurrentTask({ status: 'error' })
     )
 }
@@ -217,6 +230,23 @@ const handleWordImport = () => {
 const handleMarkdownImport = () => {
     handleImportWithTask(handleMarkdownFileSelect, 'Markdown', MarkdownIcon)
 }
+
+/**
+ * 处理 Speed 文档导入
+ * 创建 Speed 导入任务并启动文件选择流程
+ */
+const handleSpeedImport = () => {
+    handleImportWithTask(handleSpeedFileSelect, 'Speed', SpeedIcon)
+}
+watch(() => props.visible, (newVal:boolean) => {
+    if (newVal) {
+        // 重置状态
+        importTasks.value = [];
+        currentView.value = 'select';
+    }
+}, {
+    immediate: true
+})
 </script>
 
 <style scoped lang="less">

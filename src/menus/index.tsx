@@ -29,6 +29,7 @@ import Table from './insert/table.vue'
 import Image from './insert/image.vue'
 import File from './insert/file.vue'
 import Import from './import/index.vue'
+import Export from './export/index.vue'
 
 // 定义场景配置
 const sceneConfigs = {
@@ -64,9 +65,6 @@ const sceneConfigs = {
     '|',
     'textColor', 'backgroundColor',
     '|',
-    'image',
-    'file',
-    '|',
     'link',
     '|',
     'align',
@@ -82,6 +80,7 @@ const sceneConfigs = {
     'findAndReplace',
     '|',
     'import',
+    'export',
   ]
 }
 
@@ -115,6 +114,7 @@ const componentMap = {
   image: Image,
   file: File,
   import: Import,
+  export: Export,
 }
 
 export default defineComponent({

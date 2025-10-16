@@ -13,7 +13,7 @@ import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { safeJSONParse } from '@/helpers/json'
 import { handleFileEvent, isValidURL } from '@/prose-utils'
 export const Parse = Extension.create({
-  name: 'paste',
+  name: 'customPaste',
   priority: EXTENSION_PRIORITY_HIGHEST,
   addProseMirrorPlugins() {
     const extensionThis = this

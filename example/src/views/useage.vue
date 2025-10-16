@@ -14,11 +14,7 @@ const content = ref(
   // '<div data-type="callout" data-bg-color="rgba(217,201,248,0.5)" data-color="#000000" style="background-color: rgba(217,201,248,0.5); color: #000000;"><p>我是测试高亮块</p><p>啊啊啊</p></div><p></p>'
   ''
 );
-// const json = ref({ "type": "doc", "content": [{ "type": "callout", "attrs": { "bgColor": "rgba(217,201,248,0.5)", "color": "#000000", "icon": null }, "content": [{ "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "我是测试高亮块" }] }, { "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "啊啊啊" }] }] }, { "type": "paragraph", "attrs": { "textAlign": null, "indent": 0 }, "content": [{ "type": "text", "text": "1" }] }] });
-// const json = ref({});
-const onUpdate = (content: string) => {
-  console.log(content);
-};
+
 const currentDemo = ref();
 const title = ref("");
 const globalStore = useGlobalStore();
@@ -35,16 +31,15 @@ const demos = [
   },
   {
     name: "collaboration",
-    title: "协同示例",
+    title: "协同示例(待开发)",
     description: "协同示例",
   },
 ];
 const checkDemo = (name: string) => {
-  console.log(currentDemo.value, name);
   if (currentDemo.value === name) {
     return;
   }
-
+  
   router.push({
     path: "/",
     query: {
@@ -67,7 +62,13 @@ const handleOpenJwtChange = async (checked: boolean) => {
     localStorage.setItem("speed-tiptap-token", token);
   }
 };
-
+// 切换重置值
+watch(() => route.query.demoType, () => {
+  content.value = ''; // 重置内容
+  title.value = ''; // 重置标题
+}, {
+  immediate: true,
+});
 const simpleProps = {
   upload: {
     uploadApis: {
@@ -171,9 +172,10 @@ watch(
     <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
       scene="knowledge" />
   </div>
-  <!-- <div>
-    <a-space>标题:<a-input v-model:value="title" /></a-space>{{ json }}
-  </div> -->
+  <div v-if="currentDemo === 'knowledge'">
+    <a-space>标题:<a-input v-model:value="title" /></a-space>
+    <!-- {{ content }} -->
+  </div>
 </template>
 
 <style scoped></style>

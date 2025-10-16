@@ -25,7 +25,7 @@ export default defineConfig({
     nav: [
       { text: "指南", link: "/guide/" },
       { text: "配置", link: "/config/toolbar" },
-      { text: "示例", link: "/demos/simple" },
+      { text: "示例", link: "https://whateveryoudo.github.io/speed-tiptap-editor/example/" },
     ],
     sidebar: {
       "/guide/": [

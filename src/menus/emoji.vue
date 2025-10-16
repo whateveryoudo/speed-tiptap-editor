@@ -6,12 +6,18 @@
  * @LastEditTime: 2023-01-04 15:48:55
 -->
 <template>
-  <a-tooltip title="插入表情">
+  <!-- 除了写两遍是否有其他方式？？ -->
+  <a-tooltip v-if="!isTitleActive" title="插入表情">
     <emoji-picker @triggerEmoji="setEmoji">
-      <a-button type="text" class="shadow-btn-wrapper" :disabled="isTitleActive">
+      <a-button type="text" class="shadow-btn-wrapper">
         <s-icon-font type="icon-kl-emoji" :size="18" />
       </a-button>
     </emoji-picker>
+  </a-tooltip>
+  <a-tooltip v-else title="插入表情">
+    <a-button type="text" class="shadow-btn-wrapper" disabled>
+      <s-icon-font type="icon-kl-emoji" :size="18" />
+    </a-button>
   </a-tooltip>
 </template>
 

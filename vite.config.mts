@@ -6,6 +6,7 @@ import dts from "unplugin-dts/vite";
 import UnoCSS from "@unocss/vite";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+import nodePolyfills from 'vite-plugin-node-stdlib-browser';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -33,6 +34,7 @@ export default defineConfig(({ command, mode }) => {
         ],
         dts: "src/components.d.ts", // 生成类型声明文件
       }),
+      nodePolyfills() // 用于处理html-to-docx 报错：https://github.com/privateOmega/html-to-docx/issues/128
     ],
     resolve: {
       alias: {
