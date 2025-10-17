@@ -30,7 +30,7 @@
     <!-- 节点拖拽 -->
     <DragNodeMenu v-if="editor" :editor="editor" />
     <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
-      <editor-content :editor="editor" class="h-full"/>
+      <editor-content :editor="editor" class="h-full" />
     </main>
     <!-- 搜索替换弹框 -->
     <SearchReplaceModal :editor="editor" v-if="editor" />
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, PropType, provide, computed, VNode } from 'vue'
+import { watch, ref, PropType, provide, computed, VNode, onMounted } from 'vue'
 import MenuBar from './menus'
 import { getKnowledgeKit, getDefaultKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
@@ -48,7 +48,10 @@ import TableBubbleMenu from '@/bubbleMenus/tableMenu/Bubble.vue'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
 import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@/bubbleMenus'
 
-// import Collaboration from '@tiptap/extension-collaboration'
+import Collaboration from '@tiptap/extension-collaboration'
+// import { TiptapCollabProvider } from '@tiptap-pro/provider'
+// 采用自身ws服务
+import { HocuspocusProvider } from "@hocuspocus/provider";
 // import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { type CollaborationEditorProps } from './type'
 import { EditorPreviewImage } from '@/helpers/previews'
@@ -57,9 +60,11 @@ import { onKeyStroke } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
 import { SEARCH_REPLACE_VISIBLE_KEY, UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY } from './keys'
+import * as Y from 'yjs'
 // import initContext from './context'
 // import { useUserStore } from '@/store/modules/user/user'
 // import { getRandomColor } from '@/helpers/color'
+
 onKeyStroke(e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') {
     e.preventDefault()
@@ -84,6 +89,11 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
     enabled: true
   })
 })
+let doc = null;
+if (props.collaboration) {
+  doc = new Y.Doc() // Initialize Y.Doc for shared editing
+}
+
 const speedTiptapConfigCpt = computed(() => {
   return props;
 })
@@ -114,7 +124,7 @@ provide('aiExtensions', getDefaultKit(props));
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
-  content: props.content,
+  // content: props.content,
   editorProps: {
     // 追加class，用于设定样式
     attributes: {
@@ -143,12 +153,11 @@ const editor = useEditor({
       //
     }
   },
-
-  extensions: [
+  extensions: props.collaboration ? [
     ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
-    // Collaboration.configure({
-    //   document: props?.hocuspocusProvider?.document ?? {},
-    // }),
+    Collaboration.configure({
+      document: doc,
+    })
     // CollaborationCursor.configure({
     //   provider: props?.hocuspocusProvider,
     //   user: {
@@ -156,12 +165,37 @@ const editor = useEditor({
     //     color: getRandomColor(),
     //   },
     // }),
+  ] : [
+    ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
   ],
   onCreate({ editor }) {
     // 初始化图片预览
     previewInstance.value = new EditorPreviewImage(editor);
   }
 })
+if (props.collaboration && doc) {
+  const provider = new HocuspocusProvider({
+    name: 'ykx测试文档1', // Unique document identifier for syncing. This is your document name.
+    // appId: '8mze223m', // Your Cloud Dashboard AppID or `baseURL` for on-premises
+    url: props.collaboration.url,
+    // 模拟token
+    token: props.collaboration.token,
+    document: doc,
+    // onSynced: () => {
+    //   if (!doc.getMap('config').get('initialContentLoaded') && editor.value) {
+    //     doc.getMap('config').set('initialContentLoaded', true)
+
+    //     editor.value.commands.setContent(`
+    //     <h1>ykx测试文档1</h1>
+    //     <p>This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.</p>
+    //     <p>The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.</p>
+    //     `)
+    //   }
+    // },
+  })
+}
+
+
 // 监听 content 变化，同步到编辑器
 watch(
   () => props.content,
@@ -178,7 +212,6 @@ watch(
   () => props.title,
   (newTitle) => {
     if (editor.value && newTitle) {
-      debugger;
       const { state } = editor.value
       const { doc } = state
       const firstChild = doc.firstChild
@@ -264,6 +297,7 @@ watch(
 
     :deep(.editor-content) {
       min-height: 100%;
+
       // 带有句柄的需要增加padding
       &.has-drag-handle {
         padding-left: 50px;

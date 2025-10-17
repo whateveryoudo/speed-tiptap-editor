@@ -18,14 +18,17 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(highlight.js@11.11.1)(vue@3.5.16(typescript@5.8.3))
       '@hocuspocus/provider':
-        specifier: ^1.0.0-beta.4
-        version: 1.1.3(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
+        specifier: ^3.2.0
+        version: 3.2.5(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
       '@kangc/v-md-editor':
         specifier: ^2.3.17
         version: 2.3.18(@vue/compiler-sfc@3.5.16)(vue@3.5.16(typescript@5.8.3))
       '@microsoft/fetch-event-source':
         specifier: ^2.0.1
         version: 2.0.1
+      '@tiptap-pro/provider':
+        specifier: ^3.3.0
+        version: 3.3.0(@hocuspocus/provider@3.2.5(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(lib0@0.2.111)(yjs@13.6.27)
       '@tiptap/core':
         specifier: 3.0.6
         version: 3.0.6(@tiptap/pm@3.0.6)
@@ -45,8 +48,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/extension-code-block@3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(highlight.js@11.11.1)(lowlight@3.3.0)
       '@tiptap/extension-collaboration':
-        specifier: ^3.0.6
-        version: 3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(@tiptap/y-tiptap@3.0.0(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(yjs@13.6.27)
+        specifier: ^3.7.2
+        version: 3.7.2(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(@tiptap/y-tiptap@3.0.0(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(yjs@13.6.27)
       '@tiptap/extension-collaboration-cursor':
         specifier: ^3.0.0
         version: 3.0.0(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(y-prosemirror@1.3.7(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))
@@ -200,6 +203,12 @@ importers:
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.16(typescript@5.8.3))
+      y-protocols:
+        specifier: ^1.0.6
+        version: 1.0.6(yjs@13.6.27)
+      yjs:
+        specifier: ^13.6.27
+        version: 13.6.27
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.52.11
@@ -726,14 +735,14 @@ packages:
       highlight.js: ^11.0.1
       vue: ^3
 
-  '@hocuspocus/common@1.1.3':
-    resolution: {integrity: sha512-U5wQcMsVTooUKSqAq8m2bmMPWaVp78oTl1YFcJ2v3Dq0Wt1MBik3AohcnuUZ2JcP1fblf8lZVugCs9qg9mbu6g==}
+  '@hocuspocus/common@3.2.5':
+    resolution: {integrity: sha512-unodX1+dBUp2sink7nKg/PSNDDUjM+AyMxg3WGpRTZb1LI0z/22DjjwFCgWWvoCNQALPVp9PFB/wyAI0xNo6GA==}
 
-  '@hocuspocus/provider@1.1.3':
-    resolution: {integrity: sha512-8AYFM1q3ICEyK835USGskMsT/z9QgiJOqYz1IStR4OrC08RVBTEm0vDdtHx+5y3wxIMg22tHQL7ubghWRj3BPg==}
+  '@hocuspocus/provider@3.2.5':
+    resolution: {integrity: sha512-UZpmPYSp8T2ms1E049GayQcaUIVBAZCWiNIiuxfO/+lydTto8svqEgJVmIUqxmSJ3lO64zo9wsyQz9wXu2hlnQ==}
     peerDependencies:
-      y-protocols: ^1.0.5
-      yjs: ^13.5.29
+      y-protocols: ^1.0.6
+      yjs: ^13.6.8
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -1080,6 +1089,13 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
+  '@tiptap-pro/provider@3.3.0':
+    resolution: {integrity: sha512-fowdD8dMixDhYbRV3QkTnq98XEFNC+yOPIa2ormQ9hSGKVPNQRizJbasRCg74Cg0DGLXsU1re3wG9+olGbno4g==}
+    peerDependencies:
+      '@hocuspocus/provider': ^3.2.0
+      lib0: ^0.2.99
+      yjs: ^13.6.20
+
   '@tiptap/core@3.0.6':
     resolution: {integrity: sha512-dqAQCKb/++6lFub4q7fcIFTNDLRLR5ZQWDL23OxQYW2oXV+EppNZROlFoSOLYOykqVbtvQ7xp+Ja3aZou3hZJg==}
     peerDependencies:
@@ -1139,11 +1155,11 @@ packages:
       '@tiptap/core': ^3.0.0
       y-prosemirror: ^1.2.6
 
-  '@tiptap/extension-collaboration@3.0.6':
-    resolution: {integrity: sha512-6VOxJXtfaXO36l52he0JHqXN9+/GzRalNgKV3+7H3wMcs4FQRFvmnkHHnKyAQ3W5F3ktGkWmbJ1lstTAihAvJA==}
+  '@tiptap/extension-collaboration@3.7.2':
+    resolution: {integrity: sha512-eIwFBQca7hz8p+UXtn9/B9p45qCFuKLTdCgog9bJjLY6K1ObY0/9fmraxou59Qym57XLs5cm0tc2Db1O5rOxkw==}
     peerDependencies:
-      '@tiptap/core': ^3.0.6
-      '@tiptap/pm': ^3.0.6
+      '@tiptap/core': ^3.7.2
+      '@tiptap/pm': ^3.7.2
       '@tiptap/y-tiptap': ^3.0.0-beta.3
       yjs: ^13
 
@@ -3471,11 +3487,6 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  lib0@0.2.108:
-    resolution: {integrity: sha512-+3eK/B0SqYoZiQu9fNk4VEc6EX8cb0Li96tPGKgugzoGj/OdRdREtuTLvUW+mtinoB2mFiJjSqOJBIaMkAGhxQ==}
-    engines: {node: '>=16'}
-    hasBin: true
-
   lib0@0.2.111:
     resolution: {integrity: sha512-NZPvycjIPaSY1DV9uz88RJYFwrul6kLMtZGIw1T1zE6i1E9q17XElZJPfWVn2iVDQTLLqhJijghuVxKS/z8EHQ==}
     engines: {node: '>=16'}
@@ -4536,6 +4547,9 @@ packages:
   string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
 
+  string_decoder@1.3.0:
+    resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
+
   stringify-entities@4.0.4:
     resolution: {integrity: sha512-IwfBptatlO+QCJUo19AqvrPNqlVMpW9YEL2LIVY+Rpv2qsjCGxaDLNRgeGsQWJhfItebuJhsGSLjaBbNSQ+ieg==}
 
@@ -5064,6 +5078,18 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  ws@8.18.3:
+    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   x-is-array@0.1.0:
     resolution: {integrity: sha512-goHPif61oNrr0jJgsXRfc8oqtYzvfiMJpTqwE7Z4y9uH+T3UozkGqQ4d2nX9mB9khvA8U2o/UbPOFjgC7hLWIA==}
 
@@ -5587,17 +5613,21 @@ snapshots:
       highlight.js: 11.11.1
       vue: 3.5.16(typescript@5.8.3)
 
-  '@hocuspocus/common@1.1.3':
+  '@hocuspocus/common@3.2.5':
     dependencies:
-      lib0: 0.2.108
+      lib0: 0.2.111
 
-  '@hocuspocus/provider@1.1.3(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)':
+  '@hocuspocus/provider@3.2.5(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)':
     dependencies:
-      '@hocuspocus/common': 1.1.3
+      '@hocuspocus/common': 3.2.5
       '@lifeomic/attempt': 3.1.0
-      lib0: 0.2.108
+      lib0: 0.2.111
+      ws: 8.18.3
       y-protocols: 1.0.6(yjs@13.6.27)
       yjs: 13.6.27
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -5960,6 +5990,12 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
+  '@tiptap-pro/provider@3.3.0(@hocuspocus/provider@3.2.5(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(lib0@0.2.111)(yjs@13.6.27)':
+    dependencies:
+      '@hocuspocus/provider': 3.2.5(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
+      lib0: 0.2.111
+      yjs: 13.6.27
+
   '@tiptap/core@3.0.6(@tiptap/pm@3.0.6)':
     dependencies:
       '@tiptap/pm': 3.0.6
@@ -6011,7 +6047,7 @@ snapshots:
       '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
       y-prosemirror: 1.3.7(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
 
-  '@tiptap/extension-collaboration@3.0.6(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(@tiptap/y-tiptap@3.0.0(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(yjs@13.6.27)':
+  '@tiptap/extension-collaboration@3.7.2(@tiptap/core@3.0.6(@tiptap/pm@3.0.6))(@tiptap/pm@3.0.6)(@tiptap/y-tiptap@3.0.0(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(yjs@13.6.27)':
     dependencies:
       '@tiptap/core': 3.0.6(@tiptap/pm@3.0.6)
       '@tiptap/pm': 3.0.6
@@ -8722,10 +8758,6 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  lib0@0.2.108:
-    dependencies:
-      isomorphic.js: 0.2.5
-
   lib0@0.2.111:
     dependencies:
       isomorphic.js: 0.2.5
@@ -9278,7 +9310,7 @@ snapshots:
       readable-stream: 3.6.2
       stream-browserify: 3.0.0
       stream-http: 3.2.0
-      string_decoder: 1.1.1
+      string_decoder: 1.3.0
       timers-browserify: 2.0.12
       tty-browserify: 0.0.1
       url: 0.11.4
@@ -10051,6 +10083,10 @@ snapshots:
     dependencies:
       safe-buffer: 5.1.2
 
+  string_decoder@1.3.0:
+    dependencies:
+      safe-buffer: 5.2.1
+
   stringify-entities@4.0.4:
     dependencies:
       character-entities-html4: 2.1.0
@@ -10640,6 +10676,8 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
+
+  ws@8.18.3: {}
 
   x-is-array@0.1.0: {}
 

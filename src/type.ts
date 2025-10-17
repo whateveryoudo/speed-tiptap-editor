@@ -45,6 +45,7 @@ export interface CollaborationEditorProps {
    * 内容
    */
   content?: string;
+
   /**
    * 标题
    */
@@ -61,7 +62,13 @@ export interface CollaborationEditorProps {
    * 是否可编辑
    */
   editable?: boolean;
-
+  /**
+   * 协作配置
+   */
+  collaboration?: {
+    url: string;
+    token: string;
+  }
   /**
    * 是否需要菜单
    */
