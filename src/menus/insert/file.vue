@@ -7,9 +7,9 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-  <a-tooltip title="附件">
+  <a-tooltip :title="disableMenu ? null : '附件'">
     <a-button type="text" @click="handleClickImg" class="shadow-btn-wrapper"
-      :class="[isFileActive ? 'is-active' : '', isTitleActive && 'disabled']" :disabled="isTitleActive">
+      :class="[isFileActive ? 'is-active' : '', isTitleActive && 'disabled']" :disabled="disableMenu">
       <PaperClipOutlined />
       </a-button>
       <input ref="FileInput" @change="handleFileChange" :multiple="fileConfig?.multiple ?? true" type="file"
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, type Ref } from 'vue'
+import { inject, ref, type Ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { PaperClipOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
@@ -36,7 +36,10 @@ const FileInput = ref<HTMLInputElement>()
 const speedTiptapConfig = inject('speedTiptapConfig', ref({})) as Ref<any>; // 获取编辑器传入配置
 const { file: fileConfig } = speedTiptapConfig.value;
 const isTitleActive = useActive(props.editor, Title.name)
-
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const isFileActive = useActive(props.editor, 'attachment')
 const handleFileChange = (event: any) => {
   props.editor.chain().focus().uploadAttachment(event?.target?.files).run()

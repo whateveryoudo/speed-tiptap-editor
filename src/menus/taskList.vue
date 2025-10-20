@@ -8,25 +8,25 @@
 -->
 
 <template>
-  <a-tooltip title="任务列表">
+  <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '任务列表'">
     <a-button
       type="text"
       class="shadow-btn-wrapper"
-      :class="[isTaskListActive ? 'is-active' : '', isTitleActive && 'disabled']"
+      :class="[isTaskListActive ? 'is-active' : '']"
       @click="toggleTaskList"
-      :disabled="isTitleActive"
+      :disabled="disableMenu"
     >
     <s-icon-font type="icon-kl-task"></s-icon-font>
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { TaskList as TaskListExtension } from '@/extensions/taskList';
-
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -34,12 +34,17 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const keyMap = getShortcutTipByKey('taskList')
 const toggleTaskList = () => {
   if (isTitleActive.value) {
     return
   }
   props.editor && props.editor.chain().focus().toggleTaskList().run()
 }
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value || !props.editor.isEditable
+})
 const isTaskListActive = useActive(props.editor, TaskListExtension.name)
 </script>
 

@@ -66,7 +66,7 @@ import * as Y from 'yjs'
 // import { getRandomColor } from '@/helpers/color'
 
 onKeyStroke(e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 's') {
     e.preventDefault()
     message.info(`${baseConfig.TITLE}会实时保存你的数据，无需手动保存。`)
     return false
@@ -98,9 +98,13 @@ const speedTiptapConfigCpt = computed(() => {
   return props;
 })
 provide('speedTiptapConfig', speedTiptapConfigCpt); // 向下传递配置
-const emit = defineEmits(['update:title', 'update:content', 'update:json'])
+const emit = defineEmits(['update:title', 'update:content'])
 const previewInstance = ref<EditorPreviewImage | null>(null);
 provide('previewInstance', previewInstance);
+const editableCpt = computed(() => {
+  return props.editable;
+})
+provide('editableCpt', editableCpt);
 
 const searchReplaceVisible = ref(false);
 provide(SEARCH_REPLACE_VISIBLE_KEY, searchReplaceVisible);
@@ -229,6 +233,16 @@ watch(
           newTitle
         )
       }
+    }
+  }
+)
+
+// 监听 editable 变化，动态更新编辑器的可编辑状态
+watch(
+  () => props.editable,
+  (newEditable) => {
+    if (editor.value) {
+      editor.value.setEditable(newEditable)
     }
   }
 )

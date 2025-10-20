@@ -18,6 +18,7 @@ const content = ref(
 const currentDemo = ref();
 const title = ref("");
 const globalStore = useGlobalStore();
+const editable = ref(true);
 const demos = [
   {
     name: "simple",
@@ -186,6 +187,7 @@ const collaborateProps = {
 }
 
 
+
 watch(
   () => route.query.demoType,
   (newVal) => {
@@ -199,10 +201,13 @@ watch(
 
 <template>
   <h2>以下是Speed Tiptap Editor的示例</h2>
-  <a-flex align="center" class="mb-2">
+  <a-flex align="center" class="mb-2 gap-2">
     <a-switch v-model:checked="globalStore.openJwt" @change="handleOpenJwtChange"></a-switch><span
-      class="ml-2 text-sm text-gray-500">是否开启登录jwt校验(文档可能需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span>
-  </a-flex>
+      class="ml-2 text-sm text-gray-500">是否开启登录jwt校验(文档部分功能可能需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span>
+      <a-switch v-model:checked="editable" ></a-switch><span
+      class="ml-2 text-sm text-gray-500">是否可编辑</span>
+    </a-flex>
+
   <router-view />
   <a-space class="mb-2">
     <template v-for="demo in demos" :key="demo.name">
@@ -217,12 +222,12 @@ watch(
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2 h-[600px]">
-    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'"
+    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'"
       v-bind="simpleProps" />
     <!-- 先不要绑定json 会导致实时变化 -->
-    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
+    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
       scene="knowledge" v-bind="knowledgeProps" />
-    <SpeedTiptapEditor v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
+    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
       scene="knowledge" v-bind="collaborateProps" />
   </div>
   <div v-if="currentDemo === 'knowledge'">

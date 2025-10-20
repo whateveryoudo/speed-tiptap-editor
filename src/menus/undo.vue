@@ -7,26 +7,31 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\undo.vue
 -->
 <template>
-  <a-tooltip title="撤销">
+  <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '撤销' : null">
     <a-button
+      :disabled="!editableCpt"
       type="text"
       class="shadow-btn-wrapper"
       @click="undo"
     >
       <UndoOutlined class="text-[16px]"/>
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { type PropType, type Ref, ref, inject, computed } from 'vue'
 import { Editor } from '@tiptap/core'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+
+const keyMap = getShortcutTipByKey('undo');
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
 })
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const undo = () => {
   props.editor && props.editor.chain().focus().undo().run()
 }

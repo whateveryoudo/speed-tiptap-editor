@@ -7,23 +7,25 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\strike.vue
 -->
 <template>
-  <a-tooltip title="删除线">
+  <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '删除线' : null">
     <a-button type="text" class="shadow-btn-wrapper"
       :class="[isStrikeActive ? 'is-active' : '', isTitleActive && 'disabled']"
       v-on="buttonEvents"
-      :disabled="isTitleActive">
+      :disabled="!editableCpt || isTitleActive">
       <strikethrough-outlined />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Editor } from '@tiptap/core'
+import { inject, ref } from 'vue'
+import { type Ref } from 'vue'
+import { type Editor } from '@tiptap/core'
 import { StrikethroughOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
 
 const props = withDefaults(defineProps<{
   editor: Editor,
@@ -32,6 +34,9 @@ const props = withDefaults(defineProps<{
   editor: () => ({}) as Editor,
   triggerType: 'menu'
 })
+const keyMap = getShortcutTipByKey('strike');
+
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const isTitleActive = useActive(props.editor, Title.name)
 const toggleStrike = () => {
   if (isTitleActive.value) {

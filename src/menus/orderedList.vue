@@ -8,21 +8,21 @@
 -->
 
 <template>
-  <a-tooltip title="有序列表">
-    <a-button type="text" :class="['shadow-btn-wrapper', isOrderedListActive ? 'is-active' : '']"
-      @click="toggleOrderedList" :disabled="isTitleActive">
+  <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '有序列表'">
+    <a-button :disabled="disableMenu" type="text" :class="['shadow-btn-wrapper', isOrderedListActive ? 'is-active' : '']"
+      @click="toggleOrderedList">
       <ordered-list-outlined />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { OrderedListOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { OrderedList as OrderedListExtension } from '@/extensions/orderedList';
-
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -30,12 +30,17 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const keyMap = getShortcutTipByKey('orderedList')
 const toggleOrderedList = () => {
   if (isTitleActive.value) {
     return
   }
   props.editor && props.editor.chain().focus().toggleOrderedList().run()
 }
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value || !props.editor.isEditable
+})
 const isOrderedListActive = useActive(props.editor, OrderedListExtension.name)
 </script>
 

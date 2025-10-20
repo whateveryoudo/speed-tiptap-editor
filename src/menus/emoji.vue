@@ -6,23 +6,23 @@
  * @LastEditTime: 2023-01-04 15:48:55
 -->
 <template>
-  <!-- 除了写两遍是否有其他方式？？ -->
-  <a-tooltip v-if="!isTitleActive" title="插入表情">
-    <emoji-picker @triggerEmoji="setEmoji">
-      <a-button type="text" class="shadow-btn-wrapper">
+
+  <emoji-picker @triggerEmoji="setEmoji" v-if="!disableMenu">
+    <a-tooltip :title="disableMenu ? null : '插入表情'">
+      <a-button type="text" :class="['shadow-btn-wrapper', isEmojiActive ? 'is-active' : '']">
         <s-icon-font type="icon-kl-emoji" :size="18" />
       </a-button>
-    </emoji-picker>
-  </a-tooltip>
-  <a-tooltip v-else title="插入表情">
-    <a-button type="text" class="shadow-btn-wrapper" disabled>
-      <s-icon-font type="icon-kl-emoji" :size="18" />
-    </a-button>
-  </a-tooltip>
+    </a-tooltip>
+
+  </emoji-picker>
+  <a-button v-else type="text" :class="['shadow-btn-wrapper']" disabled>
+    <s-icon-font type="icon-kl-emoji" :size="18" />
+  </a-button>
+
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import EmojiPicker from '@/components/emojiPicker/index.vue'
 import { Title } from '@/extensions/title'
@@ -36,11 +36,16 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 const setEmoji = (emoji: string) => {
   const { selection } = props.editor.state
   const { $anchor } = selection
   return props.editor.chain().insertContentAt($anchor.pos, emoji).run()
 }
+
 const isEmojiActive = useActive(props.editor, Emoji.name)
 </script>
 

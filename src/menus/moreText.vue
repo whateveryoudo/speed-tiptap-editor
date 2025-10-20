@@ -7,18 +7,21 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\moreText.vue
 -->
 <template>
-  <a-popover v-if="!isTitleActive" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click" placement="bottom">
+  <a-popover v-if="!disableMenu" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click"
+    placement="bottom">
     <template #content>
       <a-space>
         <ul class="text-list-wrapper">
           <li v-for="item in textItems" :key="item.key" class="list-item">
-            <s-icon-font v-if="selectItem && selectItem.key === item.key" type="icon-kl-gouxuan" class="absolute top-[50%] translate-y-[-50%] left-[13px]" />
-
-            <a-button type="text" class="shadow-btn-wrapper" v-on="item.action ? getButtonEvents(item.action) : {}"
-              style="width: 100%; text-align: left;">
-              <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
-              {{ item.name }}
-            </a-button>
+            <s-keymap-tip :keyMap="item.keyMap" :title="item.name" placement="right">
+              <a-button type="text" class="shadow-btn-wrapper" v-on="item.action ? getButtonEvents(item.action) : {}"
+                style="width: 100%; text-align: left;">
+                <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
+                {{ item.name }}
+              </a-button>
+              <s-icon-font v-if="selectItem && selectItem.key === item.key" type="icon-kl-gouxuan"
+                class="absolute top-[50%] translate-y-[-50%] left-[13px]" />
+            </s-keymap-tip>
           </li>
         </ul>
       </a-space>
@@ -45,10 +48,12 @@ import { Editor } from '@tiptap/core'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-import { ref, type VNode, PropType, computed } from 'vue'
+import { ref, type VNode, PropType, computed, inject, type Ref } from 'vue'
 // import { Code as InlineCode } from '@/extensions/code'
 import Superscript from '@tiptap/extension-superscript'
 import Subscript from '@tiptap/extension-subscript'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -65,6 +70,10 @@ const isTitleActive = useActive(props.editor, Title.name)
 const isSupActive = useActive(props.editor, Superscript.name)
 const isSubActive = useActive(props.editor, Subscript.name)
 const isCodeActive = useActive(props.editor, 'code')
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 const current = computed(() => {
   if (isSupActive.value) {
     return 'sup'
@@ -80,6 +89,7 @@ interface TextItem {
   key: TextType
   name: string
   iconType?: string
+  keyMap?: string
   size?: number
   action?: (editor: Editor) => void
 }
@@ -106,17 +116,20 @@ const textItems = ref<TextItem[]>([
     key: 'sup',
     name: '上标',
     iconType: 'icon-kl-superscript',
+    keyMap: getShortcutTipByKey('sup'),
     action: () => {
+      
       let tempActive = isSupActive.value;
       removeAllText();
       if (!tempActive) {
         props?.editor.chain().focus().setSuperscript().run()
       }
     },
-  },
+  },  
   {
     key: 'sub',
     name: '下标',
+    keyMap: getShortcutTipByKey('sub'),
     iconType: 'icon-kl-subscript',
     action: () => {
       let tempActive = isSubActive.value;
@@ -130,6 +143,7 @@ const textItems = ref<TextItem[]>([
     key: 'code',
     name: '代码',
     iconType: 'icon-kl-code',
+    keyMap: '⌘/Ctrl + E',
     size: 18,
     action: () => {
       let tempActive = isCodeActive.value;

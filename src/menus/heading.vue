@@ -8,7 +8,7 @@
 -->
 <template>
   <a-select :dropdownMatchSelectWidth="false" :bordered="false" class="w-[80px] shadow-ant-select" :value="current"
-    :disabled="isTitleActive" popupClassName="popover-check-dropdown popover-heading-dropdown" :options="headingOptions"
+    :disabled="!editableCpt || isTitleActive" popupClassName="popover-check-dropdown popover-heading-dropdown" :options="headingOptions"
     @change="handleChange">
     <template #option="{ value: val, label, style }">
       <span class="place-check-icon">
@@ -19,13 +19,14 @@
       </span>
     </template>
     <template #suffixIcon>
-      <CaretDownOutlined :style="{ color: !isTitleActive ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
+      <CaretDownOutlined :style="{ color: (!isTitleActive && editableCpt) ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
     </template>
   </a-select>
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive, computed } from 'vue'
+import { PropType, reactive, computed, inject, ref } from 'vue'
+import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
@@ -36,6 +37,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const isTitleActive = useActive(props.editor, Title.name)
 const isH1Active = useActive(props.editor, 'heading', { level: 1 })
 const isH2Active = useActive(props.editor, 'heading', { level: 2 })

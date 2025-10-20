@@ -7,23 +7,25 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-  <a-tooltip title="粗体">
+  <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '粗体' : null">
     <a-button type="text" class="shadow-btn-wrapper"
       :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']"
       v-on="buttonEvents"
-      :disabled="isTitleActive">
+      :disabled="!editableCpt || isTitleActive">
       <bold-outlined />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import {  inject, ref, computed } from 'vue'
+import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { BoldOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
 
 const props = withDefaults(defineProps<{
   editor: Editor,
@@ -33,6 +35,11 @@ const props = withDefaults(defineProps<{
   triggerType: 'menu'
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+
+// 获取快捷键文本
+const keyMap = getShortcutTipByKey('bold');
+
 const toggleBold = () => {
   if (isTitleActive.value) {
     return

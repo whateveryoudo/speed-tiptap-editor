@@ -7,26 +7,27 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\textColor.vue
 -->
 <template>
-  <a-tooltip title="字体颜色">
+  <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '字体颜色'">
     <div :class="['text-color-menu-wrapper']">
-      <a-button type="text" class="shadow-btn-wrapper middle" style="margin-top:-1px" :disabled="isTitleActive"
+      <a-button type="text" class="shadow-btn-wrapper middle" style="margin-top:-1px" :disabled="disableMenu"
         v-on="buttonEvents">
-        <span class="text-wrapper" :style="{ color: isTitleActive ? 'rgba(0, 0, 0, 0.25)' : '#000' }">A
+        <span class="text-wrapper" :style="{ color: disableMenu ? 'rgba(0, 0, 0, 0.25)' : '#000' }">A
           <span class="under-line"
-            :style="{ backgroundColor: isTitleActive ? 'rgba(0, 0, 0, 0.25)' : curColor || 'transparent' }" />
+            :style="{ backgroundColor: disableMenu ? 'rgba(0, 0, 0, 0.25)' : curColor || 'transparent' }" />
         </span>
       </a-button>
-      <color-picker :cur-color="curColor" show-default :disabled="isTitleActive" @triggerColor="setColor">
-        <a-button @mousedown.prevent type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="isTitleActive">
+      <color-picker :cur-color="curColor" show-default :disabled="disableMenu" @triggerColor="setColor">
+        <a-button @mousedown.prevent type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="disableMenu">
           <caret-down-outlined />
         </a-button>
       </color-picker>
     </div>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { PropType, ref, inject, computed } from 'vue'
+import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import ColorPicker from '@/components/colorPicker/index.vue'
 import { type ColorType } from '@/components/colorPicker/data'
@@ -34,6 +35,8 @@ import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -41,9 +44,17 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 
-const curColor = ref<ColorType>('#000000'); // 这里不使用选中回显
+  const curColor = ref<ColorType>('#000000'); // 这里不使用选中回显
 
+// 获取快捷键文本
+const keyMap = getShortcutTipByKey('textColor')
+
+// 禁用菜单
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value || !props.editor.isEditable
+})
 const setColor = (color: ColorType) => {
   if (isTitleActive.value || !color) {
     return

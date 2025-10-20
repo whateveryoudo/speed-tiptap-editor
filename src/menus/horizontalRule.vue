@@ -7,11 +7,11 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\horizontalRule.vue
 -->
 <template>
-  <a-tooltip title="插入分割线">
+  <a-tooltip :title="disableMenu ? null : '插入分割线'">
     <a-button
       type="text"
       class="shadow-btn-wrapper"
-      :disabled="isTitleActive"
+      :disabled="disableMenu"
       @click="setHorizontalRule"
     >
       <s-icon-font type="icon-kl-line" :size="18"></s-icon-font>
@@ -19,7 +19,7 @@
   </a-tooltip>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
@@ -31,6 +31,10 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 const setHorizontalRule = () => {
   if (isTitleActive.value) {
     return

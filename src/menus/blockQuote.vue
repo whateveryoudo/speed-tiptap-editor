@@ -8,20 +8,20 @@
 -->
 
 <template>
-  <a-tooltip title="插入引用">
+  <a-tooltip :title="disableMenu ? null : '插入引用'">
     <a-button
       type="text"
       class="shadow-btn-wrapper"
-      :class="[isBlockquoteActive ? 'is-active' : '', isTitleActive && 'disabled']"
+      :class="[isBlockquoteActive ? 'is-active' : '']"
       @click="toggleBlockquote"
-      :disabled="isTitleActive"
+      :disabled="disableMenu"
     >
     <s-icon-font type="icon-kl-quote1"></s-icon-font>
     </a-button>
   </a-tooltip>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
@@ -34,6 +34,10 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 const toggleBlockquote = () => {
   if (isTitleActive.value) {
     return

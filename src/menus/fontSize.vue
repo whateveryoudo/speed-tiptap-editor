@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <a-select :bordered="false" class="w-[80px] shadow-ant-select" :value="currentFontSize" :disabled="isTitleActive"
+  <a-select :bordered="false" class="w-[80px] shadow-ant-select" :value="currentFontSize" :disabled="!editableCpt || isTitleActive"
     popupClassName="popover-check-dropdown" :options="fontSizeOptions" @change="handleChange">
     <template #option="{ value: val, label }">
       <span class="place-check-icon">
@@ -17,7 +17,7 @@
       {{ label }}
     </template>
     <template #suffixIcon>
-      <CaretDownOutlined :style="{ color: !isTitleActive ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
+      <CaretDownOutlined :style="{ color: (!isTitleActive && editableCpt) ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
     </template>
   </a-select>
 </template>
@@ -36,6 +36,7 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const isTitleActive = useActive(props.editor, Title.name)
 const currentFontSize = useAttributes(props.editor, 'textStyle', { fontSize: speedTiptapConfig?.value?.fontSize?.default ?? '14px' }, attrs =>
   attrs.fontSize.replace('px', ''),

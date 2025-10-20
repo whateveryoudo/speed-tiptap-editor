@@ -7,32 +7,33 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\clearNodeAndMarks.vue
 -->
 <template>
-  <a-tooltip title="清除格式">
-    <a-button
-      class="shadow-btn-wrapper"
-      @click="clear"
-      :class="[isTitleActive && 'disabled']"
-      type="text"
-      :disabled="isTitleActive"
-    >
-      <s-icon-font type="icon-kl-remove-format" :size="16"/>
+  <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? '清除格式' : null">
+    <a-button class="shadow-btn-wrapper" @click="clear"  :disabled="disableMenu" type="text">
+      <s-icon-font type="icon-kl-remove-format" :size="16" />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { PropType, ref, inject, computed } from 'vue'
+import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
 })
+const keyMap = getShortcutTipByKey('clear');
 const isTitleActive = useActive(props.editor, Title.name)
-
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 const clear = () => {
   if (props.editor) {
     debugger;

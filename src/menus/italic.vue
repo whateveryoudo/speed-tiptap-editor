@@ -7,23 +7,25 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\italic.vue
 -->
 <template>
-  <a-tooltip title="斜体">
+  <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '斜体' : null">
     <a-button type="text" class="shadow-btn-wrapper"
       :class="[isItalicActive ? 'is-active' : '', isTitleActive && 'disabled']"
       v-on="buttonEvents"
-      :disabled="isTitleActive">
+      :disabled="!editableCpt || isTitleActive">
       <italic-outlined />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { inject, ref } from 'vue'
+import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { ItalicOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
+import { getShortcutTipByKey } from '@/helpers/registKeyMap'
 
 const props = withDefaults(defineProps<{
   editor: Editor,
@@ -32,7 +34,9 @@ const props = withDefaults(defineProps<{
   editor: () => ({}) as Editor,
   triggerType: 'menu'
 })
+const keyMap = getShortcutTipByKey('italic');
 const isTitleActive = useActive(props.editor, Title.name)
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const toggleItalic = () => {
   if (isTitleActive.value) {
     return

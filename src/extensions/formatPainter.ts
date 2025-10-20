@@ -1,6 +1,6 @@
 import { Extension } from '@tiptap/core'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
-
+import { message } from 'ant-design-vue'
 // 存储格式信息
 interface FormatInfo {
   marks: Record<string, any>
@@ -20,11 +20,13 @@ declare module '@tiptap/core' {
 
 export const FormatPainter = Extension.create({
   name: 'formatPainter',
-  
+
   addStorage() {
     return {
       copiedFormat: null as FormatInfo | null,
-      isFormatPainterActive: false
+      isFormatPainterActive: false,
+      // 激活模式：single(一次性，点击菜单触发) | sticky(连续，快捷键触发)
+      activationMode: 'single' as 'single' | 'sticky',
     }
   },
 
@@ -32,8 +34,8 @@ export const FormatPainter = Extension.create({
     return {
       copyFormat: () => ({ state }) => {
         const { selection } = state
-        const { $from } = selection
-        
+        const { $head, $from } = selection
+
         if (selection.empty) {
           return false
         }
@@ -46,7 +48,7 @@ export const FormatPainter = Extension.create({
         }
 
         // 收集所有 marks
-        const marks = $from.marks()
+        const marks = $head.marks()
         marks.forEach(mark => {
           formatInfo.marks[mark.type.name] = mark.attrs
         })
@@ -65,11 +67,15 @@ export const FormatPainter = Extension.create({
 
         // 存储格式信息
         this.storage.copiedFormat = formatInfo
+        // 如果未显式设置模式，则默认走一次性(single)
+        if (!this.storage.activationMode) {
+          this.storage.activationMode = 'single'
+        }
         this.storage.isFormatPainterActive = true
 
         // 显示提示信息
         this.editor.view.dom.style.cursor = 'copy'
-        
+
         return true
       },
 
@@ -113,10 +119,11 @@ export const FormatPainter = Extension.create({
       clearFormat: () => ({ commands }) => {
         this.storage.copiedFormat = null
         this.storage.isFormatPainterActive = false
-        
+        this.storage.activationMode = 'single'
+
         // 恢复默认光标
         this.editor.view.dom.style.cursor = 'text'
-        
+
         return commands.unsetAllMarks()
       }
     }
@@ -124,7 +131,13 @@ export const FormatPainter = Extension.create({
 
   addKeyboardShortcuts() {
     return {
-      'Mod-Shift-s': () => this.editor.commands.copyFormat(),
+      // 这里定义为 Mod-Shift-X 是为了避免与 Mod-Shift-S 冲突，因为 Mod-Shift-S 是删除线
+      'Mod-Shift-X': () => {
+        message.info('已经开启格式刷，按Esc退出')
+        // 快捷键进入连续模式(sticky)
+        this.storage.activationMode = 'sticky'
+        return this.editor.commands.copyFormat();
+      },
       'Escape': () => this.editor.commands.clearFormat(),
     }
   },
@@ -137,12 +150,15 @@ export const FormatPainter = Extension.create({
           handleDOMEvents: {
             mouseup: (view) => {
               if (this.storage.isFormatPainterActive && !view.state.selection.empty) {
-                // 自动应用格式
+                // 自动应用格式（保持启用，不自动退出，直到按 Esc）
                 this.editor.commands.applyFormat()
-                // 应用后清除格式刷状态
-                this.storage.isFormatPainterActive = false
-                // 恢复默认光标
-                view.dom.style.cursor = 'text'
+                // 根据模式决定是否退出
+                if (this.storage.activationMode === 'single') {
+                  this.storage.isFormatPainterActive = false
+                  view.dom.style.cursor = 'text'
+                } else {
+                  view.dom.style.cursor = 'copy'
+                }
                 // 触发编辑器更新事件，确保组件状态同步
                 this.editor.view.dispatch(this.editor.view.state.tr)
                 return true
@@ -157,8 +173,12 @@ export const FormatPainter = Extension.create({
                   setTimeout(() => {
                     if (this.storage.isFormatPainterActive && !view.state.selection.empty) {
                       this.editor.commands.applyFormat()
-                      this.storage.isFormatPainterActive = false
-                      view.dom.style.cursor = 'text'
+                      if (this.storage.activationMode === 'single') {
+                        this.storage.isFormatPainterActive = false
+                        view.dom.style.cursor = 'text'
+                      } else {
+                        view.dom.style.cursor = 'copy'
+                      }
                       // 触发编辑器更新事件，确保组件状态同步
                       this.editor.view.dispatch(this.editor.view.state.tr)
                     }

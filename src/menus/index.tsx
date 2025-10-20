@@ -1,7 +1,7 @@
 import { defineComponent, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Space, Divider } from 'ant-design-vue'
-import InsertPopover from './insert/popover.vue'
+import InsertPopover from './insert/popover'
 import Undo from './undo.vue'
 import Redo from './redo.vue'
 import FormatPainter from './formatPainter.vue'
@@ -15,7 +15,7 @@ import Heading from './heading.vue'
 import FontSize from './fontSize.vue'
 import TextColor from './textColor.vue'
 import BackgroundColor from './backgroundColor.vue'
-import Align from './align.vue'
+import Align from './align'
 import MoreText from './moreText.vue'
 import BulletList from './bulletList.vue'
 import OrderedList from './orderedList.vue'
@@ -25,7 +25,7 @@ import HorizontalRule from './horizontalRule.vue'
 import Emoji from './emoji.vue'
 import Indent from './indent.vue'
 import FindAndReplace from './findAndReplace.vue'
-import Table from './insert/table.vue'
+import Table from './insert/table'
 import Image from './insert/image.vue'
 import File from './insert/file.vue'
 import Import from './import/index.vue'
@@ -125,7 +125,7 @@ export default defineComponent({
       default: 'default'
     },
     toolbarKeys: {
-      type: Array as () => string[],
+      type: Array as () => import('../type').ToolBarConfig[],
       default: undefined
     },
     excludeKeys: {
@@ -175,16 +175,26 @@ export default defineComponent({
         const currentKey = keys[i]
         const nextKey = keys[i + 1]
 
+        // 获取currentKey的实际值（处理ToolBarConfig类型）
+        const currentKeyValue = typeof currentKey === 'string' ? currentKey : currentKey.key
+        
         // 如果当前是分隔符，跳过
-        if (currentKey === '|') {
+        if (currentKeyValue === '|') {
           continue
         }
 
+        // 获取nextKey的实际值（处理ToolBarConfig类型）
+        const nextKeyValue = nextKey === undefined ? undefined : 
+                            typeof nextKey === 'string' ? nextKey : nextKey.key
+        
         // 检查是否需要显示分隔符
-        const showDivider = nextKey === '|' && i + 1 < keys.length
+        const showDivider = nextKeyValue === '|' && i + 1 < keys.length
+
+        // 处理ToolBarConfig类型，提取key值
+        const keyValue = typeof currentKey === 'string' ? currentKey : currentKey.key
 
         result.push({
-          key: currentKey,
+          key: keyValue,
           showDivider
         })
       }

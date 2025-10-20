@@ -37,7 +37,7 @@
 import { inject, PropType, computed, Ref, ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { Image } from "@/extensions/image";
-import align from "@/menus/align.vue";
+import align from "@/menus/align";
 import SizeSetting from "./SizeSetting.vue";
 import { useBubble } from "@/hooks/useBubble";
 import { useAttributes } from "@/hooks/useAttributes";

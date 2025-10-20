@@ -7,13 +7,13 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\link\index.vue
 -->
 <template>
-  <a-tooltip title="插入链接">
+  <a-tooltip :title="disableMenu ? null : '插入链接'">
     <a-button
       type="text"
       class="shadow-btn-wrapper"
-      :class="[isLinkActive ? 'is-active' : '', isTitleActive && 'disabled']"
+      :class="[isLinkActive ? 'is-active' : '']"
       @click="createOrToggleLink"
-      :disabled="isTitleActive"
+      :disabled="disableMenu"
     >
       <link-outlined />
     </a-button>
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { PropType, ref, computed, inject, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { LinkOutlined } from '@ant-design/icons-vue'
 import { isMarkActive } from '@/prose-utils'
@@ -52,7 +52,10 @@ const props = defineProps({
 const linkModalProp = ref<LinkModalProps>({})
 const isTitleActive = useActive(props.editor, Title.name)
 const isLinkActive = useActive(props.editor, 'Link')
-
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 const createOrToggleLink = () => {
   if (isTitleActive.value) {
     return

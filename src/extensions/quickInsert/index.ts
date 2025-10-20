@@ -26,6 +26,7 @@ export const QuickInsert = Node.create({
   name: extensionName,
 
   priority: EXTENSION_PRIORITY_HIGHEST,
+ 
   addOptions() {
     return {
       HTMLAttributes: {},
@@ -69,6 +70,25 @@ export const QuickInsert = Node.create({
       }),
     ];
   },
+  // 此方案不行，内部会直接不触发command(挺难复写的)
+  // addKeyboardShortcuts() {
+  //   const triggerAtCaret = () => {
+  //     // this.editor.storage[extensionName].forceOpen = true;
+  //     this.editor
+  //       .chain()
+  //       .focus()
+  //       .insertContent('/')
+  //       .run();
+  //     return true;
+  //   };
+
+  //   return {
+  //     'Mod-/': triggerAtCaret,
+  //     'Mod-\\': triggerAtCaret,
+  //   } as any;
+  // },
+  
+
 
   addStorage() {
     return {
@@ -88,10 +108,14 @@ export const QuickInsert = Node.create({
     items: ({ query }: any) => {
       return menuGroup.value;
     },
-    // 仅在段落首位触发
-    allow: ({ state, range }: any) => {
+    // (修改为光标后面不能有内容，不拦截前面了，这样无法在文本中间触发插入，而且插件默认会匹配 ' ' + \)
+    allow: (props: any) => {
+      const { editor, state, range } = props;
       const $from = state.doc.resolve(range.from);
-      return $from.parentOffset === 0;
+      // 光标后面不能有内容
+      const trailing = state.doc.textBetween(range.to, $from.end(), '\n').trim();
+
+      return trailing.length === 0;
     },
     render: () => {
       let component: any;
@@ -103,9 +127,10 @@ export const QuickInsert = Node.create({
 
       return {
         onStart: (props: any) => {
-          console.log(props);
           const isEditable = props.editor.isEditable;
           if (!isEditable) return;
+          // 兜底重置快捷键触发标记
+          ((props.editor.storage as any)[extensionName]).forceOpen = false;
           component = new VueRenderer(BaseList, {
             props: { ...props, triggerType: "bubble" },
             editor: props.editor,
@@ -114,7 +139,6 @@ export const QuickInsert = Node.create({
         },
 
         onUpdate: (props: any) => {
-          console.log("updated");
           const isEditable = props.editor.isEditable;
           if (!isEditable) return;
 
@@ -135,6 +159,8 @@ export const QuickInsert = Node.create({
 
         onExit: (props: any) => {
           hidePopup();
+          // 兜底重置快捷键触发标记
+          ((props.editor.storage as any)[extensionName]).forceOpen = false;
           component.destroy();
         },
       };

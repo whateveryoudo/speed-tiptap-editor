@@ -45,7 +45,7 @@ export default defineComponent({
     }
   },
   emits: ['triggerVisible'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const { menuGroup, flatLeafMenu } = useCommand(props.insertMenuConfig)
     const speedTiptapConfig = inject('speedTiptapConfig', ref({})) as Ref<any>; // 获取编辑器传入配置
     const { image, file } = speedTiptapConfig.value;
@@ -89,6 +89,7 @@ export default defineComponent({
 
     // 区分不同类型点击
     const handleEditorOpt = (item?: SubMenuGroup, payload?: any) => {
+      debugger;
       if (!item) {
         return
       }
@@ -204,6 +205,9 @@ export default defineComponent({
 
       return false
     }
+
+    // 对外暴露键盘处理方法，供 Suggestion 渲染器调用
+    expose({ onKeyDown })
 
     return () => (
       <div class={[styles.bubbleWrapper, props.triggerType === 'bubble' && 'bubble']}>
@@ -343,5 +347,4 @@ export default defineComponent({
       </div>
     )
   },
-  expose: ['onKeyDown']
 })

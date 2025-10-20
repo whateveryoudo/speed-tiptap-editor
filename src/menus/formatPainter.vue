@@ -7,10 +7,10 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\clearNodeAndMarks.vue
 -->
 <template>
-  <a-tooltip title="格式刷">
-    <a-button class="shadow-btn-wrapper" @click="toggleFormatPainter" type="text"
-      :class="[isActive ? 'is-active' : '', isTitleActive && 'disabled']"
-      :disabled="isTitleActive"
+  <a-tooltip :title="disableMenu ? null : '格式刷'">
+    <a-button class="shadow-btn-wrapper"  @click="toggleFormatPainter" type="text"
+      :class="[isActive ? 'is-active' : '']"
+      :disabled="disableMenu"
       >
       <FormatPainterOutlined />
     </a-button>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue'
+import { PropType, ref, watch, computed, inject, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
@@ -51,6 +51,10 @@ const toggleFormatPainter = () => {
 }
 const isTitleActive = useActive(props.editor, Title.name)
 
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+  return isTitleActive.value || !editableCpt.value
+})
 // 定义更新函数，确保在清理时能访问到
 let updateFormatPainterState: (() => void) | null = null
 

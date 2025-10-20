@@ -3,7 +3,7 @@
  * @Description: 缩进菜单组件
 -->
 <template>
-    <a-popover v-if="!isTitleActive" overlay-class-name="toolbar-popover-wrapper indent-popover-wrapper" trigger="click"
+    <a-popover v-if="!disableMenu" overlay-class-name="toolbar-popover-wrapper indent-popover-wrapper" trigger="click"
         placement="bottom">
         <template #content>
             <ul class="text-list-wrapper">
@@ -42,7 +42,7 @@ import { type Editor } from '@tiptap/core'
 import { CaretDownOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-import { ref, type VNode, PropType, computed } from 'vue'
+import { ref, type VNode, PropType, computed, inject, type Ref } from 'vue'
 
 const props = defineProps({
     editor: {
@@ -54,7 +54,10 @@ const props = defineProps({
 type IndentType = 'outdent' | 'indent'
 
 const isTitleActive = useActive(props.editor, Title.name)
-
+const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const disableMenu = computed(() => {
+    return isTitleActive.value || !editableCpt.value
+})
 // 当前选中的按钮
 const selectButton = computed(() => {
     return indentButtons.value[0]
