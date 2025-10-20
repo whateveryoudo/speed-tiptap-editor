@@ -34,7 +34,7 @@ export const FormatPainter = Extension.create({
     return {
       copyFormat: () => ({ state }) => {
         const { selection } = state
-        const { $head, $from } = selection
+        const { $head, $from, $to } = selection
 
         if (selection.empty) {
           return false
@@ -47,14 +47,34 @@ export const FormatPainter = Extension.create({
           textAlign: undefined
         }
 
-        // 收集所有 marks
-        const marks = $head.marks()
-        marks.forEach(mark => {
+        // 混合策略：优先交集($head.marks)，为空则取“末尾就近样式”，再回退 storedMarks/$from.marks， （单行的时候$head.marks为空）
+        let effectiveMarks: any[] = [...$head.marks()]
+        if (!effectiveMarks || effectiveMarks.length === 0) {
+          const endPos = Math.max(selection.from, selection.to)
+          let pos = endPos - 1
+          let found: any[] | null = null
+          while (pos >= selection.from) {
+            const $pos = state.doc.resolve(pos)
+            const before: any = ($pos as any).nodeBefore
+            if (before && before.isText && Array.isArray(before.marks) && before.marks.length) {
+              found = before.marks
+              break
+            }
+            if ($pos.parentOffset > 0) {
+              pos--
+              continue
+            }
+            break
+          }
+          const fallback = found ?? (state.storedMarks ?? $from.marks())
+          effectiveMarks = [...fallback]
+        }
+        effectiveMarks.forEach((mark: any) => {
           formatInfo.marks[mark.type.name] = mark.attrs
         })
 
         // 收集节点属性
-        const node = $from.parent
+        const node = $to.parent
         if (node.attrs) {
           formatInfo.nodeAttrs = { ...node.attrs }
         }
@@ -74,7 +94,7 @@ export const FormatPainter = Extension.create({
         this.storage.isFormatPainterActive = true
 
         // 显示提示信息
-        this.editor.view.dom.style.cursor = 'copy'
+        // this.editor.view.dom.style.cursor = 'copy'
 
         return true
       },
@@ -122,7 +142,7 @@ export const FormatPainter = Extension.create({
         this.storage.activationMode = 'single'
 
         // 恢复默认光标
-        this.editor.view.dom.style.cursor = 'text'
+        // this.editor.view.dom.style.cursor = 'text'
 
         return commands.unsetAllMarks()
       }
@@ -155,9 +175,9 @@ export const FormatPainter = Extension.create({
                 // 根据模式决定是否退出
                 if (this.storage.activationMode === 'single') {
                   this.storage.isFormatPainterActive = false
-                  view.dom.style.cursor = 'text'
+                  // view.dom.style.cursor = 'text'
                 } else {
-                  view.dom.style.cursor = 'copy'
+                  // view.dom.style.cursor = 'copy'
                 }
                 // 触发编辑器更新事件，确保组件状态同步
                 this.editor.view.dispatch(this.editor.view.state.tr)
@@ -175,9 +195,9 @@ export const FormatPainter = Extension.create({
                       this.editor.commands.applyFormat()
                       if (this.storage.activationMode === 'single') {
                         this.storage.isFormatPainterActive = false
-                        view.dom.style.cursor = 'text'
+                        // view.dom.style.cursor = 'text'
                       } else {
-                        view.dom.style.cursor = 'copy'
+                        // view.dom.style.cursor = 'copy'
                       }
                       // 触发编辑器更新事件，确保组件状态同步
                       this.editor.view.dispatch(this.editor.view.state.tr)

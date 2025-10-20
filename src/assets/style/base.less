@@ -1,3 +1,4 @@
+
 // 定义一些常用变量
 :root {
   --speed-color-border-gray: #e8e8e8;
@@ -179,7 +180,13 @@
     }
   }
 }
-
+// 追加格式刷激活样式
+.format-painter-active {
+  .ProseMirror {
+    // 不清楚这里为什么iconfont的图标无法显示（可能和背景色有关）
+    cursor: url('@/assets/image/format-paint-cursor.svg'), text;
+  }
+}
 // .ProseMirror-selectednode,
 // .ProseMirror-selectednoderange {
 //   position: relative;

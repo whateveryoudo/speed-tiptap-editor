@@ -30,7 +30,8 @@
     <!-- 节点拖拽 -->
     <DragNodeMenu v-if="editor" :editor="editor" />
     <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
-      <editor-content :editor="editor" class="h-full" />
+      <editor-content :editor="editor"
+        :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
     </main>
     <!-- 搜索替换弹框 -->
     <SearchReplaceModal :editor="editor" v-if="editor" />
