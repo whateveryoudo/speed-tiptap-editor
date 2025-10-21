@@ -1,4 +1,4 @@
-<script setup>image导出功能
+<script setup>
 </script>
 
 ### 基础示例(已废弃，直接跳转单独部署的页面)

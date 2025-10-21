@@ -8,7 +8,7 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? '清除格式' : null">
-    <a-button class="shadow-btn-wrapper" @click="clear"  :disabled="disableMenu" type="text">
+    <a-button class="shadow-btn-wrapper" @click="clear" :disabled="disableMenu" type="text">
       <s-icon-font type="icon-kl-remove-format" :size="16" />
     </a-button>
   </s-keymap-tip>
@@ -35,10 +35,20 @@ const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })
 const clear = () => {
+  // 新增逻辑 
   if (props.editor) {
-    debugger;
-    props.editor.chain().focus().unsetAllMarks().run()
-    props.editor.chain().focus().clearNodes().run()
+    const { state } = props.editor
+    const { selection } = state
+    if (selection.empty) {
+      const { $from } = selection
+      // 获取整个段落的起始和结束位置
+      const from = $from.start()
+      const to = $from.end()
+      props.editor.chain().focus().setTextSelection({ from, to }).unsetAllMarks().setTextSelection(selection.from).run()
+    } else {
+      props.editor.chain().focus().unsetAllMarks().run()
+    }
+
   }
 }
 </script>

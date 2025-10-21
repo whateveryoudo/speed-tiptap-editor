@@ -42,7 +42,6 @@ declare module 'vue' {
     DownloadOutlined: typeof import('@ant-design/icons-vue')['DownloadOutlined']
     EnterOutlined: typeof import('@ant-design/icons-vue')['EnterOutlined']
     FileSearchOutlined: typeof import('@ant-design/icons-vue')['FileSearchOutlined']
-    FormatPainterOutlined: typeof import('@ant-design/icons-vue')['FormatPainterOutlined']
     RedoOutlined: typeof import('@ant-design/icons-vue')['RedoOutlined']
     RightOutlined: typeof import('@ant-design/icons-vue')['RightOutlined']
     RouterLink: typeof import('vue-router')['RouterLink']

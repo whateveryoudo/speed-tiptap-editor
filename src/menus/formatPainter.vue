@@ -12,7 +12,7 @@
       :class="[isActive ? 'is-active' : '']"
       :disabled="disableMenu"
       >
-      <FormatPainterOutlined />
+      <ClearOutlined style="font-size: 16px;" />
     </a-button>
   </a-tooltip>
 </template>
@@ -22,7 +22,7 @@ import { PropType, ref, watch, computed, inject, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-import { FormatPainterOutlined } from '@ant-design/icons-vue'
+import { ClearOutlined } from '@ant-design/icons-vue'
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
