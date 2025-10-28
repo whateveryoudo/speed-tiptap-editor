@@ -46,7 +46,6 @@ export function getNodeAtPos(state: EditorState, pos: number): Node {
 
 export function isInCustomNode(state: EditorState, nodeName: string): boolean {
   if (!state.schema.nodes[nodeName]) return false;
-
   const $head = state.selection.$head;
   for (let d = $head.depth; d > 0; d--) {
     if ($head.node(d).type === state.schema.nodes[nodeName]) {
@@ -62,6 +61,12 @@ export function isInCodeBlock(state: EditorState): boolean {
 
 export function isInTitle(state: EditorState): boolean {
   if (state?.selection?.$head?.pos === 0) return true;
+  const $head = state.selection.$head;
+  
+  // 如果 depth 为 0，检查第一个节点
+  if ($head.depth === 0) {
+    return $head.pos <= 2 && state.doc.content.firstChild?.type.name === 'title';
+  }
   return isInCustomNode(state, 'title');
 }
 

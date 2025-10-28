@@ -109,7 +109,6 @@ export const Title = Node.create<TitleOptions>({
           },
           handleKeyDown(view, evt) {
             const { state, dispatch } = view;
-
             // 只在 title 节点中且按下 Enter 键时处理
             if (isInTitle(view.state) && evt.code === 'Enter') {
               evt.preventDefault();
@@ -128,9 +127,11 @@ export const Title = Node.create<TitleOptions>({
               
               for (let i = 0; i < doc.content.childCount; i++) {
                 const node = doc.content.child(i);
+                console.log(`Looking for title: i=${i}, node=${node.type.name}, nodeSize=${node.nodeSize}`);
                 if (node.type.name === 'title') {
                   titleNode = node;
                   titleIndex = i;
+                  // titleNodePos 保持为 0（从 doc 节点开始）
                   break;
                 }
                 titleNodePos += node.nodeSize;
@@ -140,19 +141,29 @@ export const Title = Node.create<TitleOptions>({
                 return true;
               }
               
+              console.log(`titleNode found: index=${titleIndex}, pos=${titleNodePos}, nodeSize=${titleNode.nodeSize}`);
+              console.log(`doc structure:`, Array.from({length: doc.content.childCount}).map((_, i) => ({
+                index: i,
+                type: doc.content.child(i).type.name,
+                nodeSize: doc.content.child(i).nodeSize
+              })));
+              
               // 检查 title 后面是否已有段落
               const hasNextParagraph = titleIndex + 1 < doc.content.childCount && 
                                        doc.content.child(titleIndex + 1).type.name === 'paragraph';
               
               let tr = state.tr;
-              
               if (hasNextParagraph) {
-                // 如果有段落，移动光标到该段落
+                // 如果有段落，移动光标到第一个段落
+                // 直接获取下一个节点的位置
+                const nextNodeIndex = titleIndex + 1;
                 let paragraphPos = 1;
-                for (let i = 0; i <= titleIndex; i++) {
+                // 计算到这个段落之前所有节点的总大小
+                for (let i = 0; i < nextNodeIndex; i++) {
                   paragraphPos += doc.content.child(i).nodeSize;
                 }
-                // +1 是段落的文本起始位置
+                // paragraphPos 现在指向段落的开始位置
+                // +1 移动到段落的文本位置（可输入位置）
                 tr = tr.setSelection(TextSelection.create(doc, paragraphPos + 1));
                 dispatch(tr);
               } else {
