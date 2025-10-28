@@ -8,9 +8,9 @@
  */
 import { mergeAttributes, Node } from '@tiptap/core';
 import { VueNodeViewRenderer  } from '@tiptap/vue-3';
-import { PluginKey, TextSelection } from '@tiptap/pm/state';
+import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
-import { getDatasetAttribute, getNodeAtPos, isInTitle, nodeAttrsToDataset } from '@/prose-utils';
+import { isInTitle, nodeAttrsToDataset } from '@/prose-utils';
 
 import Wrapper from './Wrapper.vue';
 
@@ -73,128 +73,149 @@ export const Title = Node.create<TitleOptions>({
   },
 
   addNodeView() {
-    return VueNodeViewRenderer (Wrapper);
+    return VueNodeViewRenderer (Wrapper as any);
   },
 
-  // addProseMirrorPlugins() {
-  //   const { editor } = this;
-  //   let shouldSelectTitleNode = true;
+  addProseMirrorPlugins() {
+    const { editor } = this;
 
-  //   const closeSelectTitleNode = () => {
-  //     shouldSelectTitleNode = false;
-  //     return;
-  //   };
+    return [
+      new Plugin({
+        key: TitlePluginKey,
+        state: {
+          init() {
+            // 初始化时检查是否有重复的 title
+            return true;
+          },
+          apply(_tr, _oldPluginState) {
+            // 每次事务后检查是否有重复的 title
+            return true;
+          }
+        },
+        props: {
+          decorations: (state) => {
+            const { doc } = state;
+            const decorations:any[] = [];
+            doc.descendants((node, pos) => {
+              if (node.type.name !== this.name) return;
 
-  //   return [
-  //     new Plugin({
-  //       key: TitlePluginKey,
-  //       props: {
-  //         decorations: (state) => {
-  //           const { doc } = state;
-  //           const decorations:any[] = [];
-  //           doc.descendants((node, pos) => {
-  //             if (node.type.name !== this.name) return;
+              decorations.push(
+                Decoration.node(pos, pos + node.nodeSize, {
+                  class: editor.isEditable ? 'is-editable' : '',
+                })
+              );
+            });
+            return DecorationSet.create(doc, decorations);
+          },
+          handleKeyDown(view, evt) {
+            const { state, dispatch } = view;
 
-  //             decorations.push(
-  //               Decoration.node(pos, pos + node.nodeSize, {
-  //                 class: editor.isEditable ? 'is-editable' : '',
-  //               })
-  //             );
-  //           });
-  //           return DecorationSet.create(doc, decorations);
-  //         },
-  //         handleClick() {
-  //           closeSelectTitleNode();
-  //           return;
-  //         },
-  //         handleDOMEvents: {
-  //           click: closeSelectTitleNode,
-  //           mousedown: closeSelectTitleNode,
-  //           pointerdown: closeSelectTitleNode,
-  //           touchstart: closeSelectTitleNode,
-  //         },
-  //         handleKeyDown(view, evt) {
-  //           const { state, dispatch } = view;
+            // 只在 title 节点中且按下 Enter 键时处理
+            if (isInTitle(view.state) && evt.code === 'Enter') {
+              evt.preventDefault();
 
-  //           closeSelectTitleNode();
+              const paragraph = state.schema.nodes.paragraph;
+              if (!paragraph) {
+                return true;
+              }
 
-  //           if (isInTitle(view.state) && evt.code === 'Enter') {
-  //             evt.preventDefault();
+              const doc = state.doc;
+              
+              // 找到第一个 title 节点
+              let titleNode = null;
+              let titleNodePos = 0;
+              let titleIndex = 0;
+              
+              for (let i = 0; i < doc.content.childCount; i++) {
+                const node = doc.content.child(i);
+                if (node.type.name === 'title') {
+                  titleNode = node;
+                  titleIndex = i;
+                  break;
+                }
+                titleNodePos += node.nodeSize;
+              }
+              
+              if (!titleNode) {
+                return true;
+              }
+              
+              // 检查 title 后面是否已有段落
+              const hasNextParagraph = titleIndex + 1 < doc.content.childCount && 
+                                       doc.content.child(titleIndex + 1).type.name === 'paragraph';
+              
+              let tr = state.tr;
+              
+              if (hasNextParagraph) {
+                // 如果有段落，移动光标到该段落
+                let paragraphPos = 1;
+                for (let i = 0; i <= titleIndex; i++) {
+                  paragraphPos += doc.content.child(i).nodeSize;
+                }
+                // +1 是段落的文本起始位置
+                tr = tr.setSelection(TextSelection.create(doc, paragraphPos + 1));
+                dispatch(tr);
+              } else {
+                // 如果没有段落，创建一个
+                const titleEndPos = titleNodePos + titleNode.nodeSize;
+                const newParagraph = paragraph.createAndFill() || paragraph.create();
+                tr = tr.insert(titleEndPos, newParagraph);
+                // +1 是段落的文本起始位置
+                tr = tr.setSelection(TextSelection.create(tr.doc, titleEndPos + 1));
+                dispatch(tr);
+              }
 
-  //             const paragraph = state.schema.nodes.paragraph;
+              return true;
+            }
+          },
+        },
+        appendTransaction: (_transactions, _oldState, newState) => {
+          if (!editor.isEditable) return;
 
-  //             if (!paragraph) {
-  //               return true;
-  //             }
+          const tr = newState.tr;
+          let hasChanges = false;
 
-  //             const $head = state.selection.$head;
-  //             const titleNode = $head.node($head.depth);
-  //             const endPos = ((titleNode.firstChild && titleNode.firstChild.nodeSize) || 0) + 1;
+          // 检查并修复重复的 title 节点
+          const content = newState.doc.content;
+          const titleNodes: any[] = [];
+          const otherNodes: any[] = [];
+          
+          content.forEach((node) => {
+            if (node.type.name === this.name) {
+              titleNodes.push(node);
+            } else {
+              otherNodes.push(node);
+            }
+          });
 
-  //             const nextNode = getNodeAtPos(state, endPos + 2);
+          // 如果有多个 title 节点，只保留第一个
+          if (titleNodes.length > 1) {
+            // 合并所有 title 的内容到第一个 title
+            const firstTitle = titleNodes[0];
+            const mergedTitleContent = titleNodes.slice(1).reduce((acc, titleNode) => {
+              return acc.append(titleNode.content);
+            }, firstTitle.content);
+            
+            const newFirstTitle = newState.schema.nodes['title'].create(firstTitle.attrs, mergedTitleContent);
+            
+            const newContent = [
+              newFirstTitle,
+              ...otherNodes
+            ];
+            
+            tr.replaceWith(0, newState.doc.content.size, newState.schema.nodeFromJSON({
+              type: newState.doc.type.name,
+              attrs: newState.doc.attrs,
+              content: newContent.map(node => node.toJSON())
+            }).content);
+            tr.setMeta('addToHistory', false);
+            tr.setMeta('preventEvent', true); // 防止触发事件
+            hasChanges = true;
+          }
 
-  //             if (!nextNode) {
-  //               dispatch(state.tr.insert(endPos, paragraph.create()));
-  //             }
-
-  //             const newState = view.state;
-  //             const next = new TextSelection(newState.doc.resolve(endPos + 2));
-  //             dispatch(newState.tr.setSelection(next));
-
-  //             return true;
-  //           }
-  //         },
-  //       },
-  //       appendTransaction: (transactions, oldState, newState) => {
-  //         if (!editor.isEditable) return;
-
-  //         const tr = newState.tr;
-  //         let shouldReturnTr = false;
-
-  //         if (shouldSelectTitleNode) {
-  //           const firstNode = newState?.doc?.content?.content?.[0];
-  //           if (firstNode && firstNode.type.name === this.name && firstNode.nodeSize === 2) {
-  //             const selection = new TextSelection(newState.tr.doc.resolve(firstNode?.attrs?.cover ? 1 : 0));
-  //             tr.setSelection(selection).scrollIntoView();
-  //             tr.setMeta('addToHistory', false);
-  //             shouldReturnTr = true;
-  //           }
-  //         }
-
-  //         const filterTitleNode = (nodes: any, equal = true) => {
-  //           return (nodes || [])
-  //             .filter(Boolean)
-  //             .filter((item: any) => (equal ? item.type.name === this.name : item.type.name !== this.name));
-  //         };
-
-  //         const newTitleNodes = filterTitleNode(newState.tr.doc.content.content || []);
-
-  //         if (newTitleNodes.length > 1) {
-  //           const oldTitleNodes = filterTitleNode(oldState.tr.doc.content.content || []);
-  //           const allTitleNodes = [...oldTitleNodes, ...newTitleNodes].filter(Boolean);
-  //           const nextNewTitleNode = allTitleNodes.find((node) => node.nodeSize > 2) || allTitleNodes[0];
-
-  //           const otherNewNodes = filterTitleNode(newState.tr.doc.content.content || [], false);
-
-  //           const fixedDoc = {
-  //             ...newState.tr.doc.toJSON(),
-  //             content: [].concat(
-  //               nextNewTitleNode.toJSON(),
-  //               otherNewNodes.map((node: any) => node.toJSON())
-  //             ),
-  //           };
-
-  //           tr.replaceWith(0, newState.doc.content.size, newState.schema.nodeFromJSON(fixedDoc));
-
-  //           if (tr.docChanged) {
-  //             shouldReturnTr = true;
-  //             tr.setMeta('addToHistory', false);
-  //           }
-  //         }
-
-  //         return shouldReturnTr ? tr : undefined;
-  //       },
-  //     }),
-  //   ];
-  // },
+          return hasChanges ? tr : undefined;
+        },
+      }),
+    ];
+  },
 });

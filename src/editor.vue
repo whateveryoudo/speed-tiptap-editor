@@ -129,7 +129,7 @@ provide('aiExtensions', getDefaultKit(props));
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
-  // content: props.content,
+  content: props.content || undefined,
   editorProps: {
     // 追加class，用于设定样式
     attributes: {
