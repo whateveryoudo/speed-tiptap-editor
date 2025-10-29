@@ -53,7 +53,7 @@ jobs:
 
       - name: Build docs + example (prepare deploy)
         env:
-          VITE_RELEASE_URL: /speed-tiptap-editor/
+          VITE_RELEASE_URL: /speed-tiptap-editor/example/
         run: pnpm run build:deploy
 
       - name: Setup Pages
