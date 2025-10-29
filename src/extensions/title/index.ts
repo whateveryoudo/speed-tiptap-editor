@@ -108,6 +108,7 @@ export const Title = Node.create<TitleOptions>({
             return DecorationSet.create(doc, decorations);
           },
           handleKeyDown(view, evt) {
+            // 这里还是有问题，如果存在多个p还是会跳转到第二个，不会在第一个（pos问题？）
             const { state, dispatch } = view;
             // 只在 title 节点中且按下 Enter 键时处理
             if (isInTitle(view.state) && evt.code === 'Enter') {
@@ -182,7 +183,7 @@ export const Title = Node.create<TitleOptions>({
         },
         appendTransaction: (_transactions, _oldState, newState) => {
           if (!editor.isEditable) return;
-
+          console.log('执行了');
           const tr = newState.tr;
           let hasChanges = false;
 
