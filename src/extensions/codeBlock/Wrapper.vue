@@ -26,17 +26,20 @@
                   v-else />
               </a-button>
             </s-question-tip>
-            <a-input v-model="title" bordered="false" placeholder="请输入代码块名称(选填)" />
+            <a-input v-if="editableCpt" v-model:value="title" @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
+            <span v-else>{{ title }}</span>
           </a-space>
           <a-space :size="5">
             <!-- 注意这里存入的是个对象 -->
             <a-select :dropdownMatchSelectWidth="false" :bordered="false"
+              :disabled="!editableCpt"
               :class="['auto-width shadow-ant-select', nodeAttrs.theme]" show-search :value="nodeAttrs.languageAlias"
               @change="(lan: string, option: any) => updateAttributes({ languageAlias: option.value, language: option.lang })"
               optionFilterProp="label" :options="extendedLanguages">
             </a-select>
             <a-divider type="vertical" :class="['divider-small', nodeAttrs.theme === 'atom-one-dark' && 'dark']" />
             <a-select :dropdownMatchSelectWidth="false" :bordered="false"
+              :disabled="!editableCpt"
               :class="['auto-width shadow-ant-select', nodeAttrs.theme]" :value="nodeAttrs.theme"
               @change="(theme: string) => updateAttributes({ theme: theme })">
               <a-select-option value="atom-one-light">atom-one-light</a-select-option>
@@ -45,7 +48,7 @@
               <a-select-option value="github-dark">github-dark</a-select-option>
             </a-select>
             <a-divider type="vertical" :class="['divider-small', nodeAttrs.theme]" />
-            <s-question-tip placement="top" :tip="nodeAttrs.wrap ? '取消自动换行' : '自动换行'">
+            <s-question-tip v-if="editableCpt" placement="top" :tip="nodeAttrs.wrap ? '取消自动换行' : '自动换行'">
               <a-button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme, nodeAttrs.wrap && 'is-active']"
                 @click="updateAttributes({ wrap: !nodeAttrs.wrap })">
                 <s-icon-font type="icon-kl-multilinetext" />
@@ -57,7 +60,7 @@
                 <CopyOutlined />
               </a-button>
             </s-question-tip>
-            <a-button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="handleDelNode('codeBlock')">
+            <a-button v-if="editableCpt" type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="handleDelNode('codeBlock')">
               <DeleteOutlined />
             </a-button>
           </a-space>
@@ -82,6 +85,7 @@ import { useEdgeResize } from '@/hooks/useEdgeResize'
 import { lowlightInstance } from './index'
 import { copy } from '@/helpers/copy-to-clipboard'
 import { useBubble } from '@/hooks/useBubble'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps(nodeViewProps)
 const title = ref('');
 const nodeAttrs = computed(() => props.node.attrs)
@@ -94,7 +98,7 @@ const languages = lowlightInstance.listLanguages().map((language: string) => ({
   value: language,
   label: language
 }))
-
+const { editableCpt } = useSpeedEditor();
 const extendedLanguages = computed(() => {
   return [...languages, {
     value: 'vue',

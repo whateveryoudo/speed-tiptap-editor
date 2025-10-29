@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\attachment\Wrapper.vue
 -->
 <template>
-  <NodeViewWrapper :class="[nodeAttrs.displayMode !== 'card' && 'inline-block']">
+  <NodeViewWrapper :class="['cursor-pointer', nodeAttrs.displayMode !== 'card' && 'inline-block']">
     <div v-if="isEditable && !nodeAttrs.fileId" :class="['wrap', uploadFailed ? 'upload-failed' : '']"
       @click="uploadAgain">
       <a-spin :spinning="uploadLoading">
@@ -35,7 +35,7 @@ import FileDisplayBar from "./FileDisplayBar.vue";
 import { useCustomUpload, type IFileItem } from "speed-components-ui/hooks";
 import { message } from 'ant-design-vue';
 import axios from 'axios';
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const uploadFailed = ref(false);
 const props = defineProps({
   node: {
@@ -58,7 +58,7 @@ const speedUseTiptapConfig = inject(
   ref({})
 ) as Ref<any>;
 // 顶层组件注入对象
-const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+const { speedTiptapConfig } = useSpeedEditor();
 const { file: fileConfig } = speedTiptapConfig.value;
 const isEditable = computed(() => {
   return props.editor?.isEditable;

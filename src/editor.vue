@@ -48,7 +48,7 @@ import TableMenu from '@/bubbleMenus/tableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/tableMenu/Bubble.vue'
 import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
 import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@/bubbleMenus'
-
+import { useSpeedEditorProvider } from '@/hooks/useSpeedEditorContext'
 import Collaboration from '@tiptap/extension-collaboration'
 // import { TiptapCollabProvider } from '@tiptap-pro/provider'
 // 采用自身ws服务
@@ -90,42 +90,24 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
     enabled: true
   })
 })
+// 初始化编辑器的一些上下文
+const { previewInstance } = useSpeedEditorProvider(props)
+
 let doc = null;
 if (props.collaboration) {
   doc = new Y.Doc() // Initialize Y.Doc for shared editing
 }
 
-const speedTiptapConfigCpt = computed(() => {
-  return props;
-})
-provide('speedTiptapConfig', speedTiptapConfigCpt); // 向下传递配置
 const emit = defineEmits(['update:title', 'update:content'])
-const previewInstance = ref<EditorPreviewImage | null>(null);
-provide('previewInstance', previewInstance);
-const editableCpt = computed(() => {
-  return props.editable;
-})
-provide('editableCpt', editableCpt);
 
-const searchReplaceVisible = ref(false);
-provide(SEARCH_REPLACE_VISIBLE_KEY, searchReplaceVisible);
-provide(UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY, (visible: boolean) => {
-  searchReplaceVisible.value = visible;
-});
-const globalTiptapStorage = ref<Record<string, any>>({}); // 模拟一个编辑器的全局存储，用于某些没有加入扩展的请求（如：drag-handle）
-provide('globalTiptapStorage', globalTiptapStorage);
-const updateGlobalTiptapStorageFunc = (key: string, value: any) => {
-  globalTiptapStorage.value[key] = value;
-};
-provide('updateGlobalTiptapStorageFunc', updateGlobalTiptapStorageFunc);
+
 watch(
   () => props.hocuspocusProvider,
   val => {
     console.log(val)
   },
 )
-// 向下传入ai文本扩展（注：这里不需要tite扩展）
-provide('aiExtensions', getDefaultKit(props));
+
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',

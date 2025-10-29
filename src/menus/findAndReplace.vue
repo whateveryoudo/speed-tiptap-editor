@@ -8,10 +8,7 @@
 -->
 <template>
   <a-tooltip title="查找替换">
-    <a-button type="text" class="shadow-btn-wrapper"
-      :disabled="!editableCpt"
-      v-on="buttonEvents"
-      >
+    <a-button type="text" class="shadow-btn-wrapper" :disabled="!editableCpt" v-on="buttonEvents">
       <FileSearchOutlined />
     </a-button>
   </a-tooltip>
@@ -22,9 +19,9 @@ import { ref, inject, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { FileSearchOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
-import { UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY, SEARCH_REPLACE_VISIBLE_KEY } from '@/keys'
-const searchReplaceVisible = inject(SEARCH_REPLACE_VISIBLE_KEY, ref(false))
-const updateSearchReplaceVisibleFunc = inject(UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY, (visible: boolean) => { })
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+const { editableCpt, searchReplaceVisible, updateSearchReplaceVisible } = useSpeedEditor();
+
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'
@@ -33,9 +30,8 @@ const props = withDefaults(defineProps<{
   triggerType: 'menu'
 })
 const toggleSearchPanel = () => {
-  updateSearchReplaceVisibleFunc(!searchReplaceVisible.value)
+  updateSearchReplaceVisible(!searchReplaceVisible.value)
 }
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const buttonEvents = useMenuButtonEvents(toggleSearchPanel, props.triggerType)
 </script>
 

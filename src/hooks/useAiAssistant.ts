@@ -5,7 +5,7 @@
 import { ref, inject, type Ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 export type AIAction = 'refactor' | 'check' | 'simple' | 'rich' | 'translate' | 'summary' | 'custom'
 
 // AI 处理状态 idle 空闲 pending 处理中  success 成功 error 失败 cancelled 取消
@@ -32,7 +32,7 @@ const EventStreamContentType = 'text/event-stream'
 
 export const useAiAssistant = () => {
   // 顶层组件注入对象
-  const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+  const { speedTiptapConfig } = useSpeedEditor();
   console.log(speedTiptapConfig.value);
   if (!speedTiptapConfig.value.ai || !speedTiptapConfig.value.ai.doubao) {
     message.warning('请先配置大模型请求接口');

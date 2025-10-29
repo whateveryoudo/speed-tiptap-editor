@@ -44,13 +44,14 @@ import {
   CodeOutlined,
 } from "@ant-design/icons-vue";
 import { type IFileItem } from "speed-components-ui/hooks";
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",
   ref({})
 ) as Ref<any>;
 // 顶层组件注入对象
-const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+const { speedTiptapConfig } = useSpeedEditor();
 
 const props = withDefaults(
   defineProps<{

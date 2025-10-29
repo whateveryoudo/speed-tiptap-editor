@@ -20,6 +20,7 @@ import { type VNode, PropType, computed, inject, ref, type Ref, defineComponent 
 import { Popover, Tooltip, Button, Space } from 'ant-design-vue'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
 import { KeyMapTip } from 'speed-components-ui/components'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 type AlignType = 'left' | 'center' | 'right'
 
 
@@ -51,7 +52,7 @@ export default defineComponent({
     const isLeftActive = useActive(props.editor, { textAlign: 'left' })
     const isCenterActive = useActive(props.editor, { textAlign: 'center' })
     const isRightActive = useActive(props.editor, { textAlign: 'right' })
-    const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+    const { editableCpt } = useSpeedEditor();
 
     const disableMenu = computed(() => {
       return isTitleActive.value || !editableCpt.value

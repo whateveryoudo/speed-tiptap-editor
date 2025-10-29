@@ -28,7 +28,7 @@ import EmojiPicker from '@/components/emojiPicker/index.vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { Emoji } from '@tiptap/extension-emoji'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -36,7 +36,7 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })

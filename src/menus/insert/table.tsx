@@ -14,6 +14,7 @@ import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import AutoExpandTableSelect from './autoExpandTableSelect.vue'
 import { Tooltip, Popover, Button } from 'ant-design-vue'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 export default defineComponent({
   name: 'TableMenu',
   components: {
@@ -32,7 +33,7 @@ export default defineComponent({
   setup(props) {
     const open = ref(false)
     const isTitleActive = useActive(props.editor, Title.name)
-    const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+    const { editableCpt } = useSpeedEditor();
 
     const disableMenu = computed(() => {
       return isTitleActive.value || !editableCpt.value

@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, computed, inject, type Ref } from 'vue'
+import { PropType, ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { LinkOutlined } from '@ant-design/icons-vue'
 import { isMarkActive } from '@/prose-utils'
@@ -43,6 +43,7 @@ import { LinkModalProps } from './modal'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { isEmpty } from 'lodash-es'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -52,7 +53,7 @@ const props = defineProps({
 const linkModalProp = ref<LinkModalProps>({})
 const isTitleActive = useActive(props.editor, Title.name)
 const isLinkActive = useActive(props.editor, 'Link')
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })

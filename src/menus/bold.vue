@@ -26,7 +26,7 @@ import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<{
   triggerType: 'menu'
 })
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 
 // 获取快捷键文本
 const keyMap = getShortcutTipByKey('bold');

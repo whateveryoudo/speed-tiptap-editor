@@ -21,6 +21,7 @@ import { ImportOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import ImportFormatModal from './ImportFormatModal.vue'
 import { ref, inject, type Ref } from 'vue'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
     editor: Editor,
     triggerType?: 'menu' | 'bubble'
@@ -29,7 +30,7 @@ const props = withDefaults(defineProps<{
     triggerType: 'menu'
 })
 const modalVisible = ref(false)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const buttonEvents = useMenuButtonEvents(() => {
     modalVisible.value = true
 }, props.triggerType)

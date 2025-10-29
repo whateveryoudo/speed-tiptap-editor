@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, type PropType, inject, computed } from "vue";
+import { ref, type PropType, computed } from "vue";
 import type { Editor } from "@tiptap/core";
 import { DragHandle } from "@/components/dragHandle";
 import { useActive } from '@/hooks/useActive'
@@ -82,6 +82,7 @@ import {
     CodeOutlined,
     FileTextOutlined,
 } from "@ant-design/icons-vue";
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
     editor: {
         type: Object as PropType<Editor>,
@@ -191,10 +192,7 @@ const dropdownMenuItems = computed(() => {
         },
     ].filter(item => !!item)
 });
-const updateGlobalTiptapStorageFunc = inject(
-    "updateGlobalTiptapStorageFunc",
-    (_prop: string, _value: any) => ({})
-);
+const { updateGlobalTiptapStorageFunc } = useSpeedEditor();
 const isH1Active = useActive(props.editor, 'heading', { level: 1 })
 const isH2Active = useActive(props.editor, 'heading', { level: 2 })
 const isH3Active = useActive(props.editor, 'heading', { level: 3 })

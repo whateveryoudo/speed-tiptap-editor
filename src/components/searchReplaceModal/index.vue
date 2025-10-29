@@ -1,11 +1,11 @@
 <template>
     <div class="search-replace-modal" v-if="searchReplaceVisible">
-        <a-card :ref="modalRef" style="box-shadow: 0 8px 16px 4px rgba(0,0,0,.04)">
+        <a-card ref="modalRef" style="box-shadow: 0 8px 16px 4px rgba(0,0,0,.04)">
             <template #title>
                 <FileSearchOutlined class="mr-2" />
                 <span>查找替换</span>
             </template>
-            <template #extra><close-outlined @click="updateSearchReplaceVisibleFunc(false)" /></template>
+            <template #extra><close-outlined @click="updateSearchReplaceVisible(false)" /></template>
             <a-flex vertical :gap="15">
                 <a-flex>
                     <a-input allow-clear @press-enter="goToResult('next')" v-model:value="search" @change="handleSearch"
@@ -49,15 +49,13 @@
 import { ref, inject, computed } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { Editor } from '@tiptap/core'
-import { SEARCH_REPLACE_VISIBLE_KEY, UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY } from '@/keys'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
     editor: Editor
 }>(), {
     editor: () => ({}) as Editor
 })
-const searchReplaceVisible = inject(SEARCH_REPLACE_VISIBLE_KEY, ref(false))
-const updateSearchReplaceVisibleFunc = inject(UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY, (visible: boolean) => { })
+const { searchReplaceVisible, updateSearchReplaceVisible } = useSpeedEditor();
 const modalRef = ref<HTMLDivElement>()
 const search = ref('')
 const replace = ref('')

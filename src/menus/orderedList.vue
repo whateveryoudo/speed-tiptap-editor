@@ -23,6 +23,7 @@ import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { OrderedList as OrderedListExtension } from '@/extensions/orderedList';
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -37,7 +38,7 @@ const toggleOrderedList = () => {
   }
   props.editor && props.editor.chain().focus().toggleOrderedList().run()
 }
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value || !props.editor.isEditable
 })

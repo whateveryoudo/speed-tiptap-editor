@@ -9,7 +9,7 @@
 <template>
   <BubbleContainer :editor="editor" plugin-key="image-bubble-menu" :should-show="shouldShow">
     <a-space :size="5">
-      <a-tooltip title="标题">
+      <a-tooltip title="标题" v-if="editableCpt">
         <div :class="[
           'shadow-bg-wrapper',
           attributes.displayMode === 'title' && 'is-active',
@@ -17,7 +17,7 @@
           <ProfileOutlined />
         </div>
       </a-tooltip>
-      <a-tooltip title="卡片">
+      <a-tooltip title="卡片" v-if="editableCpt">
         <a-button type="text" :class="[
           'shadow-bg-wrapper',
           attributes.displayMode === 'card' && 'is-active',
@@ -25,7 +25,7 @@
           <CreditCardOutlined />
         </a-button>
       </a-tooltip>
-      <a-divider type="vertical" class="menu-divider" />
+      <a-divider type="vertical" class="menu-divider" v-if="editableCpt"/>
       <a-tooltip title="预览">
         <a-button type="text" class="shadow-btn-wrapper" @click="handlePreivew">
           <eye-outlined />
@@ -52,13 +52,14 @@ import {
   DownloadOutlined,
 } from "@ant-design/icons-vue";
 import { type Editor } from "@tiptap/core";
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",
   ref({})
 ) as Ref<any>;
 // 顶层组件注入对象
-const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+const { speedTiptapConfig, editableCpt } = useSpeedEditor();
 
 const props = defineProps({
   editor: {
@@ -78,9 +79,9 @@ const isActiveAttachment = computed(() => {
   return props?.editor.isActive(Attachment.name) && !!attributes.value.fileId;
 });
 
+// 这里不限制气泡弹出（仅控制内部的菜单显示）
 const shouldShow = () => {
   return (
-    props?.editor?.isEditable &&
     !props?.editor.view.state.selection.empty &&
     isActiveAttachment.value
   );

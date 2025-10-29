@@ -36,7 +36,7 @@ import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 
 const props = withDefaults(defineProps<{
   editor: Editor
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<{
 const keyMap = getShortcutTipByKey('backgroundColor')
 const curColor = ref<ColorType | null>();
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })

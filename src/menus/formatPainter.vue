@@ -18,11 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch, computed, inject, type Ref } from 'vue'
+import { PropType, ref, watch, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { ClearOutlined } from '@ant-design/icons-vue'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -50,8 +51,7 @@ const toggleFormatPainter = () => {
 
 }
 const isTitleActive = useActive(props.editor, Title.name)
-
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })

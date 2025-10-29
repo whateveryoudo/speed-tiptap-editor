@@ -14,6 +14,7 @@ import { type SubMenuGroup, type MenuGroup, useCommand } from './useCommand'
 import { createKeysLocalStorageLRUCache } from '@/helpers/lru-cache'
 import AutoExpandTableSelect from './autoExpandTableSelect.vue'
 import styles from './baseList.module.less'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 
 export default defineComponent({
   name: 'BaseList',
@@ -47,7 +48,7 @@ export default defineComponent({
   emits: ['triggerVisible'],
   setup(props, { emit, expose }) {
     const { menuGroup, flatLeafMenu } = useCommand(props.insertMenuConfig)
-    const speedTiptapConfig = inject('speedTiptapConfig', ref({})) as Ref<any>; // 获取编辑器传入配置
+    const { speedTiptapConfig  } = useSpeedEditor();
     const { image, file } = speedTiptapConfig.value;
     const cacheKey = 'RECENT_MENU_LIST'
     // 创建最近使用菜单的LRU缓存，最多存储20条
@@ -89,7 +90,6 @@ export default defineComponent({
 
     // 区分不同类型点击
     const handleEditorOpt = (item?: SubMenuGroup, payload?: any) => {
-      debugger;
       if (!item) {
         return
       }

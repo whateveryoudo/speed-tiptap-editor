@@ -23,7 +23,7 @@ import { Editor } from '@tiptap/core'
 import { FileImageOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'
@@ -33,13 +33,12 @@ const props = withDefaults(defineProps<{
 })
 
 const ImageInput = ref<HTMLInputElement>()
-const speedTiptapConfig = inject('speedTiptapConfig', ref({})) as Ref<any>; // 获取编辑器传入配置
+const { speedTiptapConfig, editableCpt } = useSpeedEditor();
 const { image: imageConfig } = speedTiptapConfig.value;
 const isTitleActive = useActive(props.editor, Title.name)
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const isImageActive = useActive(props.editor, 'image')
 const handleFileChange = (event: any) => {
   props.editor.chain().focus().uploadImage(event?.target?.files).run()

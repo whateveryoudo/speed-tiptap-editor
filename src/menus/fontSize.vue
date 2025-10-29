@@ -29,14 +29,14 @@ import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useAttributes } from '@/hooks/useAttributes'
 import { CheckOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
-const speedTiptapConfig = inject('speedTiptapConfig', ref({})) as Ref<any>
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+const { speedTiptapConfig, editableCpt } = useSpeedEditor();
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
 })
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
 const isTitleActive = useActive(props.editor, Title.name)
 const currentFontSize = useAttributes(props.editor, 'textStyle', { fontSize: speedTiptapConfig?.value?.fontSize?.default ?? '14px' }, attrs =>
   attrs.fontSize.replace('px', ''),

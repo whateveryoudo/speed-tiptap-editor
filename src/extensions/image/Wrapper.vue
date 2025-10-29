@@ -11,7 +11,7 @@
     <!-- <div v-if="nodeAttrs.error" :class="styles.wrapper">
       <a-typography-text>{{ nodeAttrs.error }}</a-typography-text>
     </div> -->
-    <div v-if="!nodeAttrs.src" :class="['wrapper', uploadFailed ? 'upload-failed' : '']"  @click="uploadAgain">
+    <div v-if="!nodeAttrs.src" :class="['wrapper', uploadFailed ? 'upload-failed' : '']" @click="uploadAgain">
       <a-spin :spinning="uploadLoading">
         <img :class="uploadFailed ? 'upload-failed' : ''" :src="ImgPlaceholder" alt="请选择图片"
           style="width: 150px; height: auto">
@@ -21,11 +21,16 @@
       :height="nodeAttrs.height" :maxWidth="maxWidth" @changeEnd="updateImageAttrs">
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </Resizeable> -->
-    <drager v-else :selected="selected" :boundary="false" :disabled="!isEditable" :width="Number(node.attrs.width)"
-      :height="Number(node.attrs.height)" :min-width="14" :min-height="14" :max-width="maxWidth" :max-height="maxWidth"
-      @resize="onResize" @focus="selected = true">
-      <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
-    </drager>
+    <template v-else>
+      <drager v-if="editableCpt" :selected="selected" :boundary="false" :disabled="!editableCpt"
+        :width="Number(node.attrs.width)" :height="Number(node.attrs.height)" :min-width="14" :min-height="14"
+        :max-width="maxWidth" :max-height="maxWidth" @resize="onResize" @focus="selected = true">
+        <img :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
+      </drager>
+      <img v-else @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
+    </template>
+
+
     <!-- 隐藏一个input,上传失败后允许重新点击上传，这里不允许选多张 -->
     <input ref="ImageInput" @change="handleFileChange" type="file"
       :accept="imageConfig?.accept ?? '.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic'" hidden />
@@ -46,15 +51,15 @@ import {
 } from '@/prose-utils'
 import { useCustomUpload } from 'speed-components-ui/hooks'
 import { message } from 'ant-design-vue';
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",
   ref({})
 ) as Ref<any>;
 // 顶层组件注入对象
-const speedTiptapConfig = inject("speedTiptapConfig", ref({})) as Ref<any>;
+const { speedTiptapConfig, previewInstance, editableCpt } = useSpeedEditor();
 const { image: imageConfig } = speedTiptapConfig.value;
-const previewInstance = inject('previewInstance') as Ref<any>
 const uploadFailed = ref(false);
 const props = defineProps({
   node: {
@@ -73,9 +78,7 @@ const props = defineProps({
 })
 const selected = ref(false)
 const ImageInput = ref<HTMLInputElement>()
-const isEditable = computed(() => {
-  return props.editor?.isEditable
-})
+
 // torefs无效？？
 const nodeAttrs = computed(() => {
   return props.node?.attrs
@@ -249,7 +252,7 @@ const updateImageAttrs = (size: any) => {
 //   }
 // }
 const handlePreivew = () => {
-  if (!isEditable.value) {
+  if (!editableCpt.value) {
     // 调用全局图片预览
     if (previewInstance.value) {
       previewInstance.value.previewImage(nodeAttrs.value?.src)
@@ -295,6 +298,7 @@ watch(() => nodeAttrs.value.file, (file: File) => {
     justify-content: space-between;
     align-items: center;
     border: 1px solid transparent;
+
     &.upload-failed {
       border-color: var(--ant-color-error);
     }
