@@ -24,6 +24,7 @@ declare module 'vue' {
     AMenuDivider: typeof import('ant-design-vue/es')['MenuDivider']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     APopover: typeof import('ant-design-vue/es')['Popover']
+    AProgress: typeof import('ant-design-vue/es')['Progress']
     ASegmented: typeof import('ant-design-vue/es')['Segmented']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
