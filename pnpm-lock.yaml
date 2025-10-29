@@ -30,7 +30,7 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0(@hocuspocus/provider@3.2.5(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(lib0@0.2.111)(yjs@13.6.27)
       '@tiptap/core':
-        specifier: 3.0.6
+        specifier: ^3.0.6
         version: 3.0.6(@tiptap/pm@3.0.6)
       '@tiptap/extension-blockquote':
         specifier: ^3.0.6

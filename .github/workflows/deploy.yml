@@ -48,8 +48,8 @@ jobs:
           key: pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: pnpm-store-
 
-      - name: Install dependencies (no frozen lockfile)
-        run: pnpm install --no-frozen-lockfile
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
 
       - name: Build docs + example (prepare deploy)
         env:
