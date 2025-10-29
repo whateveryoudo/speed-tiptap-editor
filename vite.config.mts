@@ -15,6 +15,7 @@ export default defineConfig(({ command, mode }) => {
   console.log(exampleEnv.VITE_RELEASE_URL)
   return {
     root: isLib ? "." : "example",
+    base: exampleEnv.VITE_RELEASE_URL,
     plugins: [
       vue(),
       vueJsx(),
