@@ -181,52 +181,52 @@ export const Title = Node.create<TitleOptions>({
             }
           },
         },
-        appendTransaction: (_transactions, _oldState, newState) => {
-          if (!editor.isEditable) return;
-          console.log('执行了');
-          const tr = newState.tr;
-          let hasChanges = false;
+        // appendTransaction: (_transactions, _oldState, newState) => {
+        //   if (!editor.isEditable) return;
+        //   console.log('执行了');
+        //   const tr = newState.tr;
+        //   let hasChanges = false;
 
-          // 检查并修复重复的 title 节点
-          const content = newState.doc.content;
-          const titleNodes: any[] = [];
-          const otherNodes: any[] = [];
+        //   // 检查并修复重复的 title 节点
+        //   const content = newState.doc.content;
+        //   const titleNodes: any[] = [];
+        //   const otherNodes: any[] = [];
           
-          content.forEach((node) => {
-            if (node.type.name === this.name) {
-              titleNodes.push(node);
-            } else {
-              otherNodes.push(node);
-            }
-          });
+        //   content.forEach((node) => {
+        //     if (node.type.name === this.name) {
+        //       titleNodes.push(node);
+        //     } else {
+        //       otherNodes.push(node);
+        //     }
+        //   });
 
-          // 如果有多个 title 节点，只保留第一个
-          if (titleNodes.length > 1) {
-            // 合并所有 title 的内容到第一个 title
-            const firstTitle = titleNodes[0];
-            const mergedTitleContent = titleNodes.slice(1).reduce((acc, titleNode) => {
-              return acc.append(titleNode.content);
-            }, firstTitle.content);
+        //   // 如果有多个 title 节点，只保留第一个
+        //   if (titleNodes.length > 1) {
+        //     // 合并所有 title 的内容到第一个 title
+        //     const firstTitle = titleNodes[0];
+        //     const mergedTitleContent = titleNodes.slice(1).reduce((acc, titleNode) => {
+        //       return acc.append(titleNode.content);
+        //     }, firstTitle.content);
             
-            const newFirstTitle = newState.schema.nodes['title'].create(firstTitle.attrs, mergedTitleContent);
+        //     const newFirstTitle = newState.schema.nodes['title'].create(firstTitle.attrs, mergedTitleContent);
             
-            const newContent = [
-              newFirstTitle,
-              ...otherNodes
-            ];
+        //     const newContent = [
+        //       newFirstTitle,
+        //       ...otherNodes
+        //     ];
             
-            tr.replaceWith(0, newState.doc.content.size, newState.schema.nodeFromJSON({
-              type: newState.doc.type.name,
-              attrs: newState.doc.attrs,
-              content: newContent.map(node => node.toJSON())
-            }).content);
-            tr.setMeta('addToHistory', false);
-            tr.setMeta('preventEvent', true); // 防止触发事件
-            hasChanges = true;
-          }
+        //     tr.replaceWith(0, newState.doc.content.size, newState.schema.nodeFromJSON({
+        //       type: newState.doc.type.name,
+        //       attrs: newState.doc.attrs,
+        //       content: newContent.map(node => node.toJSON())
+        //     }).content);
+        //     tr.setMeta('addToHistory', false);
+        //     tr.setMeta('preventEvent', true); // 防止触发事件
+        //     hasChanges = true;
+        //   }
 
-          return hasChanges ? tr : undefined;
-        },
+        //   return hasChanges ? tr : undefined;
+        // },
       }),
     ];
   },
