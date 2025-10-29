@@ -51,10 +51,10 @@ jobs:
       - name: Install dependencies (no frozen lockfile)
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build example (align with local)
+      - name: Build docs + example (prepare deploy)
         env:
           VITE_RELEASE_URL: /speed-tiptap-editor/
-        run: pnpm run build:example
+        run: pnpm run build:deploy
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -62,7 +62,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: example/dist-example
+          path: dist-deploy
 
       - name: Deploy to GitHub Pages
         id: deployment
