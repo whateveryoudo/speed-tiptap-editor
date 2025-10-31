@@ -203,17 +203,24 @@ watch(
   <h2>以下是Speed Tiptap Editor的示例</h2>
   <a-flex align="center" class="mb-2 gap-2">
     <a-switch v-model:checked="globalStore.openJwt" @change="handleOpenJwtChange"></a-switch><span
-      class="ml-2 text-sm text-gray-500">是否开启登录jwt校验(文档部分功能可能需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span>
-      <a-switch v-model:checked="editable" ></a-switch><span
-      class="ml-2 text-sm text-gray-500">是否可编辑</span>
-    </a-flex>
+      class="ml-2 text-sm text-gray-500">是否开启登录jwt校验(文档
+      <a-tooltip placement="bottom">
+        <template #title>
+          <div>
+            图片、附件、ai助手、协同编辑；<br/><a href="https://github.com/whateveryoudo/speed-apis"
+              target="_blank">后端示例服务</a>
+          </div>
+        </template>
+        <a>部分功能</a></a-tooltip>
+      需要配合后端示例服务启动，开启后会模拟登录jwt，接口也会有token校验)</span>
+    <a-switch v-model:checked="editable"></a-switch><span class="ml-2 text-sm text-gray-500">是否可编辑</span>
+  </a-flex>
 
   <router-view />
   <a-space class="mb-2">
     <template v-for="demo in demos" :key="demo.name">
       <a-tooltip :title="demo.description">
-        <a-button :type="currentDemo === demo.name ? 'link' : 'text'" @click="checkDemo(demo.name)"
-          >
+        <a-button :type="currentDemo === demo.name ? 'link' : 'text'" @click="checkDemo(demo.name)">
           {{ demo.title }}
         </a-button>
       </a-tooltip>
@@ -222,13 +229,13 @@ watch(
   </a-space>
   <!-- 基础示例 -->
   <div class="px-2 h-[600px]">
-    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title" v-if="currentDemo === 'simple'"
-      v-bind="simpleProps" />
+    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title"
+      v-if="currentDemo === 'simple'" v-bind="simpleProps" />
     <!-- 先不要绑定json 会导致实时变化 -->
-    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'knowledge'"
-      scene="knowledge" v-bind="knowledgeProps" />
-    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title" v-else-if="currentDemo === 'collaboration'"
-      scene="knowledge" v-bind="collaborateProps" />
+    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title"
+      v-else-if="currentDemo === 'knowledge'" scene="knowledge" v-bind="knowledgeProps" />
+    <SpeedTiptapEditor :editable="editable" v-model:content="content" v-model:title="title"
+      v-else-if="currentDemo === 'collaboration'" scene="knowledge" v-bind="collaborateProps" />
   </div>
   <div v-if="currentDemo === 'knowledge'">
     <a-space>标题:<a-input v-model:value="title" /></a-space>
