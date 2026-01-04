@@ -1,15 +1,14 @@
-import type { Editor } from '@tiptap/core'
-import { downloadFile } from './fileDownload'
-import HTMLtoDOCX from 'html-to-docx'
-import { type ExportSuccessResult } from './type'
+import type { Editor } from "@tiptap/core";
+import { downloadFile } from "./fileDownload";
+import { type ExportSuccessResult } from "./type";
 
 export interface WordExportOptions {
-  editor: Editor
-  fileName?: string
-  title: string,
-  onProgress?: (progress: number) => void
-  onSuccess?: (result: ExportSuccessResult) => void
-  onError?: (error: Error) => void
+  editor: Editor;
+  fileName?: string;
+  title: string;
+  onProgress?: (progress: number) => void;
+  onSuccess?: (result: ExportSuccessResult) => void;
+  onError?: (error: Error) => void;
 }
 
 /**
@@ -19,45 +18,46 @@ export interface WordExportOptions {
 export async function exportWordDocument({
   editor,
   title,
-  fileName = 'document.docx',
+  fileName = "document.docx",
   onProgress,
   onSuccess,
-  onError
+  onError,
 }: WordExportOptions) {
   try {
-    onProgress?.(10)
+    onProgress?.(10);
 
     // 获取编辑器内容
-    const html = editor.getHTML()
-    onProgress?.(30)
+    const html = editor.getHTML();
+    onProgress?.(30);
+    // ✅ 动态 import，避免静态分析
+    const { default: HTMLtoDOCX } = await import("html-to-docx");
     // 使用 html-to-docx 转换为真正的 DOCX 格式
     const docxBuffer = await HTMLtoDOCX(html, null, {
       table: { row: { cantSplit: true } },
       footer: true,
       pageNumber: true,
-      font: 'Calibri',
+      font: "Calibri",
       fontSize: 22,
-      title // title没效果？？
-    })
-    onProgress?.(70)
+      title, // title没效果？？
+    });
+    onProgress?.(70);
 
     // 创建 Blob 对象
     const blob = new Blob([docxBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    })
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
 
     // 下载文件
-    downloadFile(blob, fileName)
-    onProgress?.(100)
+    downloadFile(blob, fileName);
+    onProgress?.(100);
     onSuccess?.({
       value: docxBuffer,
       fileName,
-      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    })
-
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
   } catch (error) {
-    console.error('Word 导出失败:', error)
-    onError?.(error as Error)
+    console.error("Word 导出失败:", error);
+    onError?.(error as Error);
   }
 }
 
@@ -74,7 +74,7 @@ export function handleWordExport(
   onError?: (error: Error) => void
 ) {
   if (!editor) {
-    return
+    return;
   }
 
   exportWordDocument({
@@ -83,6 +83,6 @@ export function handleWordExport(
     fileName,
     onProgress,
     onSuccess,
-    onError
-  })
+    onError,
+  });
 }

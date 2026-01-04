@@ -10,9 +10,9 @@ import { computed, ref } from "vue";
 import SpeedTiptapEditor from "./editor.vue";
 import SpeedComponents from "speed-components-ui/components";
 import { type ResponseType} from "speed-components-ui";
-import { useAntdCssVars } from "speed-components-ui/hooks";
 import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
+import baseConfig from "./config";
 import SpeedTooltip from "./components/SpeedTooltip/index.vue";
 // 导入 UnoCSS 样式
 import 'uno.css'
@@ -57,7 +57,6 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   if (config) {
     setConfig(config);
   }
-
   // 注册组件
   if (currentConfig.value.registerGlobal) {
     components.forEach((component) => {
@@ -67,23 +66,16 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   app.component(SpeedTooltip.name as string, SpeedTooltip);
   // 注入响应式配置
   app.provide("speedUseTiptapConfig", currentConfig);
-  // 注册SpeedComponents
+  // 注册SpeedComponents（这里仅设置图标就行，这是editor自己的内置配置）
   app.use(SpeedComponents, {
     iconfontUrl: [
-      "//at.alicdn.com/t/c/font_3786040_jbkh0cwsxv.js",
-      currentConfig.value.iconfontUrl,
+      baseConfig.iconfontUrl
+      // currentConfig.value.iconfontUrl,
     ],
-    apis: currentConfig.value.apis,
-    transformRequestRes: currentConfig.value.transformRequestRes,
+    // apis: currentConfig.value.apis,
+    // transformRequestRes: currentConfig.value.transformRequestRes,
   });
-  // 使用 Ant Design Vue CSS 变量
-  const cleanup = useAntdCssVars();
 
-  // 在应用卸载时清理
-  app.unmount = () => {
-    cleanup();
-    app.unmount();
-  };
 };
 
 export { default as SpeedTiptapEditor } from "./editor.vue";

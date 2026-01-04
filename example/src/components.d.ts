@@ -12,6 +12,7 @@ declare module 'vue' {
     AButton: typeof import('ant-design-vue/es')['Button']
     ACard: typeof import('ant-design-vue/es')['Card']
     ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
+    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
     ADivider: typeof import('ant-design-vue/es')['Divider']
     ADropdown: typeof import('ant-design-vue/es')['Dropdown']
     AEmpty: typeof import('ant-design-vue/es')['Empty']
@@ -47,6 +48,7 @@ declare module 'vue' {
     RightOutlined: typeof import('@ant-design/icons-vue')['RightOutlined']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchOutlined: typeof import('@ant-design/icons-vue')['SearchOutlined']
     UndoOutlined: typeof import('@ant-design/icons-vue')['UndoOutlined']
   }
 }

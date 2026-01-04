@@ -7,40 +7,42 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\editor.vue
 -->
 <template>
-  <div :class="['wrap', scene]">
-    <!-- 工具栏 -->
-    <menu-bar :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header" :editor="editor" />
-    <!-- 扩展modal显示-mind -->
-    <!-- <extend-mind-modal
+  <a-config-provider :theme="cptTheme">
+    <div :class="['wrap', scene]">
+      <!-- 工具栏 -->
+      <menu-bar :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header" :editor="editor" />
+      <!-- 扩展modal显示-mind -->
+      <!-- <extend-mind-modal
       v-if="editor"
       :editor="editor"
       :data="mindState.data"
       :visible="mindState.visible"
       @triggerData="(data: any) => handleUpdateMindState('data', data)"
       @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
-    <TextMenu v-if="editor && textBubbleMenu?.enabled" :editor="editor" />
-    <TagMenu v-if="editor" :editor="editor" />
-    <ImageMenu v-if="editor" :editor="editor" />
-    <AttachmentMenu v-if="editor" :editor="editor"></AttachmentMenu>
-    <!-- table的点击提示框 -->
-    <TableMenu v-if="editor" :editor="editor" />
-    <!-- table的选择气泡提示框 -->
-    <TableBubbleMenu v-if="editor" :editor="editor" />
-    <CalloutMenu v-if="editor" :editor="editor" />
-    <!-- 节点拖拽 -->
-    <DragNodeMenu v-if="editor" :editor="editor" />
-    <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
-      <editor-content :editor="editor"
-        :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
-    </main>
-    <!-- 搜索替换弹框 -->
-    <SearchReplaceModal :editor="editor" v-if="editor" />
-    <!-- <ShortcutGuideModal v-if="editor?.isEditable && !isPreview" /> -->
-  </div>
+      <TextMenu v-if="editor && textBubbleMenu?.enabled" :editor="editor" />
+      <TagMenu v-if="editor" :editor="editor" />
+      <ImageMenu v-if="editor" :editor="editor" />
+      <AttachmentMenu v-if="editor" :editor="editor"></AttachmentMenu>
+      <!-- table的点击提示框 -->
+      <TableMenu v-if="editor" :editor="editor" />
+      <!-- table的选择气泡提示框 -->
+      <TableBubbleMenu v-if="editor" :editor="editor" />
+      <CalloutMenu v-if="editor" :editor="editor" />
+      <!-- 节点拖拽 -->
+      <DragNodeMenu v-if="editor" :editor="editor" />
+      <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
+        <editor-content :editor="editor"
+          :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
+      </main>
+      <!-- 搜索替换弹框 -->
+      <SearchReplaceModal :editor="editor" v-if="editor" />
+      <!-- <ShortcutGuideModal v-if="editor?.isEditable && !isPreview" /> -->
+    </div>
+  </a-config-provider>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, PropType, provide, computed, VNode, onMounted } from 'vue'
+import { watch, ref, inject, PropType, provide, computed, VNode, onMounted, onUnmounted } from 'vue'
 import MenuBar from './menus'
 import { getKnowledgeKit, getDefaultKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
@@ -58,14 +60,19 @@ import { type CollaborationEditorProps } from './type'
 import { EditorPreviewImage } from '@/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
-import { message } from 'ant-design-vue'
+import { message, theme } from 'ant-design-vue'
+import { useAntdCssVars } from 'speed-components-ui/hooks'
 import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
-import { SEARCH_REPLACE_VISIBLE_KEY, UPDATE_SEARCH_REPLACE_VISIBLE_FUNC_KEY } from './keys'
 import * as Y from 'yjs'
+import { debounce } from 'lodash-es'
 // import initContext from './context'
 // import { useUserStore } from '@/store/modules/user/user'
 // import { getRandomColor } from '@/helpers/color'
-
+// 初始化注入的对象
+const speedUseTiptapConfig = inject(
+  "speedUseTiptapConfig",
+  ref(null)
+);
 onKeyStroke(e => {
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 's') {
     e.preventDefault()
@@ -84,11 +91,22 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
   docType: "document",
   editable: true,
   menubar: true,
+  antdToken: () => ({}),
   hideComment: true,
   placeholder: "输入 / 唤起更多",
+  theme: 'light',
   textBubbleMenu: () => ({
     enabled: true
   })
+})
+// 组合后的antd主题(这里需要处理)
+const cptTheme = computed(() => {
+  return props.theme === 'dark' ? {
+    algorithm: theme.darkAlgorithm,
+    token: { ...props.antdToken }
+  } : {
+    token: { ...props.antdToken }
+  }
 })
 // 初始化编辑器的一些上下文
 const { previewInstance } = useSpeedEditorProvider(props)
@@ -107,7 +125,18 @@ watch(
     console.log(val)
   },
 )
-
+// 使用 Ant Design Vue CSS 变量
+const { cleanup, updateTheme } = useAntdCssVars();
+onUnmounted(() => {
+  cleanup?.();
+});
+// 防抖处理 title 更新
+const debouncedEmitTitle = debounce((titleText: string) => {
+  // 对比当前 title 和 props.title，如果相同则不 emit
+  if (titleText !== props.title) {
+    emit('update:title', titleText)
+  }
+}, 500) // 500ms 防抖
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
@@ -118,7 +147,8 @@ const editor = useEditor({
       class: props.scene === 'knowledge' ? 'editor-content has-drag-handle' : 'editor-content',
     },
   },
-  onUpdate({ editor }) {
+  onUpdate({ editor, transaction }) {
+    console.log(transaction.getMeta?.('isRemote'))
     // 编辑器内容变化时，同步到外部
     const html = editor.getHTML()
     console.log(html);
@@ -129,12 +159,7 @@ const editor = useEditor({
       if (props.scene === 'knowledge') {
         // 判断是否存在标题节点
         const titleNode = editor.state.doc?.content?.firstChild?.content.firstChild
-        if (titleNode) {
-          emit(
-            'update:title',
-            titleNode.textContent,
-          )
-        }
+        debouncedEmitTitle(titleNode?.textContent ?? '')
       }
     } catch (e) {
       //
@@ -158,15 +183,20 @@ const editor = useEditor({
   onCreate({ editor }) {
     // 初始化图片预览
     previewInstance.value = new EditorPreviewImage(editor);
+    // 查找是否是use使用
+    if (!speedUseTiptapConfig.value) {
+      throw new Error('请先调用app.use(SpeedTiptapEditor)进行初始化一些配置，否则可能会初始化一些图标显示问题！')
+    }
+    
   }
 })
 if (props.collaboration && doc) {
   const provider = new HocuspocusProvider({
-    name: 'ykx测试文档1', // Unique document identifier for syncing. This is your document name.
+    name: props.collaboration.documentId, // Unique document identifier for syncing. This is your document name.
     // appId: '8mze223m', // Your Cloud Dashboard AppID or `baseURL` for on-premises
     url: props.collaboration.url,
     // 模拟token
-    token: props.collaboration.token,
+    // token: props.collaboration.token,
     document: doc,
     // onSynced: () => {
     //   if (!doc.getMap('config').get('initialContentLoaded') && editor.value) {
@@ -226,8 +256,17 @@ watch(
   (newEditable) => {
     if (editor.value) {
       editor.value.setEditable(newEditable)
+      
     }
   }
+)
+// 监听外部antdToken变化，重新生成当前editor 的antd变量(用于同步一些主题变量)
+watch(
+  () => props.antdToken,
+  (newAntdToken: Record<string, any>) => {
+    updateTheme?.({ token: newAntdToken });
+  },
+  { immediate: true }
 )
 
 </script>

@@ -7,6 +7,9 @@
     ".": {
       "import": "./dist/speed-tiptap-editor-index.es.js",
       "types": "./dist/index.d.ts"
+    },
+    "./debug": {
+      "import": "./src/index.ts"
     }
   },
   "files": [
@@ -87,7 +90,6 @@
     "@hocuspocus/provider": "^3.2.0",
     "@kangc/v-md-editor": "^2.3.17",
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@tiptap-pro/provider": "^3.3.0",
     "@tiptap/core": "^3.0.6",
     "@tiptap/extension-blockquote": "^3.0.6",
     "@tiptap/extension-bubble-menu": "^3.0.6",
@@ -137,7 +139,7 @@
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.3",
     "scroll-into-view-if-needed": "^3.0.3",
-    "speed-components-ui": "^0.1.27",
+    "speed-components-ui": "^0.1.39",
     "toggle-selection": "^1.0.6",
     "turndown": "^7.2.1",
     "viewerjs": "^1.11.7",

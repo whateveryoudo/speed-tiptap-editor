@@ -68,7 +68,7 @@ export const getDefaultKit = (props: any) => [
     blockquote: false,
     horizontalRule: false,
     link: false,
-    undoRedo: false
+    undoRedo: false,
     // 保留 StarterKit 中的其他扩展
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
@@ -150,7 +150,6 @@ export const getDefaultKit = (props: any) => [
   Superscript,
   Subscript,
   Tag,
-  
 ];
 
 // 知识库
@@ -159,3 +158,4 @@ export const getKnowledgeKit = (props: any) => [
   DocumentWithHeading, // 用带 title 的 document
   ...getDefaultKit(props).filter((ext) => ext?.name !== "doc"),
 ];
+

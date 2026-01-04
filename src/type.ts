@@ -40,7 +40,8 @@ export interface CollaborationEditorProps {
    * 场景:
    */
   scene?: "default" | "knowledge";
-  theme?: "light" | "dark"; // TODO
+  theme?: "light" | "dark"; // 编辑器主题
+  antdToken?: any; // antd的token配置
   /**
    * 内容
    */
@@ -66,8 +67,8 @@ export interface CollaborationEditorProps {
    * 协作配置
    */
   collaboration?: {
+    documentId: string;
     url: string;
-    token: string;
   }
   /**
    * 是否需要菜单
@@ -118,5 +119,12 @@ export interface CollaborationEditorProps {
       header?: Record<string, any>
       bodyParams?: (action: string, content: string, customPrompt: string) => Record<string, any>
     }
+  },
+  // 对SpeedComponents的一些配置(注意这里)
+  sdComponentsConfig?: {
+    apis?: {
+      [key: string]: any;
+    };
+    transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
   }
 }

@@ -34,7 +34,6 @@ const TitlePluginKey = new PluginKey(TitleExtensionName);
 export const Title = Node.create<TitleOptions>({
   name: TitleExtensionName,
   content: 'inline*',
-  group: 'block',
   defining: true,
   isolating: true,
   marks: '', // 禁用样式修改
