@@ -18,15 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
-import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { ItalicOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'
@@ -36,7 +34,7 @@ const props = withDefaults(defineProps<{
 })
 const keyMap = getShortcutTipByKey('italic');
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const toggleItalic = () => {
   if (isTitleActive.value) {
     return

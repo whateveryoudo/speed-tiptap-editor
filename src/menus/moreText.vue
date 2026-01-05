@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\moreText.vue
 -->
 <template>
-  <a-popover v-if="!disableMenu" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click"
+  <a-popover v-if="!disableMenu" @open-change="handlePopoverOpenChange" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click"
     placement="bottom">
     <template #content>
       <a-space>
@@ -26,7 +26,7 @@
         </ul>
       </a-space>
     </template>
-    <a-tooltip>
+    <a-tooltip placement="bottom" v-model:open="tooltipOpen">
       <template #title> 更多文本样式 </template>
       <a-button type="text" class="shadow-btn-wrapper">
         <s-icon-font :size="16" type="icon-kl-text" />
@@ -34,8 +34,7 @@
       </a-button>
     </a-tooltip>
   </a-popover>
-  <a-tooltip v-else>
-    <template #title> 更多文本样式 </template>
+  <a-tooltip v-else :title="false">
     <a-button type="text" class="shadow-btn-wrapper" disabled>
       <s-icon-font :size="16" type="icon-kl-text" />
       <caret-down-outlined class="dropdown-trigger" />
@@ -48,12 +47,12 @@ import { Editor } from '@tiptap/core'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-import { ref, type VNode, PropType, computed, inject, type Ref } from 'vue'
+import { ref, PropType, computed } from 'vue'
 // import { Code as InlineCode } from '@/extensions/code'
 import Superscript from '@tiptap/extension-superscript'
 import Subscript from '@tiptap/extension-subscript'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -65,12 +64,12 @@ const props = defineProps({
   },
 })
 type TextType = 'sup' | 'sub' | 'code'
-
+const tooltipOpen = ref(false)
 const isTitleActive = useActive(props.editor, Title.name)
 const isSupActive = useActive(props.editor, Superscript.name)
 const isSubActive = useActive(props.editor, Subscript.name)
 const isCodeActive = useActive(props.editor, 'code')
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })
@@ -154,6 +153,11 @@ const textItems = ref<TextItem[]>([
     },
   },
 ])
+const handlePopoverOpenChange = (open: boolean) => {
+  if (open) {
+    tooltipOpen.value = false
+  }
+}
 </script>
 <style lang="less">
 .text-popover-wrapper {

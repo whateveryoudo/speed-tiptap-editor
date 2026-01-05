@@ -25,19 +25,19 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive, computed, inject, ref } from 'vue'
-import { type Ref } from 'vue'
+import { PropType, reactive, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { CheckOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
     default: () => ({}),
   },
 })
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const isTitleActive = useActive(props.editor, Title.name)
 const isH1Active = useActive(props.editor, 'heading', { level: 1 })
 const isH2Active = useActive(props.editor, 'heading', { level: 2 })

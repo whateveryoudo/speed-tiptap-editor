@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\clearNodeAndMarks.vue
 -->
 <template>
-  <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? '清除格式' : null">
+  <s-keymap-tip :keyMap="keyMap" :title="!disableMenu ? '清除格式' : null">
     <a-button class="shadow-btn-wrapper" @click="clear" :disabled="disableMenu" type="text">
       <s-icon-font type="icon-kl-remove-format" :size="16" />
     </a-button>

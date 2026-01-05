@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <a-tooltip :title="disableMenu ? null : '插入引用'">
+  <a-tooltip placement="bottom" :title="disableMenu ? null : '插入引用'">
     <a-button
       type="text"
       class="shadow-btn-wrapper"

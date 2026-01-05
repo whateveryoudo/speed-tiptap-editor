@@ -130,9 +130,9 @@ export default defineComponent({
               </KeyMapTip>
             ))}
           </Space>
-        ) : undefined}
+        ) : null}
       >
-        <Tooltip title={disableMenu.value ? null : '对齐方式'}>
+        <Tooltip title={disableMenu.value ? null : '对齐方式'} placement='bottom'>
           <Button disabled={disableMenu.value} type="text" class="shadow-btn-wrapper">
             {selectButton.value.iconRender && <s-icon-font iconRender={selectButton.value.iconRender} />}
             <CaretDownOutlined class="dropdown-trigger" />

@@ -7,24 +7,29 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\insert\popover.vue
  */
 
-import { PropType, ref, inject, type Ref, defineComponent, computed } from 'vue'
-import { Editor } from '@tiptap/core'
-import BaseList from './baseList.tsx'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import styles from './popover.module.less'
 import {
-  PlusCircleFilled,
-} from '@ant-design/icons-vue'
-import { Popover, Tooltip, Button } from 'ant-design-vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+  PropType,
+  ref,
+  inject,
+  type Ref,
+  defineComponent,
+  computed,
+} from "vue";
+import { Editor } from "@tiptap/core";
+import BaseList from "./baseList.tsx";
+import { Title } from "@/extensions/title";
+import { useActive } from "@/hooks/useActive";
+import styles from "./popover.module.less";
+import { PlusCircleFilled } from "@ant-design/icons-vue";
+import { Popover, Tooltip, Button } from "ant-design-vue";
+import { useSpeedEditor } from "@/hooks/useSpeedEditorContext";
 export default defineComponent({
-  name: 'InsertPopover',
+  name: "InsertPopover",
   components: {
     BaseList,
     Popover,
     Tooltip,
-    Button
+    Button,
   },
   props: {
     editor: {
@@ -37,39 +42,47 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const open = ref(false)
-    const isTitleActive = useActive(props.editor, Title.name)
+    const open = ref(false);
+    const isTitleActive = useActive(props.editor, Title.name);
     const { editableCpt } = useSpeedEditor();
     const disableMenu = computed(() => {
-      return isTitleActive.value || !editableCpt.value
-    })
+      return isTitleActive.value || !editableCpt.value;
+    });
     const handleTriggerVisible = (val: boolean) => {
-      open.value = val
-    }
+      open.value = val;
+    };
 
     return () => (
       <>
-         <Popover 
+        {!disableMenu.value ? (
+          <Popover
             v-model:open={open.value}
-            overlayClassName="menu-popover-wrapper" 
+            overlayClassName="menu-popover-wrapper"
             trigger="click"
             placement="bottomLeft"
-            content={!disableMenu.value ? (
-              <BaseList 
-                editor={props.editor} 
-                insertMenuConfig={props.insertMenuConfig} 
+            content={
+              <BaseList
+                editor={props.editor}
+                insertMenuConfig={props.insertMenuConfig}
                 triggerType="menu"
                 onTriggerVisible={handleTriggerVisible}
               />
-            ) : undefined}
+            }
           >
-            <Tooltip title={disableMenu.value ? null : '插入'}>
-              <Button type="text" class="shadow-btn-wrapper" disabled={disableMenu.value}>
-                <PlusCircleFilled class={[styles['tip-icon'], disableMenu.value && styles['disabled']]} />
+            <Tooltip title="插入">
+              <Button type="text" class="shadow-btn-wrapper">
+                <PlusCircleFilled class={[styles["tip-icon"]]} />
               </Button>
             </Tooltip>
           </Popover>
+        ) : (
+          <Button type="text" class="shadow-btn-wrapper" disabled>
+            <PlusCircleFilled
+              class={[styles["tip-icon"], styles["disabled"]]}
+            />
+          </Button>
+        )}
       </>
-    )
-  }
-})
+    );
+  },
+});

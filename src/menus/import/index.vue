@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-    <a-tooltip :title="editableCpt ? '文件导入' : null">
+    <a-tooltip placement="bottom" :title="editableCpt ? '文件导入' : null">
         <a-button type="text" class="shadow-btn-wrapper" v-on="buttonEvents" :disabled="!editableCpt">
             <ImportOutlined />
         </a-button>
@@ -20,7 +20,7 @@ import { Editor } from '@tiptap/core'
 import { ImportOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import ImportFormatModal from './ImportFormatModal.vue'
-import { ref, inject, type Ref } from 'vue'
+import { ref } from 'vue'
 import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
     editor: Editor,

@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\link\index.vue
 -->
 <template>
-  <a-tooltip :title="disableMenu ? null : '插入链接'">
+  <a-tooltip placement="bottom" :title="disableMenu ? null : '插入链接'">
     <a-button
       type="text"
       class="shadow-btn-wrapper"

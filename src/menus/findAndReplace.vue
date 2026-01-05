@@ -7,21 +7,21 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-  <a-tooltip title="查找替换">
+  <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '查找替换' : null">
     <a-button type="text" class="shadow-btn-wrapper" :disabled="!editableCpt" v-on="buttonEvents">
       <FileSearchOutlined />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
-import { ref, inject, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { FileSearchOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { getShortcutTipByKey } from '@/helpers/registKeyMap';
 const { editableCpt, searchReplaceVisible, updateSearchReplaceVisible } = useSpeedEditor();
-
+const keyMap = getShortcutTipByKey('findAndReplace');
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'

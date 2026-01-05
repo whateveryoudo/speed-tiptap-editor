@@ -20,17 +20,19 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, type Ref, ref, inject } from 'vue'
+import { type PropType } from 'vue'
 import { Editor } from '@tiptap/core'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
-    default: () => ({}),
+    default: () => ({}),  
   },
 })
 const keyMap = getShortcutTipByKey('redo');
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
+
 const redo = () => {
   props.editor && props.editor.chain().focus().redo().run()
 }

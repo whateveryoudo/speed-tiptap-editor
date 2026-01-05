@@ -7,7 +7,7 @@
  * @FilePath: \speed-tiptap-editor\src\menus\export\index.vue
 -->
 <template>
-    <a-tooltip :title="editableCpt ? '文件导出' : null">
+    <a-tooltip placement="bottom" :title="editableCpt ? '文件导出' : null">
         <a-button type="text" class="shadow-btn-wrapper" v-on="buttonEvents" :disabled="!editableCpt">
             <ExportOutlined />
         </a-button>
@@ -20,8 +20,8 @@ import { Editor } from '@tiptap/core'
 import { ExportOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import ExportFormatModal from './ExportFormatModal.vue'
-import { ref, inject, type Ref } from 'vue'
-
+import { ref } from 'vue'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
     editor: Editor,
     triggerType?: 'menu' | 'bubble'
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<{
 })
 
 const modalVisible = ref(false)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const buttonEvents = useMenuButtonEvents(() => {
     modalVisible.value = true
 }, props.triggerType)

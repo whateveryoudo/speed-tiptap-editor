@@ -21,12 +21,13 @@
   </s-keymap-tip>
 </template>
 <script setup lang="ts">
-import { PropType, computed, inject, ref, type Ref } from 'vue'
+import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { TaskList as TaskListExtension } from '@/extensions/taskList';
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -41,7 +42,7 @@ const toggleTaskList = () => {
   }
   props.editor && props.editor.chain().focus().toggleTaskList().run()
 }
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value || !props.editor.isEditable
 })

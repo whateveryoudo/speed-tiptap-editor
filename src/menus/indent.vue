@@ -16,7 +16,7 @@
                 </li>
             </ul>
         </template>
-        <a-tooltip>
+        <a-tooltip placement="bottom">
             <template #title>
                 缩进
             </template>
@@ -26,10 +26,7 @@
             </a-button>
         </a-tooltip>
     </a-popover>
-    <a-tooltip v-else class="menu-disabled">
-        <template #title>
-            缩进
-        </template>
+    <a-tooltip v-else :title="false" class="menu-disabled">
         <a-button type="text" class="shadow-btn-wrapper" disabled>
             <MenuUnfoldOutlined />
             <caret-down-outlined class="dropdown-trigger" />
@@ -42,8 +39,8 @@ import { type Editor } from '@tiptap/core'
 import { CaretDownOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-import { ref, type VNode, PropType, computed, inject, type Ref } from 'vue'
-
+import { ref, type VNode, PropType, computed } from 'vue'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
     editor: {
         type: Object as PropType<Editor>,
@@ -54,7 +51,7 @@ const props = defineProps({
 type IndentType = 'outdent' | 'indent'
 
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 const disableMenu = computed(() => {
     return isTitleActive.value || !editableCpt.value
 })

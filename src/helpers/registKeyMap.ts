@@ -12,6 +12,16 @@ export const SHORTCUTS = {
         mac: '⌘ + C',
         win: 'Ctrl + C'
     },
+    // 格式刷
+    formatPainter: {
+        mac: '⌘ + Shift + C',
+        win: 'Ctrl + Shift + C'
+    },
+    // 清除格式
+    clearNodeAndMarks: {
+        mac: '⌘ + \\',
+        win: 'Ctrl + \\'
+    },
     cut: {
         mac: '⌘ + X',
         win: 'Ctrl + X'
@@ -132,6 +142,11 @@ export const SHORTCUTS = {
     blockquote: {
         mac: '⌘ + Shift + B',
         win: 'Ctrl + Shift + B'
+    },
+    // 查找替换
+    findAndReplace: {
+        mac: '⌘ + F',
+        win: 'Ctrl + F'
     },
     // 对齐
     alignLeft: {

@@ -26,8 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, inject, computed } from 'vue'
-import { type Ref } from 'vue'
+import { PropType, ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import ColorPicker from '@/components/colorPicker/index.vue'
 import { type ColorType } from '@/components/colorPicker/data'
@@ -36,7 +35,7 @@ import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
 import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -44,9 +43,10 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const { editableCpt } = useSpeedEditor();
 
-  const curColor = ref<ColorType>('#000000'); // 这里不使用选中回显
+
+const curColor = ref<ColorType>('#000000'); // 这里不使用选中回显
 
 // 获取快捷键文本
 const keyMap = getShortcutTipByKey('textColor')

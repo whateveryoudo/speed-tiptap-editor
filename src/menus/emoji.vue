@@ -8,7 +8,7 @@
 <template>
 
   <emoji-picker @triggerEmoji="setEmoji" v-if="!disableMenu">
-    <a-tooltip :title="disableMenu ? null : '插入表情'">
+    <a-tooltip placement="bottom" :title="disableMenu ? null : '插入表情'">
       <a-button type="text" :class="['shadow-btn-wrapper', isEmojiActive ? 'is-active' : '']">
         <s-icon-font type="icon-kl-emoji" :size="18" />
       </a-button>

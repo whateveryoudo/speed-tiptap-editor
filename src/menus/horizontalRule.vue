@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\horizontalRule.vue
 -->
 <template>
-  <a-tooltip :title="disableMenu ? null : '插入分割线'">
+  <a-tooltip :title="disableMenu ? null : '插入分割线'" placement="bottom">
     <a-button
       type="text"
       class="shadow-btn-wrapper"
@@ -19,11 +19,11 @@
   </a-tooltip>
 </template>
 <script setup lang="ts">
-import { PropType, computed, inject, ref, type Ref } from 'vue'
+import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
-
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -31,7 +31,7 @@ const props = defineProps({
   },
 })
 const isTitleActive = useActive(props.editor, Title.name)
-const editableCpt = inject('editableCpt', ref(true)) as Ref<boolean>
+const {editableCpt} = useSpeedEditor();
 const disableMenu = computed(() => {
   return isTitleActive.value || !editableCpt.value
 })

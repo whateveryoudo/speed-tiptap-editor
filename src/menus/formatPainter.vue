@@ -7,14 +7,14 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\clearNodeAndMarks.vue
 -->
 <template>
-  <a-tooltip :title="disableMenu ? null : '格式刷'">
+  <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '格式刷' : null">
     <a-button class="shadow-btn-wrapper"  @click="toggleFormatPainter" type="text"
       :class="[isActive ? 'is-active' : '']"
       :disabled="disableMenu"
       >
       <ClearOutlined style="font-size: 16px;" />
     </a-button>
-  </a-tooltip>
+  </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
@@ -24,6 +24,7 @@ import { Title } from '@/extensions/title'
 import { useActive } from '@/hooks/useActive'
 import { ClearOutlined } from '@ant-design/icons-vue'
 import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { getShortcutTipByKey } from '@/helpers/registKeyMap';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,
@@ -33,6 +34,8 @@ const props = defineProps({
 // 使用 ref 来强制响应式更新
 const isFormatPainterActive = ref(false)
 
+// 获取快捷键文本
+const keyMap = getShortcutTipByKey('formatPainter');
 
 // 直接使用 ref，不使用 computed
 const isActive = isFormatPainterActive
