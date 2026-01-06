@@ -55,7 +55,7 @@ import Collaboration from '@tiptap/extension-collaboration'
 // import { TiptapCollabProvider } from '@tiptap-pro/provider'
 // 采用自身ws服务
 import { HocuspocusProvider } from "@hocuspocus/provider";
-// import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
+import CollaborationCaret from '@tiptap/extension-collaboration-caret'
 import { type CollaborationEditorProps } from './type'
 import { EditorPreviewImage } from '@/helpers/previews'
 import baseConfig from './config'
@@ -65,9 +65,7 @@ import { useAntdCssVars } from 'speed-components-ui/hooks'
 import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
 import * as Y from 'yjs'
 import { debounce } from 'lodash-es'
-// import initContext from './context'
-// import { useUserStore } from '@/store/modules/user/user'
-// import { getRandomColor } from '@/helpers/color'
+import { getRandomColor } from '@/helpers/color'
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",
@@ -111,20 +109,14 @@ const cptTheme = computed(() => {
 // 初始化编辑器的一些上下文
 const { previewInstance } = useSpeedEditorProvider(props)
 
+let provider = null;
 let doc = null;
 if (props.collaboration) {
   doc = new Y.Doc() // Initialize Y.Doc for shared editing
 }
 
-const emit = defineEmits(['update:title', 'update:content'])
+const emit = defineEmits(['update:title', 'update:content', 'update:collaborators'])
 
-
-watch(
-  () => props.hocuspocusProvider,
-  val => {
-    console.log(val)
-  },
-)
 // 使用 Ant Design Vue CSS 变量
 const { cleanup, updateTheme } = useAntdCssVars();
 onUnmounted(() => {
@@ -137,6 +129,43 @@ const debouncedEmitTitle = debounce((titleText: string) => {
     emit('update:title', titleText)
   }
 }, 500) // 500ms 防抖
+// 开启了协同编辑
+if (props.collaboration && doc) {
+  console.log(props.collaboration.token);
+  provider = new HocuspocusProvider({
+    name: props.collaboration.documentId, // Unique document identifier for syncing. This is your document name.
+    // appId: '8mze223m', // Your Cloud Dashboard AppID or `baseURL` for on-premises
+    url: props.collaboration.url,
+    token: props.collaboration.token,
+    document: doc,
+    // onSynced: () => {
+    //   if (!doc.getMap('config').get('initialContentLoaded') && editor.value) {
+    //     doc.getMap('config').set('initialContentLoaded', true)
+
+    //     editor.value.commands.setContent(`
+    //     <h1>ykx测试文档1</h1>
+    //     <p>This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.</p>
+    //     <p>The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.</p>
+    //     `)
+    //   }
+    // },
+  })
+  // 监听协同人员变化
+  if (provider?.awareness) {
+    const awareness = provider.awareness
+    const notifyCollaborators = () => {
+      // awareness.getStates() 返回 Map<clientId, { user: {...}, ... }>
+      const states = Array.from(awareness.getStates().values())
+      const users = states
+        .map((s: any) => s.user)
+        .filter((u) => !!u) // 只保留有 user 信息的
+      // 抛给外层
+      emit('update:collaborators', users)
+    }
+    provider.awareness.on('update', notifyCollaborators)
+  }
+}
+
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
@@ -169,14 +198,18 @@ const editor = useEditor({
     ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
     Collaboration.configure({
       document: doc,
-    })
-    // CollaborationCursor.configure({
-    //   provider: props?.hocuspocusProvider,
-    //   user: {
-    //     name: useUser?.userInfo?.name ?? '访客',
-    //     color: getRandomColor(),
-    //   },
-    // }),
+    }),
+    ...(props.collaboration && provider ? [
+      CollaborationCaret.configure({
+        provider,
+        user: {
+          id: props.collaboration.user.id,
+          avatar: props.collaboration.user.avatar,
+          name: props.collaboration.user.nickname || props.collaboration.user.username,
+          color: props.collaboration.user.color ?? getRandomColor(),
+        },
+      }),
+    ] : []),
   ] : [
     ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
   ],
@@ -187,31 +220,9 @@ const editor = useEditor({
     if (!speedUseTiptapConfig.value) {
       throw new Error('请先调用app.use(SpeedTiptapEditor)进行初始化一些配置，否则可能会初始化一些图标显示问题！')
     }
-    
+
   }
 })
-if (props.collaboration && doc) {
-  const provider = new HocuspocusProvider({
-    name: props.collaboration.documentId, // Unique document identifier for syncing. This is your document name.
-    // appId: '8mze223m', // Your Cloud Dashboard AppID or `baseURL` for on-premises
-    url: props.collaboration.url,
-    // 模拟token
-    // token: props.collaboration.token,
-    document: doc,
-    // onSynced: () => {
-    //   if (!doc.getMap('config').get('initialContentLoaded') && editor.value) {
-    //     doc.getMap('config').set('initialContentLoaded', true)
-
-    //     editor.value.commands.setContent(`
-    //     <h1>ykx测试文档1</h1>
-    //     <p>This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.</p>
-    //     <p>The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.</p>
-    //     `)
-    //   }
-    // },
-  })
-}
-
 
 // 监听 content 变化，同步到编辑器
 watch(
@@ -256,7 +267,7 @@ watch(
   (newEditable) => {
     if (editor.value) {
       editor.value.setEditable(newEditable)
-      
+
     }
   }
 )

@@ -18,8 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import {  inject, ref, computed } from 'vue'
-import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { BoldOutlined } from '@ant-design/icons-vue'
 import { Title } from '@/extensions/title'

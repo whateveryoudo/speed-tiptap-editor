@@ -69,6 +69,15 @@ export interface CollaborationEditorProps {
   collaboration?: {
     documentId: string;
     url: string;
+    token: string;
+    user: {
+      id: string
+      username: string;
+      nickname?: string;
+      avatar?: string;
+      color?: string;
+      [key: string]: any;
+    }; // 一些用户信息(用于协作时显示用户名和颜色,不传入颜色下采用随机颜色)
   }
   /**
    * 是否需要菜单
