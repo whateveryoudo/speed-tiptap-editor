@@ -109,7 +109,7 @@ const cptTheme = computed(() => {
 // 初始化编辑器的一些上下文
 const { previewInstance } = useSpeedEditorProvider(props)
 
-let provider = null;
+let provider: HocuspocusProvider | null = null;
 let doc = null;
 if (props.collaboration) {
   doc = new Y.Doc() // Initialize Y.Doc for shared editing
@@ -130,8 +130,7 @@ const debouncedEmitTitle = debounce((titleText: string) => {
   }
 }, 500) // 500ms 防抖
 // 开启了协同编辑
-if (props.collaboration && doc) {
-  console.log(props.collaboration.token);
+if (props.collaboration && doc && props.editable) {
   provider = new HocuspocusProvider({
     name: props.collaboration.documentId, // Unique document identifier for syncing. This is your document name.
     // appId: '8mze223m', // Your Cloud Dashboard AppID or `baseURL` for on-premises
@@ -199,7 +198,7 @@ const editor = useEditor({
     Collaboration.configure({
       document: doc,
     }),
-    ...(props.collaboration && provider ? [
+    ...(props.collaboration && provider && props.editable ? [
       CollaborationCaret.configure({
         provider,
         user: {
@@ -264,12 +263,21 @@ watch(
 // 监听 editable 变化，动态更新编辑器的可编辑状态
 watch(
   () => props.editable,
-  (newEditable) => {
+  (newEditable: boolean) => {
     if (editor.value) {
       editor.value.setEditable(newEditable)
-
     }
   }
+)
+watch(
+  () => props.json,
+  (newJson: string | null | undefined | Record<string, any>) => {
+    if (editor.value && newJson && !props.editable) {
+      // 兼容字符串和json传入
+      editor.value.commands.setContent(typeof newJson === 'string' ? JSON.parse(newJson)?.default : newJson?.default)
+    }
+  },
+
 )
 // 监听外部antdToken变化，重新生成当前editor 的antd变量(用于同步一些主题变量)
 watch(
@@ -279,7 +287,16 @@ watch(
   },
   { immediate: true }
 )
-
+// 卸载前处理一些东西
+onUnmounted(() => {
+  // 从协同列表里移除自己
+  if (props.collaboration && provider) {
+    provider?.awareness?.setLocalState(null);
+    provider?.disconnect?.()
+    provider?.destroy?.()
+    provider = null
+  }
+});
 </script>
 
 <style scoped lang="less">

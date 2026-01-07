@@ -48,6 +48,11 @@ export interface CollaborationEditorProps {
   content?: string;
 
   /**
+   * 内容(json数据,这里不提供更新操作，仅提供设置操作，目前仅开启了协同模式下使用)
+   */
+  json?: string | null;
+
+  /**
    * 标题
    */
   title?: string;

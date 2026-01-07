@@ -100,7 +100,7 @@ export const Title = Node.create<TitleOptions>({
 
               decorations.push(
                 Decoration.node(pos, pos + node.nodeSize, {
-                  class: editor.isEditable ? 'is-editable' : '',
+                  class: editor.isEditable ? 'is-editable' : 'readonly',
                 })
               );
             });
