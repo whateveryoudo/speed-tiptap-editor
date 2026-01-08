@@ -8,7 +8,7 @@
 -->
 <template>
   <a-config-provider :theme="cptTheme">
-    <div :class="['wrap', scene]">
+    <div :class="['wrap', scene, hideBorder ? 'hide-border' : '']" :style="editorStyle">
       <!-- 工具栏 -->
       <menu-bar :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header" :editor="editor" />
       <!-- 扩展modal显示-mind -->
@@ -90,6 +90,7 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
   editable: true,
   menubar: true,
   antdToken: () => ({}),
+  editorStyle: () => ({}),
   hideComment: true,
   placeholder: "输入 / 唤起更多",
   theme: 'light',
@@ -125,6 +126,10 @@ onUnmounted(() => {
 // 防抖处理 title 更新
 const debouncedEmitTitle = debounce((titleText: string) => {
   // 对比当前 title 和 props.title，如果相同则不 emit
+  // 如果当前的titleText为空，则不emit
+  if (!titleText) {
+    return
+  }
   if (titleText !== props.title) {
     emit('update:title', titleText)
   }
@@ -272,12 +277,12 @@ watch(
 watch(
   () => props.json,
   (newJson: string | null | undefined | Record<string, any>) => {
-    if (editor.value && newJson && !props.editable) {
+    console.log('进入了');
+    if (editor.value && !props.editable) {
       // 兼容字符串和json传入
-      editor.value.commands.setContent(typeof newJson === 'string' ? JSON.parse(newJson)?.default : newJson?.default)
+      editor.value.commands.setContent(newJson ? typeof newJson === 'string' ? JSON.parse(newJson)?.default : newJson?.default : '')
     }
   },
-
 )
 // 监听外部antdToken变化，重新生成当前editor 的antd变量(用于同步一些主题变量)
 watch(
@@ -324,6 +329,12 @@ onUnmounted(() => {
         margin: 0 auto;
       }
 
+      border: none;
+    }
+  }
+
+  &.hide-border {
+    &>main {
       border: none;
     }
   }

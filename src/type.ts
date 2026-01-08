@@ -6,16 +6,16 @@
  * @Description:
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\editor.ts
  */
-import type { VNode } from "vue";
+import type { CSSProperties, VNode } from "vue";
 import type { Editor } from "@tiptap/core";
 export type ToolBarConfig =
   | string
   | {
-    key: string;
-    title: string;
-    icon: string | VNode;
-    options?: ToolBarConfig[];
-  };
+      key: string;
+      title: string;
+      icon: string | VNode;
+      options?: ToolBarConfig[];
+    };
 // 编辑器props
 // 上传配置（image | file | upload）
 interface IUploadConfig {
@@ -42,6 +42,8 @@ export interface CollaborationEditorProps {
   scene?: "default" | "knowledge";
   theme?: "light" | "dark"; // 编辑器主题
   antdToken?: any; // antd的token配置
+  editorStyle?: CSSProperties;
+  hideBorder?: boolean;
   /**
    * 内容
    */
@@ -50,7 +52,7 @@ export interface CollaborationEditorProps {
   /**
    * 内容(json数据,这里不提供更新操作，仅提供设置操作，目前仅开启了协同模式下使用)
    */
-  json?: string | null;
+  json?: string | null | Record<string, any>;
 
   /**
    * 标题
@@ -76,14 +78,14 @@ export interface CollaborationEditorProps {
     url: string;
     token: string;
     user: {
-      id: string
+      id: string;
       username: string;
       nickname?: string;
       avatar?: string;
       color?: string;
       [key: string]: any;
     }; // 一些用户信息(用于协作时显示用户名和颜色,不传入颜色下采用随机颜色)
-  }
+  };
   /**
    * 是否需要菜单
    */
@@ -119,10 +121,10 @@ export interface CollaborationEditorProps {
     enabled?: boolean;
     items?: (
       | {
-        icon: string | VNode;
-        title: string;
-        action?: (editor: Editor) => void;
-      }
+          icon: string | VNode;
+          title: string;
+          action?: (editor: Editor) => void;
+        }
       | string
     )[];
   };
@@ -130,15 +132,19 @@ export interface CollaborationEditorProps {
   ai?: {
     doubao?: {
       url: string;
-      header?: Record<string, any>
-      bodyParams?: (action: string, content: string, customPrompt: string) => Record<string, any>
-    }
-  },
+      header?: Record<string, any>;
+      bodyParams?: (
+        action: string,
+        content: string,
+        customPrompt: string
+      ) => Record<string, any>;
+    };
+  };
   // 对SpeedComponents的一些配置(注意这里)
   sdComponentsConfig?: {
     apis?: {
       [key: string]: any;
     };
     transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
-  }
+  };
 }
