@@ -60,6 +60,7 @@ import { type CollaborationEditorProps } from './type'
 import { EditorPreviewImage } from '@/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
+import { type onAwarenessUpdateParameters } from '@hocuspocus/provider'
 import { message, theme } from 'ant-design-vue'
 import { useAntdCssVars } from 'speed-components-ui/hooks'
 import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
@@ -142,6 +143,15 @@ if (props.collaboration && doc && props.editable) {
     url: props.collaboration.url,
     token: props.collaboration.token,
     document: doc,
+    // 监听协同人员变化
+    onAwarenessUpdate: (params: onAwarenessUpdateParameters) => {
+      const { states } = params
+      const users = states
+        .map((s: any) => s.user)
+        .filter((u) => !!u) // 只保留有 user 信息的
+      // 抛给外层
+      emit('update:collaborators', users)
+    }
     // onSynced: () => {
     //   if (!doc.getMap('config').get('initialContentLoaded') && editor.value) {
     //     doc.getMap('config').set('initialContentLoaded', true)
@@ -154,20 +164,6 @@ if (props.collaboration && doc && props.editable) {
     //   }
     // },
   })
-  // 监听协同人员变化
-  if (provider?.awareness) {
-    const awareness = provider.awareness
-    const notifyCollaborators = () => {
-      // awareness.getStates() 返回 Map<clientId, { user: {...}, ... }>
-      const states = Array.from(awareness.getStates().values())
-      const users = states
-        .map((s: any) => s.user)
-        .filter((u) => !!u) // 只保留有 user 信息的
-      // 抛给外层
-      emit('update:collaborators', users)
-    }
-    provider.awareness.on('update', notifyCollaborators)
-  }
 }
 
 const editor = useEditor({
@@ -277,12 +273,14 @@ watch(
 watch(
   () => props.json,
   (newJson: string | null | undefined | Record<string, any>) => {
-    console.log('进入了');
     if (editor.value && !props.editable) {
       // 兼容字符串和json传入
       editor.value.commands.setContent(newJson ? typeof newJson === 'string' ? JSON.parse(newJson)?.default : newJson?.default : '')
     }
   },
+  {
+    immediate: true
+  }
 )
 // 监听外部antdToken变化，重新生成当前editor 的antd变量(用于同步一些主题变量)
 watch(
