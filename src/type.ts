@@ -19,6 +19,7 @@ export type ToolBarConfig =
 // 编辑器props
 // 上传配置（image | file | upload）
 interface IUploadConfig {
+  transformFileItem?: (item: any) => any; // 单条数据转换
   multiple?: boolean;
   maxSize?: number; // 最大上传大小（单位：MB）
   accept?: string; // ,拼接的mime或文件扩展名（如：.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,推荐使用.xx，mime仅会在选择文件进行过滤）,mime参考：https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file#accept

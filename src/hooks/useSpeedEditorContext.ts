@@ -57,6 +57,8 @@ function initStateFunc(props: CollaborationEditorProps): SpeedEditorContext {
   }
 }
 
+
+
 const [useSpeedEditorProvider, useSpeedEditorOriginal] = createInjectionState(initStateFunc);
 
 // 包装 useSpeedEditor，确保总是返回非空（带类型守卫）

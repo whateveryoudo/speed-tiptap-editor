@@ -50,7 +50,6 @@ export const jsonToDOMDataset = (json: Record<string, unknown>) => {
 export const getDatasetAttribute =
   (attribute: string, transformToJSON = false) =>
   (element: HTMLElement) => {
-    console.log(111);
     const dataKey = attribute.startsWith('data-') ? attribute : `data-${attribute}`;
     let value = decodeURIComponent(element.getAttribute(dataKey));
 

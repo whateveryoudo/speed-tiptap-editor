@@ -109,7 +109,7 @@ const cptTheme = computed(() => {
   }
 })
 // 初始化编辑器的一些上下文
-const { previewInstance } = useSpeedEditorProvider(props)
+const { previewInstance, addTempFile, removeTempFile, getTempFile } = useSpeedEditorProvider(props)
 
 let provider: HocuspocusProvider | null = null;
 let doc = null;
@@ -220,7 +220,6 @@ const editor = useEditor({
     if (!speedUseTiptapConfig.value) {
       throw new Error('请先调用app.use(SpeedTiptapEditor)进行初始化一些配置，否则可能会初始化一些图标显示问题！')
     }
-
   }
 })
 

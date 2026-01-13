@@ -82,14 +82,15 @@ const attributes = useAttributes<{
 // 百分比选项
 const percentageOptions = [{ value: 25, label: '25%' }, { value: 50, label: '50%' }, { value: 75, label: '75%' }, { value: 100, label: '100%' }]
 
-// 计算属性
-const hasOriginalSize = computed(() => {
-    return attributes.value.originalWidth > 0 && attributes.value.originalHeight > 0
-})
+
 
 const originalWidth = computed(() => attributes.value.originalWidth || 0)
 const originalHeight = computed(() => attributes.value.originalHeight || 0)
 
+// 计算属性
+const hasOriginalSize = computed(() => {
+    return originalWidth.value > 0 && originalHeight.value > 0
+})
 
 
 // 监听属性变化，更新临时值

@@ -45,6 +45,10 @@ export default defineComponent({
       type: Object as PropType<Editor>,
       default: () => ({}),
     },
+    placement: {
+      type: String as PropType<'top' | 'bottom' | 'left' | 'right'>,
+      default: 'bottom',
+    },
   },
   setup(props) {
     const open = ref(false)
@@ -115,7 +119,7 @@ export default defineComponent({
         v-model:open={open.value}
         overlayClassName="align-popover-wrapper" 
         trigger="click" 
-        placement="bottom"
+        placement={props.placement}
         content={!disableMenu.value ? (
           <Space class="align-list-wrapper">
             {alignButtons.value.map(item => (
@@ -132,7 +136,7 @@ export default defineComponent({
           </Space>
         ) : null}
       >
-        <Tooltip title={disableMenu.value ? null : '对齐方式'} placement='bottom'>
+        <Tooltip title={disableMenu.value ? null : '对齐方式'} placement={props.placement}>
           <Button disabled={disableMenu.value} type="text" class="shadow-btn-wrapper">
             {selectButton.value.iconRender && <s-icon-font iconRender={selectButton.value.iconRender} />}
             <CaretDownOutlined class="dropdown-trigger" />

@@ -8,7 +8,7 @@
 -->
 <template>
   <NodeViewWrapper :class="['cursor-pointer', nodeAttrs.displayMode !== 'card' && 'inline-block']">
-    <div v-if="isEditable && !nodeAttrs.fileId" :class="['wrap', uploadFailed ? 'upload-failed' : '']"
+    <div v-if="isEditable && !nodeAttrs.fileId" :class="['wrap px-2', uploadFailed ? 'upload-failed' : '']"
       @click="uploadAgain">
       <a-spin :spinning="uploadLoading">
         <!-- 先不要进度条 -->
@@ -17,6 +17,7 @@
           <span>
             {{ uploadLoading ? "正在上传中" : "请选择文件" }}
           </span>
+          <InfoCircleOutlined class="ml-2 text-[var(--ant-color-error)]" v-if="uploadFailed"/>
         </a-typography-text>
       </a-spin>
     </div>
@@ -36,6 +37,7 @@ import { useCustomUpload, type IFileItem } from "speed-components-ui/hooks";
 import { message } from 'ant-design-vue';
 import axios from 'axios';
 import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { InfoCircleOutlined } from '@ant-design/icons-vue';
 const uploadFailed = ref(false);
 const props = defineProps({
   node: {
@@ -89,11 +91,12 @@ const uploadOptions = computed(() => {
     maxSize: speedTiptapConfig?.value?.upload?.maxSize || speedTiptapConfig?.value?.file?.maxSize || speedUseTiptapConfig?.value?.file?.maxSize,
     // 传入ajax方法
     apis: {
-      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.file?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.file?.uploadApis?.fileUploadMulti,
-      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.file?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.file?.uploadApis?.fileUploadSingle,
-      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.file?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.file?.uploadApis?.fileDel,
-      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.file?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.file?.uploadApis?.fileDownload,
+      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.file?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.apis?.fileUploadMulti,
+      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.file?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.apis?.fileUploadSingle,
+      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.file?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.apis?.fileDel,
+      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.file?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.apis?.fileDownload,
     },
+    transformResult: speedTiptapConfig?.value?.upload?.transformFileItem || speedTiptapConfig?.value?.file?.transformFileItem || speedUseTiptapConfig?.value?.upload?.transformFileItem,
     // 上传后的回调
     afterUpload: async (files: any[], res: any) => {
       if (!res?.success) {
@@ -103,7 +106,6 @@ const uploadOptions = computed(() => {
       }
       console.log("上传完成:", files);
       const file = files[0];
-
       props.updateAttributes &&
         props.updateAttributes({
           fileName: file.fileName,
@@ -135,15 +137,15 @@ const manualBeforeUpload = (file: File | File[]) => {
 // 处理文件选择
 const startUpload = (file: File) => {
   // 这里直接用action判断
-  const action = speedTiptapConfig?.value?.file?.action || speedTiptapConfig?.value?.upload?.action || speedUseTiptapConfig?.value?.apis?.fileUploadSingle;
+  const action = speedTiptapConfig?.value?.file?.action || speedTiptapConfig?.value?.upload?.action;
   if (!action) {
     customRequest({
       file
     });
   } else { // 手动上传，需要用户传入一些信息（不建议使用此方案，大部分不建议直接配置url地址，而是传入方法）
     if (manualBeforeUpload(file)) {
-      const headers = speedTiptapConfig?.value?.file?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.apis?.headers;
-      const data = speedTiptapConfig?.value?.file?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.apis?.data;
+      const headers = speedTiptapConfig?.value?.file?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.file?.headers;
+      const data = speedTiptapConfig?.value?.file?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.file?.data;
       axios.post(action, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -157,7 +159,6 @@ const startUpload = (file: File) => {
           return;
         }
         const file = Array.isArray(res.data) ? res.data[0] : res.data;
-
         props.updateAttributes &&
           props.updateAttributes({
             fileName: file.fileName,
@@ -189,8 +190,10 @@ onMounted(() => {
   })
 })
 watch(
-  () => nodeAttrs.value.file,
-  (file: File) => {
+  () => nodeAttrs.value.tempFileId,
+  (tempFileId: string) => {
+    if (!tempFileId) return;
+    const file = (props.editor.storage as any).attachment.tempFileMap.get(tempFileId);
     if (file && !nodeAttrs.value.fileId) {
       startUpload(file);
     }

@@ -12,8 +12,13 @@
 
       <!-- 尺寸设置 -->
       <SizeSetting v-if="isActiveImage" :editor="editor" />
+      <a-tooltip title="锁定比例">
+        <div :class="['shadow-bg-wrapper', equalProportion ? 'is-active' : '']" @click="handleLockProportion">
+          <s-icon-font type="icon-kl-lock-size"></s-icon-font>
+        </div>
+      </a-tooltip>
       <!-- 直接调用通用的居中配置 -->
-      <align v-if="isActiveImage" :editor="editor"></align>
+      <align v-if="isActiveImage" :editor="editor" placement="top"></align>
       <a-tooltip v-if="isActiveImage" title="预览">
         <div :class="['shadow-bg-wrapper']" @click="handlePreivew">
           <eye-outlined />
@@ -75,11 +80,24 @@ const src = useAttributes(
   { src: "" },
   (attrs) => attrs.src
 );
+const equalProportion = useAttributes(
+  props.editor,
+  Image.name,
+  { equalProportion: true },
+  (attrs) => attrs.equalProportion
+);
 const previewInstance = inject("previewInstance") as Ref<any>;
 const handlePreivew = () => {
   if (previewInstance.value) {
     previewInstance.value.previewImage(src.value);
   }
+};
+const handleLockProportion = () => {
+  props.editor?.chain()
+    .focus()
+    .updateAttributes(Image.name, { equalProportion: !equalProportion.value })
+    .setNodeSelection(props.editor.state.selection.from)
+    .run()
 };
 </script>
 

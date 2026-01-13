@@ -22,15 +22,16 @@
       <img @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
     </Resizeable> -->
     <template v-else>
+      <!-- 为什么我拖拽途中会出现滚动条？ -->
       <drager v-if="editableCpt" :selected="selected" :boundary="false" :disabled="!editableCpt"
         :width="Number(node.attrs.width)" :height="Number(node.attrs.height)" :min-width="14" :min-height="14"
-        :max-width="maxWidth" :max-height="maxWidth" @resize="onResize" @focus="selected = true">
+        :max-width="maxWidth" :equal-proportion="nodeAttrs.equalProportion" @resize="onResize" @focus="selected = true"
+        v-bind="maxHeight ? { maxHeight } : {}">
         <img :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
       </drager>
-      <img v-else @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt" style="width: 100%; height: 100%" />
+      <img v-else @click="handlePreivew" :src="nodeAttrs.src" :alt="nodeAttrs.alt"
+        :style="{ width: nodeAttrs.width !== 'auto' ? nodeAttrs.width + 'px' : nodeAttrs.width, height: nodeAttrs.height !== 'auto' ? nodeAttrs.height + 'px' : nodeAttrs.height }" />
     </template>
-
-
     <!-- 隐藏一个input,上传失败后允许重新点击上传，这里不允许选多张 -->
     <input ref="ImageInput" @change="handleFileChange" type="file"
       :accept="imageConfig?.accept ?? '.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic'" hidden />
@@ -78,11 +79,12 @@ const props = defineProps({
 })
 const selected = ref(false)
 const ImageInput = ref<HTMLInputElement>()
-
+const maxHeight = ref();
 // torefs无效？？
 const nodeAttrs = computed(() => {
   return props.node?.attrs
 })
+const maxWidth = getEditorContainerDOMSize(props.editor)?.width
 // 定义上传选项
 const uploadOptions = computed(() => {
   const rawAccept =
@@ -101,13 +103,17 @@ const uploadOptions = computed(() => {
     maxSize: speedTiptapConfig?.value?.upload?.maxSize || speedTiptapConfig?.value?.image?.maxSize || speedUseTiptapConfig?.value?.image?.maxSize,
     // 传入ajax方法
     apis: {
-      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti,
-      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle,
-      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.image?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.image?.uploadApis?.fileDel,
-      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.image?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.image?.uploadApis?.fileDownload,
+      fileUploadMulti: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadMulti || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadMulti || speedUseTiptapConfig?.value?.apis?.fileUploadMulti,
+      fileUploadSingle: speedTiptapConfig?.value?.upload?.uploadApis?.fileUploadSingle || speedTiptapConfig?.value?.image?.uploadApis?.fileUploadSingle || speedUseTiptapConfig?.value?.apis?.fileUploadSingle,
+      fileDel: speedTiptapConfig?.value?.upload?.uploadApis?.fileDel || speedTiptapConfig?.value?.image?.uploadApis?.fileDel || speedUseTiptapConfig?.value?.apis?.fileDel,
+      fileDownload: speedTiptapConfig?.value?.upload?.uploadApis?.fileDownload || speedTiptapConfig?.value?.image?.uploadApis?.fileDownload || speedUseTiptapConfig?.value?.apis?.fileDownload,
     },
+    transformResult: speedTiptapConfig?.value?.upload?.transformFileItem || speedTiptapConfig?.value?.image?.transformFileItem || speedUseTiptapConfig?.value?.upload?.transformFileItem,
     // 上传后的回调
     afterUpload: async (files: any[], res: any) => {
+      debugger;
+      // 将临时文件存储Map中的文件删除
+      props.editor.commands.removeTempFile(nodeAttrs.value.fileId);
       if (!res?.success) {
         message.error(res?.message);
         uploadFailed.value = true;
@@ -122,8 +128,13 @@ const uploadOptions = computed(() => {
 
       const imgUrl = getPreviewUrl ? getPreviewUrl(file.id) : '';
       console.log('imgUrl', imgUrl);
-      const size = await getImageWidthHeight(imgUrl)
+      // 获取文档容器宽度
+      const size = await getImageWidthHeight(imgUrl, maxWidth)
+      // 如果超过了最大值， 则获取高度作为最大高度
 
+      if (size.width && parseFloat(size.width) > maxWidth) {
+        maxHeight.value = size.height;
+      }
       // 保存原始尺寸和当前尺寸
       props.updateAttributes && props.updateAttributes({
         ...size,
@@ -155,15 +166,15 @@ const manualBeforeUpload = (file: File | File[]) => {
 // 处理文件选择
 const startUpload = (file: File) => {
   // 这里直接用action判断
-  const action = speedTiptapConfig?.value?.image?.action || speedTiptapConfig?.value?.upload?.action || speedUseTiptapConfig?.value?.apis?.fileUploadSingle;
+  const action = speedTiptapConfig?.value?.image?.action || speedTiptapConfig?.value?.upload?.action;
   if (!action) {
     customRequest({
       file
     });
   } else { // 手动上传，需要用户传入一些信息（不建议使用此方案，大部分不建议直接配置url地址，而是传入方法）
     if (manualBeforeUpload(file)) {
-      const headers = speedTiptapConfig?.value?.image?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.apis?.headers;
-      const data = speedTiptapConfig?.value?.image?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.apis?.data;
+      const headers = speedTiptapConfig?.value?.image?.headers || speedTiptapConfig?.value?.upload?.headers || speedUseTiptapConfig?.value?.image?.headers;
+      const data = speedTiptapConfig?.value?.image?.data || speedTiptapConfig?.value?.upload?.data || speedUseTiptapConfig?.value?.image?.data;
       axios.post(action, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -171,6 +182,8 @@ const startUpload = (file: File) => {
         },
         data: typeof data === 'function' ? data(file) : data
       }).then(async (res: any) => {
+        // 将临时文件存储Map中的文件删除
+        props.editor.commands.removeTempFile(nodeAttrs.value.fileId);
         if (!res?.success) {
           message.error(res?.message);
           uploadFailed.value = true;
@@ -184,7 +197,7 @@ const startUpload = (file: File) => {
 
         const imgUrl = getPreviewUrl ? getPreviewUrl(file.id) : '';
         console.log('imgUrl', imgUrl);
-        const size = await getImageWidthHeight(imgUrl)
+        const size = await getImageWidthHeight(imgUrl, maxWidth)
         // 保存原始尺寸和当前尺寸
         props.updateAttributes && props.updateAttributes({
           ...size,
@@ -192,6 +205,10 @@ const startUpload = (file: File) => {
           originalWidth: size.width,  // 保存原始宽度
           originalHeight: size.height // 保存原始高度
         })
+        // 如果超过了最大值， 则获取高度作为最大高度
+        if (size.width && parseFloat(size.width || '0') > maxWidth) {
+          maxHeight.value = size.height;
+        }
       }).catch((err) => {
         console.log(err)
         message.error(err);
@@ -202,7 +219,6 @@ const startUpload = (file: File) => {
   };
 }
 // const { error, src, alt, textAlign, width, height } = toRefs(props.node.attrs)
-const maxWidth = getEditorContainerDOMSize(props.editor)?.width
 // const selectFile = () => {
 //   if (!isEditable.value || nodeAttrs.value.error || nodeAttrs.value.src) {
 //     return
@@ -275,7 +291,9 @@ const uploadAgain = () => {
 const handleFileChange = (event: any) => {
   startUpload(event?.target?.files[0])
 }
-watch(() => nodeAttrs.value.file, (file: File) => {
+watch(() => nodeAttrs.value.tempFileId, (tempFileId: string) => {
+  if (!tempFileId) return;
+  const file = (props.editor.storage as any).image.tempFileMap.get(tempFileId);
   if (file && !nodeAttrs.value.src) {
     startUpload(file)
   }

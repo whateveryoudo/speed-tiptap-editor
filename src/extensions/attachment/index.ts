@@ -11,7 +11,7 @@ import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
 import { getDatasetAttribute } from "@/prose-utils";
 import { Editor } from "@tiptap/core";
-
+import { v4 as uuidv4 } from "uuid";
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     attachment: {
@@ -47,7 +47,17 @@ export const Attachment = Node.create({
   renderHTML({ HTMLAttributes }) {
     return [
       "div",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      // 插入自定义属性
+      mergeAttributes(this.options.HTMLAttributes, {
+        "data-temp-file-id": HTMLAttributes.tempFileId,
+        "data-file-id": HTMLAttributes.fileId,
+        "data-file-name": HTMLAttributes.fileName,
+        "data-file-size": HTMLAttributes.fileSize,
+        "data-file-type": HTMLAttributes.fileType,
+        "data-file-ext": HTMLAttributes.fileExt,
+        "data-file-url": HTMLAttributes.fileUrl,
+        "data-file-preview-url": HTMLAttributes.filePreviewUrl,
+      }),
     ];
   },
 
@@ -57,25 +67,31 @@ export const Attachment = Node.create({
         default: "title",
         parseHTML: getDatasetAttribute("displayMode"),
       },
-      file: {
-        default: null
+      // 用于关联临时文件
+      tempFileId: {
+        default: null,
       },
       fileName: {
         default: null,
-        parseHTML: getDatasetAttribute("filename"),
+        parseHTML: getDatasetAttribute("fileName"),
       },
       fileSize: {
         default: null,
-        parseHTML: getDatasetAttribute("filesize"),
+        parseHTML: getDatasetAttribute("fileSize"),
       },
       fileType: {
         default: null,
-        parseHTML: getDatasetAttribute("filetype"),
+        parseHTML: getDatasetAttribute("fileType"),
       },
       fileId: {
         default: null,
         parseHTML: getDatasetAttribute("fileId"),
-      }
+      },
+    };
+  },
+  addStorage() {
+    return {
+      tempFileMap: new Map<string, File>(),
     };
   },
 
@@ -96,19 +112,27 @@ export const Attachment = Node.create({
             //   fileType: file.type,
             //   fileExt: file.name.split('.').pop()
             // });
-            const node = this.type.create({ fileId: "", file });
+            const tempFileId = `temp-file-${uuidv4()}`;
+            editor.storage.attachment.tempFileMap.set(tempFileId, file);
+            const node = this.type.create({ fileId: "", tempFileId });
             tr.insert(pos || tr.selection.from, node);
           });
 
           return true;
         },
-  
+
       downloadAttachment:
         (fileId?: string) =>
-        ({editor}: {editor: Editor}) => {
-          // 触发自定义事件 
-          editor.emit('attachment:download', { fileId })
+        ({ editor }: { editor: Editor }) => {
+          // 触发自定义事件
+          editor.emit("attachment:download", { fileId });
           return true;
+        },
+      removeTempFile:
+        (tempFileId: string) =>
+        ({ editor }: { editor: Editor }) => {
+          editor.storage.attachment.tempFileMap.delete(tempFileId);
+          return false;
         },
     };
   },

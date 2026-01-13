@@ -22,13 +22,14 @@ const components: Component[] = [SpeedTiptapEditor];
 // AJAX 方法类型
 type AjaxMethod = (params?: any) => Promise<any>;
 
-// 全局配置类型
+// 全局配置类型(这里主要是对内部使用的speedcomponents的配置)
 export interface GlobalConfig {
   apis?: {
     [key: string]: AjaxMethod;
   };
   registerGlobal?: boolean;
   iconfontUrl?: string;
+  transformFileItem?: (item: any) => any; // 单条数据转换
   transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
 }
 
@@ -71,9 +72,7 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
     iconfontUrl: [
       baseConfig.iconfontUrl
       // currentConfig.value.iconfontUrl,
-    ],
-    // apis: currentConfig.value.apis,
-    // transformRequestRes: currentConfig.value.transformRequestRes,
+    ]
   });
 
 };
