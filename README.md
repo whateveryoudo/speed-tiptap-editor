@@ -79,5 +79,5 @@
 #### 查看模式
 
 #### 生态建设
-- [ ] 完整的知识库网站（类似语雀）
+- [ ] **[类似语雀平台(持续更新中...)](https://github.com/whateveryoudo/speed-knowledge-client/tree/main)**
 
