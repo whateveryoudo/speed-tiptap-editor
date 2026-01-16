@@ -44,6 +44,8 @@ export interface CollaborationEditorProps {
   theme?: "light" | "dark"; // 编辑器主题
   antdToken?: any; // antd的token配置
   editorStyle?: CSSProperties;
+  headerStyle?: CSSProperties;
+  mainStyle?: CSSProperties;
   hideBorder?: boolean;
   /**
    * 内容

@@ -26,8 +26,8 @@
                   v-else />
               </a-button>
             </s-question-tip>
-            <a-input v-if="editableCpt" v-model:value="title" @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
-            <span v-else>{{ title }}</span>
+            <a-input v-if="editableCpt" :value="nodeAttrs.title" @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
+            <span v-else>{{ nodeAttrs.title }}</span>
           </a-space>
           <a-space :size="5">
             <!-- 注意这里存入的是个对象 -->
@@ -70,9 +70,8 @@
       <div v-if="nodeAttrs.isExpanded" :class="[`hljs-theme-${nodeAttrs.theme}`,]" class="content-wrap" ref="wrapRef"
         :style="{ height: height + 'px' }">
         <pre
-          class='h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content'><NodeViewContent class="hljs" as="code" :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"/></pre>
+          class='h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content'><NodeViewContent :class="['hljs']" as="code" :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"/></pre>
           <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
-
       </div>
     </a-flex>
   </NodeViewWrapper>
@@ -87,7 +86,6 @@ import { copy } from '@/helpers/copy-to-clipboard'
 import { useBubble } from '@/hooks/useBubble'
 import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 const props = defineProps(nodeViewProps)
-const title = ref('');
 const nodeAttrs = computed(() => props.node.attrs)
 const isHover = ref(false)
 const onMouseEnter = () => (isHover.value = true)
@@ -96,6 +94,7 @@ const onMouseLeave = () => (isHover.value = false)
 const { handleDelNode } = useBubble(props.editor, {})
 const languages = lowlightInstance.listLanguages().map((language: string) => ({
   value: language,
+  lang: language,
   label: language
 }))
 const { editableCpt } = useSpeedEditor();

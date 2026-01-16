@@ -76,7 +76,7 @@
 #### 协同与集成
 - [ ] 实时协同编辑
 
-#### 查看模式
+#### 查看模式image.png
 
 #### 生态建设
 - [ ] **[类似语雀平台(持续更新中...)](https://github.com/whateveryoudo/speed-knowledge-client/tree/main)**

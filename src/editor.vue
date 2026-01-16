@@ -10,7 +10,8 @@
   <a-config-provider :theme="cptTheme">
     <div :class="['wrap', scene, hideBorder ? 'hide-border' : '']" :style="editorStyle">
       <!-- 工具栏 -->
-      <menu-bar :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header" :editor="editor" />
+      <menu-bar :style="headerStyle" :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header"
+        :editor="editor" />
       <!-- 扩展modal显示-mind -->
       <!-- <extend-mind-modal
       v-if="editor"
@@ -30,7 +31,7 @@
       <CalloutMenu v-if="editor" :editor="editor" />
       <!-- 节点拖拽 -->
       <DragNodeMenu v-if="editor" :editor="editor" />
-      <main :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
+      <main :style="mainStyle" :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
         <editor-content :editor="editor"
           :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
       </main>
@@ -92,6 +93,8 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
   menubar: true,
   antdToken: () => ({}),
   editorStyle: () => ({}),
+  headerStyle: () => ({}), // 工具栏样式
+  mainStyle: () => ({}), // 内容区样式
   hideComment: true,
   placeholder: "输入 / 唤起更多",
   theme: 'light',
@@ -109,7 +112,7 @@ const cptTheme = computed(() => {
   }
 })
 // 初始化编辑器的一些上下文
-const { previewInstance, addTempFile, removeTempFile, getTempFile } = useSpeedEditorProvider(props)
+const { previewInstance } = useSpeedEditorProvider(props)
 
 let provider: HocuspocusProvider | null = null;
 let doc = null;
@@ -315,7 +318,9 @@ onUnmounted(() => {
     &>header {
       justify-content: center;
       border: none;
-      border-bottom: 1px solid var(--ant-color-border);
+      // border-bottom: 1px solid var(--ant-color-border);
+      // 外界传入？？
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     }
 
     &>main {
@@ -361,7 +366,7 @@ onUnmounted(() => {
     border-top: none;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    overflow-y: auto;
+    // overflow-y: auto; 去掉滚动条，这里加上会出现一些奇怪的问题（文字减少，拖拽宽高变化时会闪烁一下滚动条）
     padding: 0 10px;
     padding-bottom: 10px;
     box-sizing: border-box;

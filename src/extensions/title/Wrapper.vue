@@ -22,6 +22,7 @@ import { NodeViewWrapper, NodeViewContent } from '@tiptap/vue-3'
 .title-wrapper {
   position: relative;
   margin-bottom: 24px;
+  padding-top: 20px;
 
   .coverWrap {
     position: relative;
