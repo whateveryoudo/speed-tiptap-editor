@@ -5,6 +5,7 @@ import { createInjectionState } from '@vueuse/core';
 import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import { getDefaultKit } from '@/extensions/kit';
 import { type CollaborationEditorProps } from '@/type';
+import type { Extensions } from '@tiptap/core'
 
 // 定义返回的上下文类型
 export interface SpeedEditorContext {
@@ -15,7 +16,7 @@ export interface SpeedEditorContext {
   updateSearchReplaceVisible: (visible: boolean) => void;
   globalTiptapStorage: Ref<Record<string, any>>;
   updateGlobalTiptapStorageFunc: (key: string, value: any) => void;
-  aiExtensions: any[];
+  aiExtensions: Extensions;
 }
 
 function initStateFunc(props: CollaborationEditorProps): SpeedEditorContext {

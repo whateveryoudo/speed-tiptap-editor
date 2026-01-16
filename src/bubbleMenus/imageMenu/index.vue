@@ -46,6 +46,7 @@ import align from "@/menus/align";
 import SizeSetting from "./SizeSetting.vue";
 import { useBubble } from "@/hooks/useBubble";
 import { useAttributes } from "@/hooks/useAttributes";
+import { useSpeedEditor } from "@/hooks/useSpeedEditorContext";
 import {
   DeleteOutlined,
   EyeOutlined,
@@ -86,7 +87,7 @@ const equalProportion = useAttributes(
   { equalProportion: true },
   (attrs) => attrs.equalProportion
 );
-const previewInstance = inject("previewInstance") as Ref<any>;
+const {previewInstance} = useSpeedEditor();
 const handlePreivew = () => {
   if (previewInstance.value) {
     previewInstance.value.previewImage(src.value);

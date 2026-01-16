@@ -183,7 +183,7 @@ const editor = useEditor({
     console.log(transaction.getMeta?.('isRemote'))
     // 编辑器内容变化时，同步到外部
     const html = editor.getHTML()
-    console.log(html);
+    // console.log(html);
     emit('update:content', html)
 
     // 原有的标题更新逻辑

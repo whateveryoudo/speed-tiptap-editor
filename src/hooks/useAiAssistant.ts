@@ -120,7 +120,9 @@ export const useAiAssistant = () => {
         signal: controller.signal,
 
         async onopen(response: any) {
-          if (response.ok && response.headers.get('content-type') === EventStreamContentType) {
+          // fastapi一直是空？？
+          // && response.headers.get('content-type') === EventStreamContentType
+          if (response.ok) {
             // 连接成功，开始流式传输
             session.value.status = 'pending'
             return
@@ -199,6 +201,7 @@ export const useAiAssistant = () => {
         },
 
         onerror(error: any) {
+          console.log(error);
           // 如果是用户主动取消，不显示错误
           if (error.name === 'AbortError') {
             session.value.status = 'cancelled'
@@ -207,7 +210,6 @@ export const useAiAssistant = () => {
 
           session.value.status = 'error'
           session.value.error = error.message || 'AI 处理失败'
-          console.error('AI 流式处理错误:', error)
           message.error(error.message || 'AI 处理失败，请重试')
           throw error // 让 fetchEventSource 决定是否重试
         }
@@ -215,7 +217,7 @@ export const useAiAssistant = () => {
 
       return true
     } catch (error: any) {
-
+      debugger;
       // 用户主动取消不显示错误
       if (error.name === 'AbortError') {
         session.value.status = 'cancelled'

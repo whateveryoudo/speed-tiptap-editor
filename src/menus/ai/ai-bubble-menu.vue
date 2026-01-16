@@ -78,7 +78,7 @@ import hljs from 'highlight.js';
 import { getSelectedText } from '@/prose-utils/text'
 import { CheckOutlined, SyncOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { markdownToJSON } from '@/helpers/markdown-to-json'
-import type { Extensions } from '@tiptap/core'
+import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
 
 // Props 定义
 const props = defineProps<{
@@ -86,8 +86,7 @@ const props = defineProps<{
 }>()
 
 // 方式1：从父组件注入扩展配置（推荐）⭐
-const aiExtensions = inject<Extensions>('aiExtensions')!
-
+const { aiExtensions } = useSpeedEditor()
 VMdPreview.use(githubTheme, {
     Hljs: hljs,
 });
@@ -242,22 +241,20 @@ const replaceSelectedText = (markdownText: string) => {
  * 将 Markdown 转为 Tiptap JSON 格式后插入（原生格式，最佳实践）
  */
 const insertBelowSelection = (markdownText: string) => {
+    let jsonDoc: any = null;
     try {
-        const { to } = props.editor.state.selection
-
         // 转换为 Tiptap 原生 JSON 格式
-        const jsonDoc = markdownToJSON(markdownText, aiExtensions)
-
-        // 🎯 关键：只取 content 数组
-        const content = jsonDoc.content || []
-
-        // 使用原生 JSON 格式插入
-        props.editor.chain().focus().insertContentAt(to, content).run()
-        message.success('已插入到选区下方')
+        jsonDoc = markdownToJSON(markdownText, aiExtensions)
     } catch (error) {
         console.error('转换 Markdown 失败:', error)
         message.error('内容转换失败，请重试')
     }
+    // 🎯 关键：只取 content 数组
+    const content = jsonDoc.content || []
+    const { to } = props.editor.state.selection
+    // 使用原生 JSON 格式插入
+    props.editor.chain().focus().insertContentAt(to, content).run()
+    message.success('已插入到选区下方')
 }
 
 /**
