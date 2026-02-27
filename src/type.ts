@@ -18,7 +18,7 @@ export type ToolBarConfig =
     };
 // 编辑器props
 // 上传配置（image | file | upload）
-interface IUploadConfig {
+export interface IUploadConfig {
   transformFileItem?: (item: any) => any; // 单条数据转换
   multiple?: boolean;
   maxSize?: number; // 最大上传大小（单位：MB）

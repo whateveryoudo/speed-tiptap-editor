@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, inject, PropType, provide, computed, VNode, onMounted, onUnmounted } from 'vue'
+import { watch, ref, inject, type Ref, PropType, provide, computed, VNode, onMounted, onUnmounted } from 'vue'
 import MenuBar from './menus'
 import { getKnowledgeKit, getDefaultKit } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
@@ -68,10 +68,11 @@ import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
 import * as Y from 'yjs'
 import { debounce } from 'lodash-es'
 import { getRandomColor } from '@/helpers/color'
+import { type GlobalConfig } from './index'
 // 初始化注入的对象
-const speedUseTiptapConfig = inject(
+const speedUseTiptapConfig = inject<Ref<GlobalConfig>>(
   "speedUseTiptapConfig",
-  ref(null)
+  ref<GlobalConfig>({})
 );
 onKeyStroke(e => {
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 's') {
@@ -102,13 +103,14 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
     enabled: true
   })
 })
-// 组合后的antd主题(这里需要处理)
+// 组合后的antd主题(这里需要处理, 支持全局配置和组件配置)
 const cptTheme = computed(() => {
-  return props.theme === 'dark' ? {
+  const { antdToken: antdTokenFromConfig, theme: themeFromConfig } = speedUseTiptapConfig.value || {};
+  return (props.theme === 'dark' || themeFromConfig === 'dark') ? {
     algorithm: theme.darkAlgorithm,
-    token: { ...props.antdToken }
+    token: { ...(antdTokenFromConfig || props.antdToken) }
   } : {
-    token: { ...props.antdToken }
+    token: { ...(antdTokenFromConfig || props.antdToken) }
   }
 })
 // 初始化编辑器的一些上下文

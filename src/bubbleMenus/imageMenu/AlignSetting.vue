@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\ImageMenu\AlignSetting.vue
 -->
 <template>
-  <a-popover v-model:visible="visible" overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
+  <a-popover v-model:open="visible" overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
     <template #content>
       <a-space class="align-list-wrapper">
         <a-tooltip v-for="item in alignButtons" :key="item.key">

@@ -44,6 +44,7 @@ import { SearchAndReplace } from "./searchAndReplace";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
 import { FormatPainter } from "./formatPainter";
+import { DocumentSuggest } from "./documentSuggest";
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
 });
@@ -156,6 +157,9 @@ export const getDefaultKit = (props: any) => [
 export const getKnowledgeKit = (props: any) => [
   Title,
   DocumentWithHeading, // 用带 title 的 document
+  DocumentSuggest.configure({
+    backendUrl: 'localhost:3005/api/ai/document/check',
+  }),
   ...getDefaultKit(props).filter((ext) => ext?.name !== "doc"),
 ];
 

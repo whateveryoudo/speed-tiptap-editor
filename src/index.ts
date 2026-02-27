@@ -14,6 +14,7 @@ import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
 import baseConfig from "./config";
 import SpeedTooltip from "./components/SpeedTooltip/index.vue";
+import type { IUploadConfig } from "./type";
 // 导入 UnoCSS 样式
 import 'uno.css'
 // 组件列表
@@ -31,6 +32,9 @@ export interface GlobalConfig {
   iconfontUrl?: string;
   transformFileItem?: (item: any) => any; // 单条数据转换
   transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
+  upload?: IUploadConfig;
+  theme?: "light" | "dark"; // 编辑器主题
+  antdToken?: any; // antd的token配置
 }
 
 // 默认配置
