@@ -86,6 +86,7 @@
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.0",
     "@floating-ui/dom": "^1.6.0",
+    "@floating-ui/vue": "^1.1.10",
     "@highlightjs/vue-plugin": "^2.1.2",
     "@hocuspocus/provider": "^3.2.0",
     "@kangc/v-md-editor": "^2.3.17",
@@ -138,6 +139,7 @@
     "lowlight": "^3.3.0",
     "mammoth": "^1.11.0",
     "markdown-it": "^14.1.0",
+    "nanoid": "^5.1.6",
     "pinia": "^3.0.3",
     "scroll-into-view-if-needed": "^3.0.3",
     "speed-components-ui": "^0.1.39",

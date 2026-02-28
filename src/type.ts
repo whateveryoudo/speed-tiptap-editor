@@ -143,6 +143,10 @@ export interface CollaborationEditorProps {
       ) => Record<string, any>;
     };
   };
+  // 文档检测配置
+  documentSuggestConfig?: {
+    rules?: any[];
+  };
   // 对SpeedComponents的一些配置(注意这里)
   sdComponentsConfig?: {
     apis?: {

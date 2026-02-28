@@ -44,7 +44,17 @@ import { SearchAndReplace } from "./searchAndReplace";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
 import { FormatPainter } from "./formatPainter";
-import { DocumentSuggest } from "./documentSuggest";
+import { DocumentSuggest, type Suggestion as DocumentSuggestion } from "./documentSuggest";
+import { NodeId } from "./nodeId";
+import { Decoration } from "@tiptap/pm/view";
+import { ref } from "vue";
+
+// 用于 DocumentSuggest 扩展与 Vue 组件之间共享 tooltip 容器
+export const tooltipElement = ref<{
+  element: HTMLElement;
+  suggestion: DocumentSuggestion;
+  ruleTitle: string;
+} | null>(null);
 const DocumentWithHeading = BaseDocument.extend({
   content: "title block+",
 });
@@ -74,7 +84,6 @@ export const getDefaultKit = (props: any) => [
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
   }),
-
   // 自定义扩展
   Paragraph,
   Link,
@@ -151,6 +160,7 @@ export const getDefaultKit = (props: any) => [
   Superscript,
   Subscript,
   Tag,
+  NodeId,
 ];
 
 // 知识库
@@ -158,7 +168,42 @@ export const getKnowledgeKit = (props: any) => [
   Title,
   DocumentWithHeading, // 用带 title 的 document
   DocumentSuggest.configure({
-    backendUrl: 'localhost:3005/api/ai/document/check',
+    backendUrl: 'http://localhost:8010/api/v1/ai/document/check',
+    rules: props.documentSuggestConfig?.rules || [],
+    // 自定义装饰器
+    getCustomSuggestionDecoration({
+      suggestion,
+      ruleTitle,
+      isSelected,
+      range,
+      getDefaultDecorations,
+    }: {
+      suggestion: DocumentSuggestion;
+      ruleTitle: string;
+      isSelected: boolean;
+      range: { from: number; to: number };
+      getDefaultDecorations: () => Decoration[];
+    }) {
+      const decorations = getDefaultDecorations();
+
+      if (isSelected) {
+        decorations.push(
+          Decoration.widget(range.to, () => {
+            const element = document.createElement("span");
+            // 选中时，更新 tooltipElement
+            tooltipElement.value = { element, suggestion, ruleTitle };
+            return element;
+          })
+        );
+      } else {
+        // 如果当前取消选中的正好是 tooltip 上那条，清空 tooltip
+        if (tooltipElement.value?.suggestion?.id === suggestion.id) {
+          tooltipElement.value = null;
+        }
+      }
+
+      return decorations;
+    },
   }),
   ...getDefaultKit(props).filter((ext) => ext?.name !== "doc"),
 ];

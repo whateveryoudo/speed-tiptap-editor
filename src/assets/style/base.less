@@ -1,4 +1,3 @@
-
 // 定义一些常用变量
 :root {
   --speed-color-border-gray: #e8e8e8;
@@ -8,7 +7,7 @@
   --speed-color-bg-dark-1: #242933;
   --speed-color-bg-dark-2: #3c424d;
   --speed-color-text-white-1: #e2e2e2;
-  --speed-color-border-light: rgba(0,0,0,.04);
+  --speed-color-border-light: rgba(0, 0, 0, .04);
 
   // 搜索结果样式
   --speed-color-search-result-background: rgb(255, 255, 195);
@@ -180,7 +179,21 @@
       background: var(--speed-color-search-result-current-background);
     }
   }
+
+  // 文档建议样式
+  .ai-suggestion {
+    &--error {
+      border-bottom: 2px solid #DC143C;
+      margin-bottom: -2px;
+    }
+
+    &--warning {
+      border-bottom: 2px solid #FF8C00;
+      margin-bottom: -2px;
+    }
+  }
 }
+
 // 追加格式刷激活样式
 .format-painter-active {
   .ProseMirror {
@@ -188,6 +201,7 @@
     cursor: url('@/assets/image/format-paint-cursor.svg'), text;
   }
 }
+
 /* Give a remote user a caret */
 .collaboration-carets__caret {
   border-left: 1px solid #0d0d0d;
@@ -214,6 +228,7 @@
   user-select: none;
   white-space: nowrap;
 }
+
 // .ProseMirror-selectednode,
 // .ProseMirror-selectednoderange {
 //   position: relative;

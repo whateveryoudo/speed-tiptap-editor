@@ -34,9 +34,11 @@
       <main :style="mainStyle" :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
         <editor-content :editor="editor"
           :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
+        <SuggestionToolTip :element="tooltipElement" :editor="editor" v-if="editor" />
       </main>
       <!-- 搜索替换弹框 -->
       <SearchReplaceModal :editor="editor" v-if="editor" />
+      <!-- 文档建议提示框 -->
       <!-- <ShortcutGuideModal v-if="editor?.isEditable && !isPreview" /> -->
     </div>
   </a-config-provider>
@@ -45,7 +47,7 @@
 <script setup lang="ts">
 import { watch, ref, inject, type Ref, PropType, provide, computed, VNode, onMounted, onUnmounted } from 'vue'
 import MenuBar from './menus'
-import { getKnowledgeKit, getDefaultKit } from './extensions/kit'
+import { getKnowledgeKit, getDefaultKit, tooltipElement } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TableMenu from '@/bubbleMenus/tableMenu/index.vue'
 import TableBubbleMenu from '@/bubbleMenus/tableMenu/Bubble.vue'
@@ -53,6 +55,7 @@ import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
 import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@/bubbleMenus'
 import { useSpeedEditorProvider } from '@/hooks/useSpeedEditorContext'
 import Collaboration from '@tiptap/extension-collaboration'
+import SuggestionToolTip from './extensions/documentSuggest/SuggestionTooltip.vue'
 // import { TiptapCollabProvider } from '@tiptap-pro/provider'
 // 采用自身ws服务
 import { HocuspocusProvider } from "@hocuspocus/provider";
@@ -101,7 +104,10 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
   theme: 'light',
   textBubbleMenu: () => ({
     enabled: true
-  })
+  }),
+  documentSuggestConfig: () => ({
+    rules: [],
+  }),
 })
 // 组合后的antd主题(这里需要处理, 支持全局配置和组件配置)
 const cptTheme = computed(() => {
@@ -227,7 +233,9 @@ const editor = useEditor({
     }
   }
 })
-
+defineExpose({
+  editor
+})
 // 监听 content 变化，同步到编辑器
 watch(
   () => props.content,
