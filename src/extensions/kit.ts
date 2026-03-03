@@ -160,7 +160,7 @@ export const getDefaultKit = (props: any) => [
   Superscript,
   Subscript,
   Tag,
-  NodeId,
+  // NodeId,
 ];
 
 // 知识库

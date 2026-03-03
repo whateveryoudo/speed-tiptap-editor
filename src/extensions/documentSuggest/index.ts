@@ -146,102 +146,103 @@ export const DocumentSuggest = Extension.create({
                 storage.isLoading = true;
                 storage.error = null;
                 const docJson = editor.getJSON();
+                console.log('docJson', docJson);
                 const detectionNodeTypes = ['heading', 'paragraph', 'listItem', 'list', 'blockquote', 'table', 'tableRow', 'tableCell'];
                 // 这里过滤第一层的自定义节点（仅保留一些特定节点）
                 const rules = this.options.rules || [];
-                docJson.content = docJson.content.filter((node: any) => detectionNodeTypes.includes(node.type));
-                // (async () => {
-                //     try {
-                //         let suggestions: Suggestion[] = [];
-                //         if (this.options.fetchSuggestions) {
-                //             suggestions = await this.options.fetchSuggestions(docJson, rules, editor);
+                docJson.content = docJson.content.filter((node: any) => detectionNodeTypes.includes(node.type) || node.content);
+                (async () => {
+                    try {
+                        let suggestions: Suggestion[] = [];
+                        if (this.options.fetchSuggestions) {
+                            suggestions = await this.options.fetchSuggestions(docJson, rules, editor);
 
-                //         } else {
-                //             const resp = await fetch(this.options.backendUrl, {
-                //                 method: 'POST',
-                //                 headers: {
-                //                     'Content-Type': 'application/json',
-                //                 },
-                //                 body: JSON.stringify({
-                //                     doc: docJson,
-                //                     rules: rules,
-                //                 }),
-                //             });
-                //             if (!resp.ok) {
-                //                 throw new Error('Failed to fetch suggestions');
-                //             }
-                //             const payload = await resp.json();
-                //             suggestions = (payload.data.suggestions || []) as Suggestion[];
-                //         }
-                //         storage.suggestions = suggestions;
-                //         editor.view.dispatch(editor.state.tr)
-
-                //     } catch (error) {
-                //         storage.error = error;
-                //     } finally {
-                //         storage.isLoading = false;
-                //     }
-                // })();
-                // Test 数据：实际场景中请使用上面的异步调用后端逻辑
-                setTimeout(() => {
-                    const res = {
-                        "errCode": 0,
-                        "errMessage": "success",
-                        "success": true,
-                        "data": {
-                            "suggestions": [
-                                {
-                                    "id": "78378cfc-f983-4968-86fa-724fe0d10bbf",
-                                    "node_id": "gdtW_Xn9",
-                                    "message": "文字里面不能出现红色",
-                                    "rule_id": "RULE_TEXT_STYLE",
-                                    "text_index": 1,
-                                    "severity": "warning",
-                                    "fixCommand": {
-                                        "action": "resetTextStyle",
-                                        "params": {}
-                                    },
-                                    "meta": {}
+                        } else {
+                            const resp = await fetch(this.options.backendUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
                                 },
-                                {
-                                    "id": "a114c816-32ad-4f69-b562-19cef5fdca42",
-                                    "node_id": "gdtW_Xn9",
-                                    "message": "文字块不能出现背景色",
-                                    "rule_id": "RULE_TEXT_STYLE",
-                                    "text_index": 3,
-                                    "severity": "warning",
-                                    "fixCommand": {
-                                        "action": "resetTextStyle",
-                                        "params": {}
-                                    },
-                                    "meta": {}
-                                },
-                                {
-                                    "id": "2bfbe273-8ae6-4a99-9b73-754bbb6aa31c",
-                                    "node_id": "s6cq-1JL",
-                                    "message": "语法性问题：句子中缺少问号。",
-                                    "rule_id": "RULE_GRAMMAR_PROBLEM",
-                                    "text_index": 0,
-                                    "severity": "warning",
-                                    "fixCommand": {
-                                        "action": "replaceText",
-                                        "params": {
-                                            "text": "我是不是写错了呢？"
-                                        }
-                                    },
-                                    "meta": {}
-                                }
-                            ]
+                                body: JSON.stringify({
+                                    doc: docJson,
+                                    rules: rules,
+                                }),
+                            });
+                            if (!resp.ok) {
+                                throw new Error('Failed to fetch suggestions');
+                            }
+                            const payload = await resp.json();
+                            suggestions = (payload.data.suggestions || []) as Suggestion[];
                         }
-                    };
-                    const mockSuggestions = res.data.suggestions as Suggestion[];
-                    storage.suggestions = mockSuggestions;
-                    // 触发一次插件 state 重建 DecorationSet
-                    const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
-                        type: 'rebuildFromStorage',
-                    });
-                    editor.view.dispatch(tr);
-                }, 1000);
+                        storage.suggestions = suggestions;
+                        editor.view.dispatch(editor.state.tr)
+
+                    } catch (error) {
+                        storage.error = error;
+                    } finally {
+                        storage.isLoading = false;
+                    }
+                })();
+                // Test 数据：实际场景中请使用上面的异步调用后端逻辑
+                // setTimeout(() => {
+                //     const res = {
+                //         "errCode": 0,
+                //         "errMessage": "success",
+                //         "success": true,
+                //         "data": {
+                //             "suggestions": [
+                //                 {
+                //                     "id": "78378cfc-f983-4968-86fa-724fe0d10bbf",
+                //                     "node_id": "gdtW_Xn9",
+                //                     "message": "文字里面不能出现红色",
+                //                     "rule_id": "RULE_TEXT_STYLE",
+                //                     "text_index": 1,
+                //                     "severity": "warning",
+                //                     "fixCommand": {
+                //                         "action": "resetTextStyle",
+                //                         "params": {}
+                //                     },
+                //                     "meta": {}
+                //                 },
+                //                 {
+                //                     "id": "a114c816-32ad-4f69-b562-19cef5fdca42",
+                //                     "node_id": "gdtW_Xn9",
+                //                     "message": "文字块不能出现背景色",
+                //                     "rule_id": "RULE_TEXT_STYLE",
+                //                     "text_index": 3,
+                //                     "severity": "warning",
+                //                     "fixCommand": {
+                //                         "action": "resetTextStyle",
+                //                         "params": {}
+                //                     },
+                //                     "meta": {}
+                //                 },
+                //                 {
+                //                     "id": "2bfbe273-8ae6-4a99-9b73-754bbb6aa31c",
+                //                     "node_id": "s6cq-1JL",
+                //                     "message": "语法性问题：句子中缺少问号。",
+                //                     "rule_id": "RULE_GRAMMAR_PROBLEM",
+                //                     "text_index": 0,
+                //                     "severity": "warning",
+                //                     "fixCommand": {
+                //                         "action": "replaceText",
+                //                         "params": {
+                //                             "text": "我是不是写错了呢？"
+                //                         }
+                //                     },
+                //                     "meta": {}
+                //                 }
+                //             ]
+                //         }
+                //     };
+                //     const mockSuggestions = res.data.suggestions as Suggestion[];
+                //     storage.suggestions = mockSuggestions;
+                //     // 触发一次插件 state 重建 DecorationSet
+                //     const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
+                //         type: 'rebuildFromStorage',
+                //     });
+                //     editor.view.dispatch(tr);
+                // }, 1000);
 
                 return true;
             },
