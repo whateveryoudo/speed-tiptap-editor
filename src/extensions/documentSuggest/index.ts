@@ -35,16 +35,25 @@ export interface DocumentSuggestOptions {
      * 自定义高亮装饰（比如挂载 tooltip 容器）
      */
     getCustomSuggestionDecoration?: (params: {
-        suggestion: Suggestion;
+        suggestion?: Suggestion;
+        /**
+         * 当前所有仍然存在的建议列表
+         * 可用于在外部检测某条 suggestion 是否已经被删除
+         */
+        allSuggestions: Suggestion[];
         /**
          * 当前建议在文档中的范围
          */
-        range: { from: number; to: number };
+        range?: { from: number; to: number };
         /**
          * 当前 selection 是否完全落在这条建议范围内
          */
         isSelected: boolean;
-        getDefaultDecorations: () => Decoration[];
+        /**
+         * 规则对应的展示标题（根据 rule_id 解析）
+         */
+        ruleTitle?: string;
+        getDefaultDecorations?: () => Decoration[];
     }) => Decoration[];
 }
 
@@ -150,103 +159,113 @@ export const DocumentSuggest = Extension.create({
                 const detectionNodeTypes = ['heading', 'paragraph', 'listItem', 'list', 'blockquote', 'table', 'tableRow', 'tableCell'];
                 // 这里过滤第一层的自定义节点（仅保留一些特定节点）
                 const rules = this.options.rules || [];
-                docJson.content = docJson.content.filter((node: any) => detectionNodeTypes.includes(node.type) || node.content);
-                (async () => {
-                    try {
-                        let suggestions: Suggestion[] = [];
-                        if (this.options.fetchSuggestions) {
-                            suggestions = await this.options.fetchSuggestions(docJson, rules, editor);
+                docJson.content = docJson.content.filter((node: any) => detectionNodeTypes.includes(node.type) && node.content);
+                // (async () => {
+                //     try {
+                //         let suggestions: Suggestion[] = [];
+                //         if (this.options.fetchSuggestions) {
+                //             suggestions = await this.options.fetchSuggestions(docJson, rules, editor);
 
-                        } else {
-                            const resp = await fetch(this.options.backendUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    doc: docJson,
-                                    rules: rules,
-                                }),
-                            });
-                            if (!resp.ok) {
-                                throw new Error('Failed to fetch suggestions');
-                            }
-                            const payload = await resp.json();
-                            suggestions = (payload.data.suggestions || []) as Suggestion[];
-                        }
-                        storage.suggestions = suggestions;
-                        editor.view.dispatch(editor.state.tr)
-
-                    } catch (error) {
-                        storage.error = error;
-                    } finally {
-                        storage.isLoading = false;
-                    }
-                })();
-                // Test 数据：实际场景中请使用上面的异步调用后端逻辑
-                // setTimeout(() => {
-                //     const res = {
-                //         "errCode": 0,
-                //         "errMessage": "success",
-                //         "success": true,
-                //         "data": {
-                //             "suggestions": [
-                //                 {
-                //                     "id": "78378cfc-f983-4968-86fa-724fe0d10bbf",
-                //                     "node_id": "gdtW_Xn9",
-                //                     "message": "文字里面不能出现红色",
-                //                     "rule_id": "RULE_TEXT_STYLE",
-                //                     "text_index": 1,
-                //                     "severity": "warning",
-                //                     "fixCommand": {
-                //                         "action": "resetTextStyle",
-                //                         "params": {}
-                //                     },
-                //                     "meta": {}
+                //         } else {
+                //             const resp = await fetch(this.options.backendUrl, {
+                //                 method: 'POST',
+                //                 headers: {
+                //                     'Content-Type': 'application/json',
                 //                 },
-                //                 {
-                //                     "id": "a114c816-32ad-4f69-b562-19cef5fdca42",
-                //                     "node_id": "gdtW_Xn9",
-                //                     "message": "文字块不能出现背景色",
-                //                     "rule_id": "RULE_TEXT_STYLE",
-                //                     "text_index": 3,
-                //                     "severity": "warning",
-                //                     "fixCommand": {
-                //                         "action": "resetTextStyle",
-                //                         "params": {}
-                //                     },
-                //                     "meta": {}
-                //                 },
-                //                 {
-                //                     "id": "2bfbe273-8ae6-4a99-9b73-754bbb6aa31c",
-                //                     "node_id": "s6cq-1JL",
-                //                     "message": "语法性问题：句子中缺少问号。",
-                //                     "rule_id": "RULE_GRAMMAR_PROBLEM",
-                //                     "text_index": 0,
-                //                     "severity": "warning",
-                //                     "fixCommand": {
-                //                         "action": "replaceText",
-                //                         "params": {
-                //                             "text": "我是不是写错了呢？"
-                //                         }
-                //                     },
-                //                     "meta": {}
-                //                 }
-                //             ]
+                //                 body: JSON.stringify({
+                //                     doc: docJson,
+                //                     rules: rules,
+                //                 }),
+                //             });
+                //             if (!resp.ok) {
+                //                 throw new Error('Failed to fetch suggestions');
+                //             }
+                //             const payload = await resp.json();
+                //             suggestions = (payload.data.suggestions || []) as Suggestion[];
                 //         }
-                //     };
-                //     const mockSuggestions = res.data.suggestions as Suggestion[];
-                //     storage.suggestions = mockSuggestions;
-                //     // 触发一次插件 state 重建 DecorationSet
-                //     const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
-                //         type: 'rebuildFromStorage',
-                //     });
-                //     editor.view.dispatch(tr);
-                // }, 1000);
+                //         storage.suggestions = suggestions;
+                //         editor.view.dispatch(editor.state.tr)
+
+                //     } catch (error) {
+                //         storage.error = error;
+                //     } finally {
+                //         storage.isLoading = false;
+                //     }
+                // })();
+                // Test 数据：实际场景中请使用上面的异步调用后端逻辑
+                setTimeout(() => {
+                    const res = {
+                        "errCode": 0,
+                        "errMessage": "success",
+                        "success": true,
+                        "data": {
+                            "suggestions": [
+                                {
+                                    "id": "faf46aa3-886f-4d93-a65d-9f1375944ce1",
+                                    "node_id": "F3BeLKun",
+                                    "message": "文本颜色为红色（#F5222D），不符合规范",
+                                    "rule_id": "RULE_TEXT_COLOR_STYLE",
+                                    "text_index": 1,
+                                    "severity": "warning",
+                                    "fixCommand": {
+                                        "action": "resetTextStyle",
+                                        "params": {
+                                            "color": ""
+                                        }
+                                    },
+                                    "meta": {
+                                        "section": "第三段"
+                                    }
+                                },
+                                {
+                                    "id": "33b5bc91-b111-471c-9267-129a10916140",
+                                    "node_id": "F3BeLKun",
+                                    "message": "文本背景色为绿色（#52C41A），不符合规范",
+                                    "rule_id": "RULE_TEXT_BACKGROUND_STYLE",
+                                    "text_index": 3,
+                                    "severity": "warning",
+                                    "fixCommand": {
+                                        "action": "resetTextStyle",
+                                        "params": {
+                                            "backgroundColor": ""
+                                        }
+                                    },
+                                    "meta": {
+                                        "section": "第三段"
+                                    }
+                                },
+                                {
+                                    "id": "eb508814-b8f3-4b3c-a008-91bf75752e49",
+                                    "node_id": "NoaCfRqM",
+                                    "message": "语序错误：'我是义的话一段语测试' 不通顺",
+                                    "rule_id": "RULE_GRAMMAR_PROBLEM",
+                                    "text_index": 0,
+                                    "severity": "info",
+                                    "fixCommand": {
+                                        "action": "replaceText",
+                                        "params": {
+                                            "text": "这是一段用于语法测试的话"
+                                        }
+                                    },
+                                    "meta": {
+                                        "section": "第四段"
+                                    }
+                                }
+                            ]
+                        }
+                    };
+                    const mockSuggestions = res.data.suggestions as Suggestion[];
+                    storage.suggestions = mockSuggestions;
+                    // 触发一次插件 state 重建 DecorationSet
+                    const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
+                        type: 'rebuildFromStorage',
+                    });
+                    editor.view.dispatch(tr);
+                }, 1000);
 
                 return true;
             },
-            applySuggestion: (id: string) => ({ editor }) => {
+            applySuggestion: (id: string) => ({ editor, chain }) => {
                 const storage = this.storage;
                 const target = storage.suggestions.find((s: Suggestion) => s.id === id);
                 if (!target) {
@@ -265,29 +284,38 @@ export const DocumentSuggest = Extension.create({
                 // 没有可执行的修复命令，只高亮 & 标记为已处理
                 if (!action) {
                     storage.suggestions = storage.suggestions.filter((s: Suggestion) => s.id !== id);
+                    // 显式触发一次基于 storage 的 DecorationSet 重建（因为文档本身并未发生变化）
+                    const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
+                        type: 'rebuildFromStorage',
+                    });
+                    editor.view.dispatch(tr);
                     return true;
                 }
 
-                const chain = editor.chain().focus();
-
+                let execFlag = true;
                 switch (action) {
                     case 'setHeading': {
                         const level = (Number(params.level) || 1) as any;
-                        chain.setTextSelection(range).setHeading({ level }).run();
+                        chain().focus().setTextSelection(range).setHeading({ level }).run();
                         break;
                     }
                     case 'resetTextStyle': {
                         // 清除颜色 / 背景色，后续可根据需要扩展
-                        chain
+                        // TODO:看看是否需要特定action拆分开
+                        execFlag = chain()
+                            .focus()
                             .setTextSelection(range)
-                            .unsetColor()
-                            .unsetMark?.('backgroundColor')
+                            .setColor('#000000')
+                            .unsetBackgroundColor()
                             .run();
                         break;
                     }
                     case 'replaceText': {
                         const text = params.text ?? '';
-                        chain.insertContentAt(range, text).run();
+                        execFlag = chain()
+                            .focus()
+                            .insertContentAt(range, text)
+                            .run();
                         break;
                     }
                     default: {
@@ -297,7 +325,13 @@ export const DocumentSuggest = Extension.create({
                 }
 
                 storage.suggestions = storage.suggestions.filter((s: Suggestion) => s.id !== id);
-                return true;
+                // 触发一次插件 state 重建 DecorationSet
+                const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
+                    type: 'rebuildFromStorage',
+                    isChangeSuggestions: true
+                });
+                editor.view.dispatch(tr);
+                return execFlag;
             },
             applyAllSuggestions: () => ({ editor }) => {
                 const storage = this.storage;
@@ -348,19 +382,34 @@ export const DocumentSuggest = Extension.create({
                 return true;
             },
 
-            rejectSuggestion: (id: string) => () => {
+            rejectSuggestion: (id: string) => ({ editor }) => {
                 const storage = this.storage;
                 storage.suggestions = storage.suggestions.filter((s: Suggestion) => s.id !== id);
+                // 触发一次插件 state 重建 DecorationSet
+                const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
+                    type: 'rebuildFromStorage',
+                    isChangeSuggestions: true
+                });
+                editor.view.dispatch(tr);
                 return true;
             }
         }
     },
     addProseMirrorPlugins() {
         const pluginKey = documentSuggestPluginKey;
-        const buildDecorations = (state: EditorState, suggestions: Suggestion[]): DecorationSet => {
+        // isChangeSuggestions - 是否修改了意见项（应用/拒绝的场景下，需要主动调用一次外部更新，关闭弹框，主要是处理最后一个关闭意见无法关闭弹框的场景）
+        const buildDecorations = (state: EditorState, suggestions: Suggestion[], isChangeSuggestions?: boolean): DecorationSet => {
             const { doc, selection } = state as any;
-
             if (!suggestions || suggestions.length === 0) {
+                // 调用一次外部更新(关闭弹框)
+                if (isChangeSuggestions) {
+                    if (this.options.getCustomSuggestionDecoration) {
+                        this.options.getCustomSuggestionDecoration({
+                            allSuggestions: suggestions,
+                            isSelected: false,
+                        });
+                    }
+                }
                 return DecorationSet.empty;
             }
 
@@ -390,6 +439,7 @@ export const DocumentSuggest = Extension.create({
                 if (this.options.getCustomSuggestionDecoration) {
                     const extra = this.options.getCustomSuggestionDecoration({
                         suggestion: s,
+                        allSuggestions: suggestions,
                         range,
                         isSelected,
                         ruleTitle: getRuleText(s.rule_id),
@@ -420,7 +470,7 @@ export const DocumentSuggest = Extension.create({
                         const meta = tr.getMeta(pluginKey);
                         // 显式要求：根据 storage 重建一次 DecorationSet
                         if (meta?.type === 'rebuildFromStorage') {
-                            return buildDecorations(newState, this.storage.suggestions || []);
+                            return buildDecorations(newState, this.storage.suggestions || [], meta.isChangeSuggestions);
                         }
 
                         // 文档或选区变化时，也根据当前 storage 重新计算一次

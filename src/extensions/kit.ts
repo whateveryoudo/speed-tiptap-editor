@@ -160,7 +160,7 @@ export const getDefaultKit = (props: any) => [
   Superscript,
   Subscript,
   Tag,
-  // NodeId,
+  NodeId,
 ];
 
 // 知识库
@@ -173,19 +173,28 @@ export const getKnowledgeKit = (props: any) => [
     // 自定义装饰器
     getCustomSuggestionDecoration({
       suggestion,
+      allSuggestions,
       ruleTitle,
       isSelected,
       range,
       getDefaultDecorations,
     }: {
       suggestion: DocumentSuggestion;
+      allSuggestions: DocumentSuggestion[];
       ruleTitle: string;
       isSelected: boolean;
       range: { from: number; to: number };
       getDefaultDecorations: () => Decoration[];
     }) {
+      // 如果当前 tooltip 关联的 suggestion 已经不在列表中（如被拒绝/全部应用），主动清空 tooltip
+      if (
+        tooltipElement.value &&
+        !allSuggestions.some((s) => s.id === tooltipElement.value!.suggestion.id)
+      ) {
+        tooltipElement.value = null;
+        return [];
+      }
       const decorations = getDefaultDecorations();
-
       if (isSelected) {
         decorations.push(
           Decoration.widget(range.to, () => {

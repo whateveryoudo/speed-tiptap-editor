@@ -285,9 +285,9 @@ watch(
 watch(
   () => props.json,
   (newJson: string | null | undefined | Record<string, any>) => {
-    if (editor.value && !props.editable) {
+    if (editor.value) {
       // 兼容字符串和json传入
-      editor.value.commands.setContent(newJson ? typeof newJson === 'string' ? JSON.parse(newJson)?.default : newJson?.default : '')
+      editor.value.commands.setContent(newJson ? typeof newJson === 'string' ? JSON.parse(newJson) : newJson : '')
     }
   },
   {
@@ -312,6 +312,7 @@ onUnmounted(() => {
     provider = null
   }
 });
+
 </script>
 
 <style scoped lang="less">
@@ -321,7 +322,7 @@ onUnmounted(() => {
   min-height: 240px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  // overflow: hidden;
   position: relative;
 
   &.knowledge {

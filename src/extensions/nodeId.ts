@@ -22,7 +22,7 @@ export const NodeId = Extension.create({
               attrs.nodeId
                 ? { 'data-node-id': attrs.nodeId as string }
                 : {},
-          },
+          }
         },
       },
     ]

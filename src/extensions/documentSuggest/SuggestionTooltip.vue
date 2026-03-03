@@ -6,7 +6,7 @@
         <div v-if="isOpen" class="suggestion-tooltip-parent" ref="floating" :style="floatingStyles">
             <div class="suggestion-tooltip">
                 <div class="p-4">
-                    <a-alert class="mb-4 py-1!" show-icon :message="suggestion.message" type="warning" />
+                    <a-alert class="mb-4 py-1!" :message="suggestion.message" :type="suggestion.severity === 'error' ? 'error' : suggestion.severity === 'warning' ? 'warning' : 'info'" />
                     <a-space>
                         <a-button size="small" type="primary" class="text-[12px]!"
                             @click="applySuggestion(suggestion.id)">修复</a-button>
