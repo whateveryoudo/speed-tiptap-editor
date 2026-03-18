@@ -188,7 +188,6 @@ const editor = useEditor({
     },
   },
   onUpdate({ editor, transaction }) {
-    console.log(transaction.getMeta?.('isRemote'))
     // 编辑器内容变化时，同步到外部
     const html = editor.getHTML()
     // console.log(html);

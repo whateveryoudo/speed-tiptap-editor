@@ -6,6 +6,11 @@ export interface FixCommand {
     action: string;
     params?: Record<string, any>;
 }
+export interface TextPosRange {
+    from: number;
+    to: number;
+}
+
 export interface Suggestion {
     id: string;
     /**
@@ -17,6 +22,13 @@ export interface Suggestion {
      * 如果为 null / undefined / 小于 0，表示整块节点（例如整段错误）
      */
     text_index?: number | null;
+    /**
+     * 文本范围：
+     * - 'full'：表示整段 / 整个 text 节点
+     * - { from, to }：表示在对应 text 节点内部的局部区间（基于字符偏移）
+     * 如果为空，则等同于 'full'
+     */
+    text_pos?: TextPosRange | null;
     message: string;
     rule_id: string;
     severity: 'error' | 'warning' | 'info';
@@ -70,17 +82,17 @@ declare module '@tiptap/core' {
 }
 
 /**
- * 根据 node_id 和 text_index 计算建议在文档中的 from/to 位置
+ * 根据 node_id、text_index 与 text_pos 计算建议在文档中的 from/to 位置
  */
 function getSuggestionRange(params: {
     doc: any;
     suggestion: Suggestion;
 }): { from: number; to: number } | null {
     const { doc, suggestion } = params;
-
+    return suggestion.text_pos || { from: 0, to: 0 };
     let blockPos: number | null = null;
     let blockNode: any = null;
-
+    // debugger;
     // 先找到对应的块级节点
     doc.descendants((node: any, pos: number) => {
         if (node?.attrs?.nodeId === suggestion.node_id) {
@@ -107,26 +119,47 @@ function getSuggestionRange(params: {
     let foundFrom: number | null = null;
     let foundTo: number | null = null;
 
+    let targetTextNode: any = null;
+    let targetTextPos: number | null = null;
+
     blockNode.descendants((child: any, childPos: number) => {
         if (child.isText) {
             currentTextIndex += 1;
             if (currentTextIndex === suggestion.text_index) {
                 // childPos 是相对于 blockNode 内容开始的位置，因此需要 + blockPos + 1
-                const from = blockPos! + 1 + childPos;
-                const to = from + child.nodeSize;
-                foundFrom = from;
-                foundTo = to;
+                const absoluteStart = blockPos! + 1 + childPos;
+                targetTextNode = child;
+                targetTextPos = absoluteStart;
+                // 默认整段 text 节点
+                foundFrom = absoluteStart;
+                foundTo = absoluteStart + child.nodeSize;
                 return false;
             }
         }
         return true;
     });
 
-    if (foundFrom == null || foundTo == null) {
+    if (targetTextNode == null || targetTextPos == null || foundFrom == null || foundTo == null) {
         return null;
     }
 
-    return { from: foundFrom, to: foundTo };
+    // 处理 text_pos：
+    // - 未提供 / 为 'full'：沿用整个 text 节点范围
+    // - { from, to }：在 text 节点内部再做偏移
+    const textPos = suggestion.text_pos;
+    if (!textPos || textPos === 'full') {
+        return { from: foundFrom, to: foundTo };
+    }
+    const innerFrom = Math.max(0, textPos.from ?? 0);
+    const innerTo = Math.min(targetTextNode.text?.length ?? targetTextNode.nodeSize ?? 0, textPos.to ?? 0);
+    if (innerTo <= innerFrom) {
+        // 防御性处理：如果区间非法，退回整段
+        return { from: foundFrom, to: foundTo };
+    }
+
+    const from = targetTextPos + innerFrom;
+    const to = targetTextPos + innerTo;
+    return { from, to };
 }
 const documentSuggestPluginKey = new PluginKey('documentSuggest');
 
@@ -154,114 +187,166 @@ export const DocumentSuggest = Extension.create({
                 const storage = this.storage;
                 storage.isLoading = true;
                 storage.error = null;
-                const docJson = editor.getJSON();
-                console.log('docJson', docJson);
-                const detectionNodeTypes = ['heading', 'paragraph', 'listItem', 'list', 'blockquote', 'table', 'tableRow', 'tableCell'];
+                const docJson: any[] = [];
+                editor.state.doc.descendants((node: any, pos: number) => {
+                    if (node.isText) {
+                        docJson.push({
+                            type: 'text',
+                            text: node.text,
+                            original_text_pos: {
+                                from: pos,
+                                to: pos + node.nodeSize,
+                            },
+                        });
+                    }
+                });
+                // const docJson = editor.getJSON();
+                // console.log('docJson', docJson);
+                // const detectionNodeTypes = ['heading', 'paragraph', 'listItem', 'list', 'blockquote', 'table', 'tableRow', 'tableCell'];
                 // 这里过滤第一层的自定义节点（仅保留一些特定节点）
                 const rules = this.options.rules || [];
-                docJson.content = docJson.content.filter((node: any) => detectionNodeTypes.includes(node.type) && node.content);
-                // (async () => {
-                //     try {
-                //         let suggestions: Suggestion[] = [];
-                //         if (this.options.fetchSuggestions) {
-                //             suggestions = await this.options.fetchSuggestions(docJson, rules, editor);
-
-                //         } else {
-                //             const resp = await fetch(this.options.backendUrl, {
-                //                 method: 'POST',
-                //                 headers: {
-                //                     'Content-Type': 'application/json',
-                //                 },
-                //                 body: JSON.stringify({
-                //                     doc: docJson,
-                //                     rules: rules,
-                //                 }),
-                //             });
-                //             if (!resp.ok) {
-                //                 throw new Error('Failed to fetch suggestions');
-                //             }
-                //             const payload = await resp.json();
-                //             suggestions = (payload.data.suggestions || []) as Suggestion[];
-                //         }
-                //         storage.suggestions = suggestions;
-                //         editor.view.dispatch(editor.state.tr)
-
-                //     } catch (error) {
-                //         storage.error = error;
-                //     } finally {
-                //         storage.isLoading = false;
-                //     }
-                // })();
-                // Test 数据：实际场景中请使用上面的异步调用后端逻辑
-                setTimeout(() => {
-                    const res = {
-                        "errCode": 0,
-                        "errMessage": "success",
-                        "success": true,
-                        "data": {
-                            "suggestions": [
-                                {
-                                    "id": "faf46aa3-886f-4d93-a65d-9f1375944ce1",
-                                    "node_id": "F3BeLKun",
-                                    "message": "文本颜色为红色（#F5222D），不符合规范",
-                                    "rule_id": "RULE_TEXT_COLOR_STYLE",
-                                    "text_index": 1,
-                                    "severity": "warning",
-                                    "fixCommand": {
-                                        "action": "resetTextStyle",
-                                        "params": {
-                                            "color": ""
-                                        }
+                // docJson.content = docJson.content.filter((node: any) => detectionNodeTypes.includes(node.type) && node.content);
+                const openTest = false;
+                if (openTest) {
+                    // Test 数据：实际场景中请使用上面的异步调用后端逻辑
+                    setTimeout(() => {
+                        const res = {
+                            "errCode": 0,
+                            "errMessage": "success",
+                            "success": true,
+                            "data": {
+                                "suggestions": [
+                                    {
+                                        "id": "0b9490c0-4eec-4ad9-acb6-c1386b0d046e",
+                                        "message": "错别字问题：'几构' 应为 '机构'",
+                                        "rule_id": "RULE_GRAMMAR_PROBLEM",
+                                        "text_pos": {
+                                            "from": 97,
+                                            "to": 101
+                                        },
+                                        "original_text_pos": {
+                                            "from": 8,
+                                            "to": 121
+                                        },
+                                        "severity": "info",
+                                        "fixCommand": {
+                                            "action": "replaceText",
+                                            "params": {
+                                                "text": "机构"
+                                            }
+                                        },
+                                        "meta": {}
                                     },
-                                    "meta": {
-                                        "section": "第三段"
-                                    }
-                                },
-                                {
-                                    "id": "33b5bc91-b111-471c-9267-129a10916140",
-                                    "node_id": "F3BeLKun",
-                                    "message": "文本背景色为绿色（#52C41A），不符合规范",
-                                    "rule_id": "RULE_TEXT_BACKGROUND_STYLE",
-                                    "text_index": 3,
-                                    "severity": "warning",
-                                    "fixCommand": {
-                                        "action": "resetTextStyle",
-                                        "params": {
-                                            "backgroundColor": ""
-                                        }
+                                    {
+                                        "id": "3e223e83-2f8e-46db-a42c-66d2442d6d01",
+                                        "message": "错别字问题：'究简报' 应为 '研究简报'",
+                                        "rule_id": "RULE_GRAMMAR_PROBLEM",
+                                        "text_pos": {
+                                            "from": 106,
+                                            "to": 111
+                                        },
+                                        "original_text_pos": {
+                                            "from": 8,
+                                            "to": 121
+                                        },
+                                        "severity": "info",
+                                        "fixCommand": {
+                                            "action": "replaceText",
+                                            "params": {
+                                                "text": "研究简报"
+                                            }
+                                        },
+                                        "meta": {}
                                     },
-                                    "meta": {
-                                        "section": "第三段"
-                                    }
-                                },
-                                {
-                                    "id": "eb508814-b8f3-4b3c-a008-91bf75752e49",
-                                    "node_id": "NoaCfRqM",
-                                    "message": "语序错误：'我是义的话一段语测试' 不通顺",
-                                    "rule_id": "RULE_GRAMMAR_PROBLEM",
-                                    "text_index": 0,
-                                    "severity": "info",
-                                    "fixCommand": {
-                                        "action": "replaceText",
-                                        "params": {
-                                            "text": "这是一段用于语法测试的话"
-                                        }
+                                    {
+                                        "id": "448adb9e-7707-4ac7-8537-73bbcbf0a5e6",
+                                        "message": "错别字问题：'研' 应为 '研究'",
+                                        "rule_id": "RULE_GRAMMAR_PROBLEM",
+                                        "text_pos": {
+                                            "from": 114,
+                                            "to": 116
+                                        },
+                                        "original_text_pos": {
+                                            "from": 8,
+                                            "to": 121
+                                        },
+                                        "severity": "info",
+                                        "fixCommand": {
+                                            "action": "replaceText",
+                                            "params": {
+                                                "text": "研究"
+                                            }
+                                        },
+                                        "meta": {}
                                     },
-                                    "meta": {
-                                        "section": "第四段"
+                                    {
+                                        "id": "db473775-9f62-46b8-9656-98f8b407ab8d",
+                                        "message": "错别字问题：'问字' 应为 '文字'",
+                                        "rule_id": "RULE_GRAMMAR_PROBLEM",
+                                        "text_pos": {
+                                            "from": 148,
+                                            "to": 151
+                                        },
+                                        "original_text_pos": {
+                                            "from": 148,
+                                            "to": 159
+                                        },
+                                        "severity": "info",
+                                        "fixCommand": {
+                                            "action": "replaceText",
+                                            "params": {
+                                                "text": "文字"
+                                            }
+                                        },
+                                        "meta": {}
                                     }
-                                }
-                            ]
+                                ]
+                            }
                         }
-                    };
-                    const mockSuggestions = res.data.suggestions as Suggestion[];
-                    storage.suggestions = mockSuggestions;
-                    // 触发一次插件 state 重建 DecorationSet
-                    const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
-                        type: 'rebuildFromStorage',
-                    });
-                    editor.view.dispatch(tr);
-                }, 1000);
+                        const mockSuggestions = res.data.suggestions as Suggestion[];
+                        storage.suggestions = mockSuggestions;
+                        // 触发一次插件 state 重建 DecorationSet
+                        const tr = editor.state.tr.setMeta(documentSuggestPluginKey, {
+                            type: 'rebuildFromStorage',
+                        });
+                        editor.view.dispatch(tr);
+                    }, 1000);
+                } else {
+                    (async () => {
+                        try {
+                            let suggestions: Suggestion[] = [];
+                            if (this.options.fetchSuggestions) {
+                                suggestions = await this.options.fetchSuggestions(docJson, rules, editor);
+
+                            } else {
+                                const resp = await fetch(this.options.backendUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        doc: docJson,
+                                        rules: rules,
+                                    }),
+                                });
+                                if (!resp.ok) {
+                                    throw new Error('Failed to fetch suggestions');
+                                }
+                                const payload = await resp.json();
+                                suggestions = (payload.data.suggestions || []) as Suggestion[];
+                            }
+                            storage.suggestions = suggestions;
+                            editor.view.dispatch(editor.state.tr)
+
+                        } catch (error) {
+                            storage.error = error;
+                        } finally {
+                            storage.isLoading = false;
+                        }
+                    })();
+                }
+
+
 
                 return true;
             },
