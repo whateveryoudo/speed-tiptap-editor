@@ -132,9 +132,9 @@ const emit = defineEmits(['update:title', 'update:content', 'update:collaborator
 
 // 使用 Ant Design Vue CSS 变量
 const { cleanup, updateTheme } = useAntdCssVars();
-onUnmounted(() => {
-  cleanup?.();
-});
+// onUnmounted(() => {
+//   cleanup?.();
+// });
 // 防抖处理 title 更新
 const debouncedEmitTitle = debounce((titleText: string) => {
   // 对比当前 title 和 props.title，如果相同则不 emit
