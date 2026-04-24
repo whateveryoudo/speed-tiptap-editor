@@ -32,6 +32,7 @@ import { TextAlign } from "@tiptap/extension-text-align";
 import { Tag } from "./tag";
 import { Mind } from "./mind";
 import { Mention } from "./mention";
+import { getMentionSuggestion } from "./mention/suggestion";
 import { CodeBlock } from "./codeBlock";
 import { Callout } from "./callout";
 import CustomeFlowMap from "./flowMap/CustomeFlowMap";
@@ -44,7 +45,10 @@ import { SearchAndReplace } from "./searchAndReplace";
 import Superscript from "@tiptap/extension-superscript";
 import Subscript from "@tiptap/extension-subscript";
 import { FormatPainter } from "./formatPainter";
-import { DocumentSuggest, type Suggestion as DocumentSuggestion } from "./documentSuggest";
+import {
+  DocumentSuggest,
+  type Suggestion as DocumentSuggestion,
+} from "./documentSuggest";
 import { Decoration } from "@tiptap/pm/view";
 import { ref } from "vue";
 
@@ -129,7 +133,15 @@ export const getDefaultKit = (props: any) => [
   Blockquote,
   Emoji,
   Parse,
-  Mention,
+  // 这里传入自定义请求
+  Mention.configure({
+    HTMLAttributes: {
+      class: "mention",
+    },
+    suggestion: getMentionSuggestion({
+      mentionUserFetch: props.mentionUserFetch,
+    }),
+  }),
   FormatPainter,
   // 开源 替换 搜索插件
   SearchAndReplace.configure({
@@ -165,7 +177,7 @@ export const getKnowledgeKit = (props: any) => [
   Title,
   DocumentWithHeading, // 用带 title 的 document
   DocumentSuggest.configure({
-    backendUrl: 'http://localhost:8010/api/v1/ai/document/check',
+    backendUrl: "http://localhost:8010/api/v1/ai/document/check",
     rules: props.documentSuggestConfig?.rules || [],
     // 自定义装饰器
     getCustomSuggestionDecoration({
@@ -186,7 +198,9 @@ export const getKnowledgeKit = (props: any) => [
       // 如果当前 tooltip 关联的 suggestion 已经不在列表中（如被拒绝/全部应用），主动清空 tooltip
       if (
         tooltipElement.value &&
-        !allSuggestions.some((s) => s.id === tooltipElement.value!.suggestion.id)
+        !allSuggestions.some(
+          (s) => s.id === tooltipElement.value!.suggestion.id,
+        )
       ) {
         tooltipElement.value = null;
         return [];
@@ -199,7 +213,7 @@ export const getKnowledgeKit = (props: any) => [
             // 选中时，更新 tooltipElement
             tooltipElement.value = { element, suggestion, ruleTitle };
             return element;
-          })
+          }),
         );
       } else {
         // 如果当前取消选中的正好是 tooltip 上那条，清空 tooltip
@@ -213,4 +227,3 @@ export const getKnowledgeKit = (props: any) => [
   }),
   ...getDefaultKit(props).filter((ext) => ext?.name !== "doc"),
 ];
-

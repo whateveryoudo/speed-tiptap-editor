@@ -43,7 +43,8 @@ export function useFloatingPopup(options: FloatingPopupOptions = {}) {
     offset: offsetValue = 4,
     padding = 8,
     zIndex = 999,
-    scrollElem = document.querySelector(".editor-content-wrap"), // 目前编辑器的滚动容器类
+    // scrollElem = document.querySelector(".editor-content-wrap"), // 目前编辑器的滚动容器类
+    scrollElem = document.body, // 请保证外部页面滚动，而不是编辑器内部滚动
   } = options;
 
   const popupInstance = ref<PopupInstance | null>(null);
@@ -62,7 +63,7 @@ export function useFloatingPopup(options: FloatingPopupOptions = {}) {
     popup.style.pointerEvents = "auto";
     popup.style.overflowY = "auto";
     popup.style.backgroundColor = "#fff";
-    popup.style.padding = "3px 10px";
+    popup.style.padding = "5px 10px";
     popup.style.boxShadow =
       "0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)";
     popup.style.borderRadius = "4px";

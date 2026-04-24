@@ -142,7 +142,7 @@
     "nanoid": "^5.1.6",
     "pinia": "^3.0.3",
     "scroll-into-view-if-needed": "^3.0.3",
-    "speed-components-ui": "^0.1.39",
+    "speed-components-ui": "^0.1.40",
     "toggle-selection": "^1.0.6",
     "turndown": "^7.2.1",
     "uuid": "^13.0.0",

@@ -16,6 +16,14 @@ export type ToolBarConfig =
       icon: string | VNode;
       options?: ToolBarConfig[];
     };
+export interface UserInfo {
+  id: number;
+  username: string;
+  nickname?: string;
+  avatar?: string;
+  color?: string;
+  [key: string]: any;
+}
 // 编辑器props
 // 上传配置（image | file | upload）
 export interface IUploadConfig {
@@ -36,6 +44,8 @@ export interface IUploadConfig {
     getPreviewUrl: (fileId: string) => string;
   };
 }
+
+// 已经放到了editor中，不知道使用导入的一直不更新什么原因
 export interface CollaborationEditorProps {
   /**
    * 场景:
@@ -143,10 +153,13 @@ export interface CollaborationEditorProps {
       ) => Record<string, any>;
     };
   };
+  // 用户请求函数
+  mentionUserFetch?: any;
   // 文档检测配置
   documentSuggestConfig?: {
     rules?: any[];
   };
+  aa: number;
   // 对SpeedComponents的一些配置(注意这里)
   sdComponentsConfig?: {
     apis?: {

@@ -72,6 +72,10 @@ import * as Y from 'yjs'
 import { debounce } from 'lodash-es'
 import { getRandomColor } from '@/helpers/color'
 import { type GlobalConfig } from './index'
+import type { CSSProperties } from "vue";
+import type { Editor } from "@tiptap/core";
+import { type UserInfo, type IUploadConfig, type ToolBarConfig } from './type'
+
 // 初始化注入的对象
 const speedUseTiptapConfig = inject<Ref<GlobalConfig>>(
   "speedUseTiptapConfig",
@@ -87,9 +91,128 @@ onKeyStroke(e => {
 defineOptions({
   name: 'SpeedTiptapEditor',
 })
+// TODO: theme 类型提取出去不行？？
+const props = withDefaults(defineProps<{
+  /**
+   * 场景:
+   */
+  scene?: "default" | "knowledge";
+  theme?: "light" | "dark"; // 编辑器主题
+  antdToken?: any; // antd的token配置
+  editorStyle?: CSSProperties;
+  headerStyle?: CSSProperties;
+  mainStyle?: CSSProperties;
+  hideBorder?: boolean;
+  /**
+   * 内容
+   */
+  content?: string;
 
-// TODO: theme
-const props = withDefaults(defineProps<CollaborationEditorProps>(), {
+  /**
+   * 内容(json数据,这里不提供更新操作，仅提供设置操作，目前仅开启了协同模式下使用)
+   */
+  json?: string | null | Record<string, any>;
+
+  /**
+   * 标题
+   */
+  title?: string;
+  /**
+   * 文档 id
+   */
+  docId?: string;
+  /**
+   *  类型
+   */
+  docType?: "document" | "template";
+  /**
+   * 是否可编辑
+   */
+  editable?: boolean;
+  /**
+   * 协作配置
+   */
+  collaboration?: {
+    documentId: string;
+    url: string;
+    token: string;
+    user: {
+      id: string;
+      username: string;
+      nickname?: string;
+      avatar?: string;
+      color?: string;
+      [key: string]: any;
+    }; // 一些用户信息(用于协作时显示用户名和颜色,不传入颜色下采用随机颜色)
+  };
+  /**
+   * 是否需要菜单
+   */
+  menubar?: boolean;
+  /**
+   * 是否隐藏评论功能
+   */
+  hideComment?: boolean;
+  /**
+   * 占位符
+   */
+  placeholder?: string;
+  hocuspocusProvider?: {
+    type: Object;
+  };
+
+  toolbarKeys?: ToolBarConfig[];
+  // 通用上传配置（此配置下会作用于image 和 file）
+  upload?: IUploadConfig;
+  // 图片
+  image?: IUploadConfig;
+  // 附件
+  file?: IUploadConfig;
+  fontSize?: {
+    default?: string;
+    options?: {
+      value: string;
+      label: string;
+    }[];
+  };
+  // 文本浮动菜单
+  textBubbleMenu?: {
+    enabled?: boolean;
+    items?: (
+      | {
+          icon: string | VNode;
+          title: string;
+          action?: (editor: Editor) => void;
+        }
+      | string
+    )[];
+  };
+  // ai配置
+  ai?: {
+    doubao?: {
+      url: string;
+      header?: Record<string, any>;
+      bodyParams?: (
+        action: string,
+        content: string,
+        customPrompt: string
+      ) => Record<string, any>;
+    };
+  };
+  // 用户请求函数
+  mentionUserFetch?: (query: string) => Promise<UserInfo[]>;
+  // 文档检测配置
+  documentSuggestConfig?: {
+    rules?: any[];
+  };
+  // 对SpeedComponents的一些配置(注意这里)
+  sdComponentsConfig?: {
+    apis?: {
+      [key: string]: any;
+    };
+    transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
+  };
+}>(), {
   scene: "default",
   content: "",
   docType: "document",
@@ -107,8 +230,9 @@ const props = withDefaults(defineProps<CollaborationEditorProps>(), {
   }),
   documentSuggestConfig: () => ({
     rules: [],
-  }),
+  })
 })
+console.log(props);
 // 组合后的antd主题(这里需要处理, 支持全局配置和组件配置)
 const cptTheme = computed(() => {
   const { antdToken: antdTokenFromConfig, theme: themeFromConfig } = speedUseTiptapConfig.value || {};

@@ -8,28 +8,26 @@
 -->
 <template>
   <ul class="text-list-wrapper" ref="ulRef">
-    <li
-      v-for="(item, index) in items"
-      :key="index"
-      :class="[
-        'shadow-bg-wrapper overflow-hidden-one',
-        'list-item',
-        index === selectedIndex && 'is-active',
-      ]"
-      @click="selectItem(index)"
-      :title="item">
-      {{ item }}
+    <li v-for="(item, index) in items" :key="index" :class="[
+      'shadow-bg-wrapper overflow-hidden-one',
+      'list-item',
+      index === selectedIndex && 'is-active',
+    ]" @click="selectItem(index)" :title="item.nickname || item.username">
+      <img :src="item.avatar || AvatarDef" alt="avatar" class="w-[20px] h-[20px] mr-2" />
+      {{ item.nickname || item.username }}
+      --{{ items.length }}
     </li>
   </ul>
 </template>
 
 <script setup lang="ts">
 import scrollIntoView from 'scroll-into-view-if-needed'
-
+import AvatarDef from '@/assets/image/avatar_def.png';
 import { PropType, ref, watch } from 'vue'
+import type { UserInfo } from '@/type'
 const props = defineProps({
   items: {
-    type: Array as PropType<Array<string>>,
+    type: Array as PropType<Array<UserInfo>>,
     required: true,
   },
 
@@ -103,15 +101,14 @@ defineExpose({
   max-height: 320px;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #fff;
-  border-radius: var(--border-radius);
-  margin: 0;
-  box-shadow: rgba(9, 30, 66, 0.31) 0 0 1px, rgba(9, 30, 66, 0.25) 0 4px 8px -2px;
+
   .list-item {
     padding: 0 10px;
     height: 35px;
     line-height: 35px;
-    & > span {
+    justify-content: flex-start;
+
+    &>span {
       margin-right: 5px;
       position: relative;
       top: 1px;
