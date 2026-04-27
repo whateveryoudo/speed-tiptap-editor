@@ -12,13 +12,17 @@ import { getDatasetAttribute } from '@/prose-utils';
 export const Mention = BulitInMention.extend({
   addAttributes() {
     return {
-      id: {
+      userId: {
         default: '',
-        parseHTML: getDatasetAttribute('id'),
+        parseHTML: getDatasetAttribute('user-id'),
       },
       label: {
         default: '',
         parseHTML: getDatasetAttribute('label'),
+      },
+      id: {
+        default: '',
+        parseHTML: getDatasetAttribute('id'),
       },
     };
   },

@@ -8,7 +8,7 @@
 -->
 <template>
   <a-config-provider :theme="cptTheme">
-    <div :class="['wrap', scene, hideBorder ? 'hide-border' : '']" :style="editorStyle">
+    <div :class="['wrap speed-tiptap-editor', scene, hideBorder ? 'hide-border' : '']" :style="editorStyle">
       <!-- 工具栏 -->
       <menu-bar :style="headerStyle" :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header"
         :editor="editor" />
@@ -137,7 +137,7 @@ const props = withDefaults(defineProps<{
     url: string;
     token: string;
     user: {
-      id: string;
+      id: number;
       username: string;
       nickname?: string;
       avatar?: string;

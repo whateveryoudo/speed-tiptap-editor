@@ -7,17 +7,21 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\mention\MentionList.vue
 -->
 <template>
-  <ul class="text-list-wrapper" ref="ulRef">
-    <li v-for="(item, index) in items" :key="index" :class="[
-      'shadow-bg-wrapper overflow-hidden-one',
-      'list-item',
-      index === selectedIndex && 'is-active',
-    ]" @click="selectItem(index)" :title="item.nickname || item.username">
-      <img :src="item.avatar || AvatarDef" alt="avatar" class="w-[20px] h-[20px] mr-2" />
-      {{ item.nickname || item.username }}
-      --{{ items.length }}
-    </li>
-  </ul>
+  <div>
+    <ul class="text-list-wrapper" v-if="items.length > 0" ref="ulRef">
+      <li v-for="(item, index) in items" :key="index" :class="[
+        'shadow-bg-wrapper overflow-hidden-one',
+        'list-item',
+        index === selectedIndex && 'is-active',
+      ]" @click="selectItem(index)" :title="item.nickname || item.username">
+        <img :src="item.avatar || AvatarDef" alt="avatar" class="w-[20px] h-[20px] mr-2" />
+        {{ item.nickname || item.username }}
+        --{{ items.length }}
+      </li>
+    </ul>
+    <p class="text-center text-gray-500" v-else>暂无联系人</p>
+  </div>
+
 </template>
 
 <script setup lang="ts">
@@ -25,6 +29,7 @@ import scrollIntoView from 'scroll-into-view-if-needed'
 import AvatarDef from '@/assets/image/avatar_def.png';
 import { PropType, ref, watch } from 'vue'
 import type { UserInfo } from '@/type'
+import { nanoid } from 'nanoid'
 const props = defineProps({
   items: {
     type: Array as PropType<Array<UserInfo>>,
@@ -43,6 +48,7 @@ const props = defineProps({
 })
 const selectedIndex = ref(0)
 const ulRef = ref<HTMLDivElement>()
+const menthonId = nanoid(); // 唯一标识
 //监听index变化滚动
 watch(selectedIndex, (val: number) => {
   // if (Number.isNaN(selectedIndex.value + 1)) return
@@ -58,7 +64,7 @@ watch(
 const selectItem = (index: number) => {
   const item = props.items[index]
   if (item) {
-    props.command({ id: item, label: item })
+    props.command({ userId: item.id, label: item.nickname || item.username, id: menthonId })
   }
 }
 const upHandler = () => {
