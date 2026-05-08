@@ -16,10 +16,9 @@
       ]" @click="selectItem(index)" :title="item.nickname || item.username">
         <img :src="item.avatar || AvatarDef" alt="avatar" class="w-[20px] h-[20px] mr-2" />
         {{ item.nickname || item.username }}
-        --{{ items.length }}
       </li>
     </ul>
-    <p class="text-center text-gray-500" v-else>暂无联系人</p>
+    <p class="text-center text-gray-500 px-1" v-else>暂无联系人</p>
   </div>
 
 </template>

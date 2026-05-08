@@ -5,6 +5,10 @@
   "main": "example/main.ts",
   "exports": {
     ".": {
+      "import": "./dist/speed-tiptap-editor-index.es.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./debug": {
       "import": "./src/index.ts"
     }
   },
