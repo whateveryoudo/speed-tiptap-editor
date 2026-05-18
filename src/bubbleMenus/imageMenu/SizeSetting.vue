@@ -50,8 +50,8 @@
 <script setup lang="ts">
 import { ref, computed, watch, PropType } from 'vue'
 import { Editor } from '@tiptap/core'
-import { Image } from '@/extensions/image'
-import { useAttributes } from '@/hooks/useAttributes'
+import { Image } from '@st/extensions/image'
+import { useAttributes } from '@st/hooks/useAttributes'
 
 const props = defineProps({
     editor: {

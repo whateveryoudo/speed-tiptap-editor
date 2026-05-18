@@ -41,12 +41,12 @@
 <script setup lang="ts">
 import { inject, PropType, computed, Ref, ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
-import { Image } from "@/extensions/image";
-import align from "@/menus/align";
+import { Image } from "@st/extensions/image";
+import align from "@st/menus/align";
 import SizeSetting from "./SizeSetting.vue";
-import { useBubble } from "@/hooks/useBubble";
-import { useAttributes } from "@/hooks/useAttributes";
-import { useSpeedEditor } from "@/hooks/useSpeedEditorContext";
+import { useBubble } from "@st/hooks/useBubble";
+import { useAttributes } from "@st/hooks/useAttributes";
+import { useSpeedEditor } from "@st/hooks/useSpeedEditorContext";
 import {
   DeleteOutlined,
   EyeOutlined,

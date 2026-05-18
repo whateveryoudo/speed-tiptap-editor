@@ -42,7 +42,7 @@
 
 <script setup lang="tsx">
 import { ref, PropType, computed, nextTick, onMounted } from 'vue'
-import { createKeysLocalStorageLRUCache } from '@/helpers/lru-cache';
+import { createKeysLocalStorageLRUCache } from '@st/helpers/lru-cache';
 import { ACTIVITIES, EXPRESSIONES, GESTURES, OBJECTS, SKY_WEATHER, SYMBOLS } from './data';
 
 const EMOJI_CACHE_KEY = 'RECENT_EMOJI_LIST'

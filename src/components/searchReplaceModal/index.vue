@@ -49,7 +49,7 @@
 import { ref, inject, computed } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { Editor } from '@tiptap/core'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
     editor: Editor
 }>(), {

@@ -22,8 +22,8 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { Editor } from '@tiptap/core'
-import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 
 const keyMap = getShortcutTipByKey('undo');
 const props = defineProps({

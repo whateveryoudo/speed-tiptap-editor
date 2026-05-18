@@ -18,10 +18,10 @@
 <script setup lang="ts">
 import { Editor } from '@tiptap/core'
 import { ExportOutlined } from '@ant-design/icons-vue'
-import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
+import { useMenuButtonEvents } from '@st/hooks/useMenuButtonEvents'
 import ExportFormatModal from './ExportFormatModal.vue'
 import { ref } from 'vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
     editor: Editor,
     triggerType?: 'menu' | 'bubble'

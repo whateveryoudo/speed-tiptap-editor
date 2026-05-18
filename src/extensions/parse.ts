@@ -7,11 +7,11 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\parse.ts
  */
 import { Extension } from '@tiptap/core'
-import { EXTENSION_PRIORITY_HIGHEST } from '@/enums/constants'
+import { EXTENSION_PRIORITY_HIGHEST } from '@st/enums/constants'
 import { toggleMark } from '@tiptap/pm/commands'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
-import { safeJSONParse } from '@/helpers/json'
-import { handleFileEvent, isValidURL } from '@/prose-utils'
+import { safeJSONParse } from '@st/helpers/json'
+import { handleFileEvent, isValidURL } from '@st/prose-utils'
 export const Parse = Extension.create({
   name: 'customPaste',
   priority: EXTENSION_PRIORITY_HIGHEST,

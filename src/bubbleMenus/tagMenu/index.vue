@@ -50,10 +50,10 @@
 <script setup lang="ts">
 import { PropType, computed, ref, watch } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
-import { Tag } from "@/extensions/tag";
-import { useAttributes } from "@/hooks/useAttributes";
+import { Tag } from "@st/extensions/tag";
+import { useAttributes } from "@st/hooks/useAttributes";
 import { type Editor } from "@tiptap/core";
-import ColorPicker from "@/components/colorPicker/index.vue";
+import ColorPicker from "@st/components/colorPicker/index.vue";
 import { debounce } from "lodash-es";
 const props = defineProps({
   editor: {

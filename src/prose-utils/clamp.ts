@@ -6,4 +6,4 @@
  * @Description: 
  * @FilePath: \we-knowledge-base\src\tiptap\prose-utils\clamp.ts
  */
-export * from '@/helpers/clamp';
+export * from '@st/helpers/clamp';

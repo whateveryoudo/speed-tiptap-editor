@@ -1,5 +1,5 @@
-import type { UserInfo } from "@/type";
-import { useFloatingPopup } from "@/hooks/useFloatingPopup";
+import type { UserInfo } from "@st/type";
+import { useFloatingPopup } from "@st/hooks/useFloatingPopup";
 import { VueRenderer } from "@tiptap/vue-3";
 import MentionList from "./MentionList.vue";
 export const getMentionSuggestion = (option: {

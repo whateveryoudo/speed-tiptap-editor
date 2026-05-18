@@ -7,8 +7,8 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { layoutSetting } from '@/config/globalSetting'
-import { useAppStore } from '@/store'
+import { layoutSetting } from '@st/config/globalSetting'
+import { useAppStore } from '@st/store'
 import { useRouter } from 'vue-router'
 export default defineComponent({
   setup() {

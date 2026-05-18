@@ -30,13 +30,13 @@
 import { ref, inject, computed } from 'vue'
 import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
-import ColorPicker from '@/components/colorPicker/index.vue'
-import { type ColorType } from '@/components/colorPicker/data'
+import ColorPicker from '@st/components/colorPicker/index.vue'
+import { type ColorType } from '@st/components/colorPicker/data'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 
 const props = withDefaults(defineProps<{
   editor: Editor

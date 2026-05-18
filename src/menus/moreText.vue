@@ -45,14 +45,14 @@
 <script setup lang="tsx">
 import { Editor } from '@tiptap/core'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { ref, PropType, computed } from 'vue'
-// import { Code as InlineCode } from '@/extensions/code'
+// import { Code as InlineCode } from '@st/extensions/code'
 import Superscript from '@tiptap/extension-superscript'
 import Subscript from '@tiptap/extension-subscript'
-import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

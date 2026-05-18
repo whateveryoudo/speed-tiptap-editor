@@ -20,11 +20,11 @@
 <script setup lang="ts">
 import { PropType, ref, watch, computed } from 'vue'
 import { Editor } from '@tiptap/core'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { ClearOutlined } from '@ant-design/icons-vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
-import { getShortcutTipByKey } from '@/helpers/registKeyMap';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

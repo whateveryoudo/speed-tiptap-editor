@@ -47,7 +47,7 @@ import { CloseOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-
 import { useVModel } from '@vueuse/core'
 import { throttle, omit } from 'lodash-es'
 import { defineOptions } from 'unplugin-vue-define-options/macros'
-import { getCompatUnit } from '@/utils/utils'
+import { getCompatUnit } from '@st/utils/utils'
 defineOptions({
   name: 's-draggable-modal',
 })

@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import { ref, reactive, nextTick, watch, onMounted } from 'vue'
 import interact from 'interactjs'
-import { useClickOutside } from '@/hooks/useClickOutside'
-import { getCompatUnit } from '@/helpers/base'
+import { useClickOutside } from '@st/hooks/useClickOutside'
+import { getCompatUnit } from '@st/helpers/base'
 const MIN_WIDTH = 50
 const MIN_HEIGHT = 50
 function clamp(val: number, min: number, max: number): string {

@@ -55,8 +55,8 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import useOrgListStore from '@/hooks/useOrgListStore'
-import type { OrgListItem } from '@/hooks/useOrgListStore'
+import useOrgListStore from '@st/hooks/useOrgListStore'
+import type { OrgListItem } from '@st/hooks/useOrgListStore'
 const orgListStore = useOrgListStore()
 orgListStore.getPersonList()
 

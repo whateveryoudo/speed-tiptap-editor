@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import shortcut from '@/assets/image/shortcut.gif'
-import keyboard from '@/assets/image/keyboard.svg'
+import shortcut from '@st/assets/image/shortcut.gif'
+import keyboard from '@st/assets/image/keyboard.svg'
 
 const visible = ref(false)
 const shortcutDataSource = [

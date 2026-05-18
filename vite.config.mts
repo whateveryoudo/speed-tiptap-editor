@@ -38,7 +38,7 @@ export default defineConfig(({ command, mode }) => {
     ],
     resolve: {
       alias: {
-        "@": resolve(__dirname, "src"),
+        "@st": resolve(__dirname, "src"),
         "#example": resolve(__dirname, "example/src")
       },
     },
@@ -52,10 +52,11 @@ export default defineConfig(({ command, mode }) => {
         },
         rollupOptions: {
           external:
-            process.env.BUILD_MODE === "lib" ? ["vue"] : [],
+            process.env.BUILD_MODE === "lib" ? ["vue", "ant-design-vue"] : [],
           output: {
             globals: {
               vue: "Vue",
+              'ant-design-vue': 'AntDesignVue'
             },
             dir: "dist",
             assetFileNames: (assetInfo) => {

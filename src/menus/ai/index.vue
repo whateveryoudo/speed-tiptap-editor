@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import AiIcon from '@/assets/image/ai.svg'
+import AiIcon from '@st/assets/image/ai.svg'
 import { Editor } from '@tiptap/core'
 
 const props = withDefaults(defineProps<{

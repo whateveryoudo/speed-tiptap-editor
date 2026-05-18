@@ -3,8 +3,8 @@
 
 import { createInjectionState } from '@vueuse/core';
 import { computed, ref, type ComputedRef, type Ref } from 'vue';
-import { getDefaultKit } from '@/extensions/kit';
-import { type CollaborationEditorProps } from '@/type';
+import { getDefaultKit } from '@st/extensions/kit';
+import { type CollaborationEditorProps } from '@st/type';
 import type { Extensions } from '@tiptap/core'
 
 // 定义返回的上下文类型

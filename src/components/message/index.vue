@@ -41,8 +41,8 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import useMessageStore from '@/hooks/useMessageStore'
-import type { pageParams } from '@/hooks/useMessageStore'
+import useMessageStore from '@st/hooks/useMessageStore'
+import type { pageParams } from '@st/hooks/useMessageStore'
 
 import { Empty } from 'ant-design-vue'
 const messageStore = useMessageStore()

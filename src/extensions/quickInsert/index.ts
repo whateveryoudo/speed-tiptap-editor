@@ -8,12 +8,12 @@
  */
 import { Node } from "@tiptap/core";
 import { PluginKey, Plugin } from "@tiptap/pm/state";
-import { EXTENSION_PRIORITY_HIGHEST } from "@/enums/constants";
+import { EXTENSION_PRIORITY_HIGHEST } from "@st/enums/constants";
 import Suggestion from "@tiptap/suggestion";
-import BaseList from "@/menus/insert/baseList";
-import { useCommand, type SubMenuGroup } from "@/menus/insert/useCommand";
+import BaseList from "@st/menus/insert/baseList";
+import { useCommand, type SubMenuGroup } from "@st/menus/insert/useCommand";
 import { VueRenderer } from "@tiptap/vue-3";
-import { useFloatingPopup } from "@/hooks/useFloatingPopup";
+import { useFloatingPopup } from "@st/hooks/useFloatingPopup";
 
 const QuickInsertPluginKey = new PluginKey("quickInsert");
 const QuickInsertPluginKeyZh = new PluginKey("zhEvokeMenuPlaceholder");

@@ -3,7 +3,7 @@ import { Extension } from '@tiptap/core'
 import { Plugin, PluginKey, Selection } from '@tiptap/pm/state'
 import { NodeSelection } from '@tiptap/pm/state'
 import { EditorView } from '@tiptap/pm/view'
-import { ActiveNode, getNodeAtPos, selectRootNodeByDom } from '@/prose-utils';
+import { ActiveNode, getNodeAtPos, selectRootNodeByDom } from '@st/prose-utils';
 
 export const DragablePluginKey = new PluginKey('dragable');
 

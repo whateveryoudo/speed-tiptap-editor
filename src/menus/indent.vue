@@ -37,10 +37,10 @@
 <script setup lang="tsx">
 import { type Editor } from '@tiptap/core'
 import { CaretDownOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { ref, type VNode, PropType, computed } from 'vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
     editor: {
         type: Object as PropType<Editor>,

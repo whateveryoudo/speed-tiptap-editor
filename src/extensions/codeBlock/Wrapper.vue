@@ -80,11 +80,11 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
-import { useEdgeResize } from '@/hooks/useEdgeResize'
+import { useEdgeResize } from '@st/hooks/useEdgeResize'
 import { lowlightInstance } from './index'
-import { copy } from '@/helpers/copy-to-clipboard'
-import { useBubble } from '@/hooks/useBubble'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { copy } from '@st/helpers/copy-to-clipboard'
+import { useBubble } from '@st/hooks/useBubble'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps(nodeViewProps)
 const nodeAttrs = computed(() => props.node.attrs)
 const isHover = ref(false)

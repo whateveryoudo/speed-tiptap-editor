@@ -70,15 +70,15 @@
 import { ref, computed, inject } from 'vue'
 import { message } from 'ant-design-vue'
 import type { Editor } from '@tiptap/core'
-import { useAiAssistant, type AIAction, type AIProcessOptions } from '@/hooks/useAiAssistant'
-import AiPromptIcon from '@/assets/image/ai-prompt-icon.svg'
+import { useAiAssistant, type AIAction, type AIProcessOptions } from '@st/hooks/useAiAssistant'
+import AiPromptIcon from '@st/assets/image/ai-prompt-icon.svg'
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import hljs from 'highlight.js';
-import { getSelectedText } from '@/prose-utils/text'
+import { getSelectedText } from '@st/prose-utils/text'
 import { CheckOutlined, SyncOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { markdownToJSON } from '@/helpers/markdown-to-json'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { markdownToJSON } from '@st/helpers/markdown-to-json'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 
 // Props 定义
 const props = defineProps<{

@@ -62,8 +62,8 @@
 <script setup lang="tsx">
 import { ref, PropType, onMounted } from 'vue'
 import { colors, type ColorType } from './data'
-import CustomColor from '@/assets/image/custom-color.png'
-import { createKeysLocalStorageLRUCache } from '@/helpers/lru-cache';
+import CustomColor from '@st/assets/image/custom-color.png'
+import { createKeysLocalStorageLRUCache } from '@st/helpers/lru-cache';
 
 const defaultColor: ColorType = '#000000'
 const LOCAL_KEY = 'RECENT_CUSTOM_COLORS'

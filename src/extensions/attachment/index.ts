@@ -9,7 +9,7 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
-import { getDatasetAttribute } from "@/prose-utils";
+import { getDatasetAttribute } from "@st/prose-utils";
 import { Editor } from "@tiptap/core";
 import { v4 as uuidv4 } from "uuid";
 declare module "@tiptap/core" {

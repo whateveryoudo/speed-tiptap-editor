@@ -7,8 +7,8 @@
  * @FilePath: \we-knowledge-base\src\tiptap\prose-utils\copy-node.ts
  */
 import { Editor } from '@tiptap/core';
-import { copy } from '@/helpers/copy-to-clipboard';
-import { safeJSONStringify } from '@/helpers/json';
+import { copy } from '@st/helpers/copy-to-clipboard';
+import { safeJSONStringify } from '@st/helpers/json';
 import { Fragment, Node } from '@tiptap/pm/model';
 
 import { debug } from './debug';

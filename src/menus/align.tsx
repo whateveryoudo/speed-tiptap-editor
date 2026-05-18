@@ -14,13 +14,13 @@ import {
   AlignRightOutlined,
   AlignCenterOutlined,
 } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { type VNode, PropType, computed, inject, ref, type Ref, defineComponent } from 'vue'
 import { Popover, Tooltip, Button, Space } from 'ant-design-vue'
-import { getShortcutTipByKey } from '@/helpers/registKeyMap'
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap'
 import { KeyMapTip } from 'speed-components-ui/components'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 type AlignType = 'left' | 'center' | 'right'
 
 

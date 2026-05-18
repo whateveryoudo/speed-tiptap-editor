@@ -43,8 +43,8 @@
 <script setup lang="ts">
 import { PropType, computed, inject, ref, Ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
-import { Attachment } from "@/extensions/attachment";
-import { useAttributes } from "@/hooks/useAttributes";
+import { Attachment } from "@st/extensions/attachment";
+import { useAttributes } from "@st/hooks/useAttributes";
 import {
   EyeOutlined,
   ProfileOutlined,
@@ -52,7 +52,7 @@ import {
   DownloadOutlined,
 } from "@ant-design/icons-vue";
 import { type Editor } from "@tiptap/core";
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",

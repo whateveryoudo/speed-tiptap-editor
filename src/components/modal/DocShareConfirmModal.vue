@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import useDocShareStore from '@/hooks/useDocShareStore'
+import useDocShareStore from '@st/hooks/useDocShareStore'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 
@@ -17,7 +17,7 @@ const clickHandler = async () => {
 <template>
   <a-modal v-model:open="docShareStore.visible" :footer="null" title="分享文档">
     <div class="w-96 mx-auto">
-      <img class="w-full" src="@/assets/image/engineering_team.svg" alt="team" />
+      <img class="w-full" src="@st/assets/image/engineering_team.svg" alt="team" />
     </div>
 
     <div class="mt-5 text-center">

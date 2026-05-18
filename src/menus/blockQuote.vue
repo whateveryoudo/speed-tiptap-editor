@@ -23,10 +23,10 @@
 <script setup lang="ts">
 import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import { Blockquote as BlockquoteExtension } from '@/extensions/blockquote';
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
+import { Blockquote as BlockquoteExtension } from '@st/extensions/blockquote';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

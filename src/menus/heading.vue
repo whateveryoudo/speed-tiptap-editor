@@ -27,10 +27,10 @@
 <script setup lang="ts">
 import { PropType, reactive, computed } from 'vue'
 import { Editor } from '@tiptap/core'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { CheckOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

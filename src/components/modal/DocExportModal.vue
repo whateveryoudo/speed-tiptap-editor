@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import useDocExportStore from '@/hooks/useDocExportStore'
+import useDocExportStore from '@st/hooks/useDocExportStore'
 
 const docExportStore = useDocExportStore()
 </script>

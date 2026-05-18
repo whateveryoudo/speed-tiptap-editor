@@ -24,11 +24,11 @@
 <script setup lang="ts">
 import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
-import EmojiPicker from '@/components/emojiPicker/index.vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import EmojiPicker from '@st/components/emojiPicker/index.vue'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { Emoji } from '@tiptap/extension-emoji'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

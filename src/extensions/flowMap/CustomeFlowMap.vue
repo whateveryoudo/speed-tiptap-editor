@@ -12,10 +12,10 @@ import { onMounted, ref, computed, watch } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
 import useFlowMap from './useFlowMap'
 import { load } from './diagram/index.js'
-import BasePluginBox from '@/components/wrappers/BasePluginBox.vue'
+import BasePluginBox from '@st/components/wrappers/BasePluginBox.vue'
 import {
   getEditorContainerDOMSize,
-} from '@/prose-utils'
+} from '@st/prose-utils'
 
 const flowMapRef = ref<HTMLDivElement>()
 

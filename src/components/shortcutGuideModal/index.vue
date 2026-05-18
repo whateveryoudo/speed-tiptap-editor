@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import shortcut from '@/assets/image/shortcut.gif'
+import shortcut from '@st/assets/image/shortcut.gif'
 
 const visible = ref(false)
 const shortcutDataSource = [

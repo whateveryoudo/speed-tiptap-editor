@@ -25,9 +25,9 @@
 
 <script setup lang="ts">
 import scrollIntoView from 'scroll-into-view-if-needed'
-import AvatarDef from '@/assets/image/avatar_def.png';
+import AvatarDef from '@st/assets/image/avatar_def.png';
 import { PropType, ref, watch } from 'vue'
-import type { UserInfo } from '@/type'
+import type { UserInfo } from '@st/type'
 import { nanoid } from 'nanoid'
 const props = defineProps({
   items: {

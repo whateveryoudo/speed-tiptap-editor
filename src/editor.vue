@@ -49,11 +49,11 @@ import { watch, ref, inject, type Ref, PropType, provide, computed, VNode, onMou
 import MenuBar from './menus'
 import { getKnowledgeKit, getDefaultKit, tooltipElement } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
-import TableMenu from '@/bubbleMenus/tableMenu/index.vue'
-import TableBubbleMenu from '@/bubbleMenus/tableMenu/Bubble.vue'
-import ShortcutGuideModal from '@/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@/bubbleMenus'
-import { useSpeedEditorProvider } from '@/hooks/useSpeedEditorContext'
+import TableMenu from '@st/bubbleMenus/tableMenu/index.vue'
+import TableBubbleMenu from '@st/bubbleMenus/tableMenu/Bubble.vue'
+import ShortcutGuideModal from '@st/components/shortcutGuideModal/index.vue'
+import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@st/bubbleMenus'
+import { useSpeedEditorProvider } from '@st/hooks/useSpeedEditorContext'
 import Collaboration from '@tiptap/extension-collaboration'
 import SuggestionToolTip from './extensions/documentSuggest/SuggestionTooltip.vue'
 // import { TiptapCollabProvider } from '@tiptap-pro/provider'
@@ -61,16 +61,16 @@ import SuggestionToolTip from './extensions/documentSuggest/SuggestionTooltip.vu
 import { HocuspocusProvider } from "@hocuspocus/provider";
 import CollaborationCaret from '@tiptap/extension-collaboration-caret'
 import { type CollaborationEditorProps } from './type'
-import { EditorPreviewImage } from '@/helpers/previews'
+import { EditorPreviewImage } from '@st/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
 import { type onAwarenessUpdateParameters } from '@hocuspocus/provider'
 import { message, theme } from 'ant-design-vue'
 import { useAntdCssVars } from 'speed-components-ui/hooks'
-import SearchReplaceModal from '@/components/searchReplaceModal/index.vue'
+import SearchReplaceModal from '@st/components/searchReplaceModal/index.vue'
 import * as Y from 'yjs'
 import { debounce } from 'lodash-es'
-import { getRandomColor } from '@/helpers/color'
+import { getRandomColor } from '@st/helpers/color'
 import { type GlobalConfig } from './index'
 import type { CSSProperties } from "vue";
 import type { Editor } from "@tiptap/core";
@@ -314,7 +314,7 @@ const editor = useEditor({
   onUpdate({ editor, transaction }) {
     // 编辑器内容变化时，同步到外部
     const html = editor.getHTML()
-    // console.log(html);
+    console.log(html);
     emit('update:content', html)
 
     // 原有的标题更新逻辑

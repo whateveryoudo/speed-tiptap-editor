@@ -3,6 +3,6 @@
 </template>
 
 <script lang="ts" setup>
-import logoSrc from '@/assets/image/logo.svg'
-import { layoutSetting } from '@/config/globalSetting'
+import logoSrc from '@st/assets/image/logo.svg'
+import { layoutSetting } from '@st/config/globalSetting'
 </script>

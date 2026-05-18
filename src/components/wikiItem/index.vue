@@ -46,11 +46,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { WikiListItem } from '@/hooks/useWikiListStore'
+import type { WikiListItem } from '@st/hooks/useWikiListStore'
 import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
-import useWikiDelete from '@/hooks/useWikiDelete'
-import { getStore } from '@/utils/storage'
+import useWikiDelete from '@st/hooks/useWikiDelete'
+import { getStore } from '@st/utils/storage'
 
 
 const route = useRoute()
@@ -95,7 +95,7 @@ const $emits = defineEmits(['starWiki', 'deleteWiki', 'editWiki'])
   // margin-left: 1%;
   margin-right: 10px;
   // color: #fff;
-  background: url('@/assets/image/cover2.png') no-repeat;
+  background: url('@st/assets/image/cover2.png') no-repeat;
   background-size: auto 140px;
   background-position: 0px -20px;
   .title {

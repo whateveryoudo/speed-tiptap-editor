@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import { Editor } from '@tiptap/core'
 import { FileSearchOutlined } from '@ant-design/icons-vue'
-import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
-import { getShortcutTipByKey } from '@/helpers/registKeyMap';
+import { useMenuButtonEvents } from '@st/hooks/useMenuButtonEvents'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap';
 const { editableCpt, searchReplaceVisible, updateSearchReplaceVisible } = useSpeedEditor();
 const keyMap = getShortcutTipByKey('findAndReplace');
 const props = withDefaults(defineProps<{

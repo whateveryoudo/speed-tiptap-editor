@@ -1,4 +1,4 @@
-import { safeJSONParse } from '@/helpers/json';
+import { safeJSONParse } from '@st/helpers/json';
 import { Node } from '@tiptap/pm/state';
 
 /**

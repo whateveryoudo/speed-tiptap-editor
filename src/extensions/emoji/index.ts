@@ -7,13 +7,13 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\emoji\index.ts
  */
 import { Extension } from '@tiptap/core'
-import { EXTENSION_PRIORITY_HIGHEST } from '@/enums/constants'
+import { EXTENSION_PRIORITY_HIGHEST } from '@st/enums/constants'
 import Suggestion from '@tiptap/suggestion'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { emojiSearch, emojisToName } from './emojis';
 import { VueRenderer } from '@tiptap/vue-3'
 import EmojiList from './EmojiList.vue'
-import { useFloatingPopup } from '@/hooks/useFloatingPopup'
+import { useFloatingPopup } from '@st/hooks/useFloatingPopup'
 
 const EmojiPluginKey = new PluginKey('emoji')
 

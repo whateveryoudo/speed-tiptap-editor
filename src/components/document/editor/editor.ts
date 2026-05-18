@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\components\document\editor\editor.ts
  */
 import type { PropType, ExtractPropTypes } from 'vue'
-import type { IDocument, IAuthority } from '@/types/module/document'
+import type { IDocument, IAuthority } from '@st/types/module/document'
 export const documentEditorProps = {
   
   document: {

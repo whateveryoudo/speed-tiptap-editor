@@ -65,14 +65,14 @@
 
 <script setup lang="ts">
 import { PropType, computed, onMounted, onUnmounted, ref } from "vue";
-import { Callout } from "@/extensions/callout";
-import { useAttributes } from "@/hooks/useAttributes";
+import { Callout } from "@st/extensions/callout";
+import { useAttributes } from "@st/hooks/useAttributes";
 import { type Editor } from "@tiptap/core";
-import ColorPicker from "@/components/colorPicker/index.vue";
-import { useNodeTopCenterBubble } from "@/bubbleMenus/useNodeTopCenterBubble";
+import ColorPicker from "@st/components/colorPicker/index.vue";
+import { useNodeTopCenterBubble } from "@st/bubbleMenus/useNodeTopCenterBubble";
 import { MinusCircleOutlined } from "@ant-design/icons-vue";
-import EmojiPicker from "@/components/emojiPicker/index.vue";
-import { useBubble } from "@/hooks/useBubble";
+import EmojiPicker from "@st/components/emojiPicker/index.vue";
+import { useBubble } from "@st/hooks/useBubble";
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

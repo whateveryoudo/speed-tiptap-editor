@@ -31,7 +31,7 @@
 
 <script setup lang="tsx">
 import { inject, ref, Ref } from "vue";
-import { normalizeFileType, normalizeFileSize } from "@/prose-utils/file";
+import { normalizeFileType, normalizeFileSize } from "@st/prose-utils/file";
 import {
   AudioOutlined,
   FileOutlined,
@@ -44,7 +44,7 @@ import {
   CodeOutlined,
 } from "@ant-design/icons-vue";
 import { type IFileItem } from "speed-components-ui/hooks";
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",

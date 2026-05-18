@@ -1,8 +1,8 @@
-import { IUser } from '@/types/user'
+import { IUser } from '@st/types/user'
 import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 import Wrapper from './Wrapper.vue'
-import { getDatasetAttribute, nodeAttrsToDataset } from '@/prose-utils'
+import { getDatasetAttribute, nodeAttrsToDataset } from '@st/prose-utils'
 
 export const DEFAULT_MIND_DATA = {
   root: { data: { text: '中心节点' }, children: [] },

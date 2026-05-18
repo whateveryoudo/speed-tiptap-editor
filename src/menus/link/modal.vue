@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
 import { linkModalProps } from './modal'
-import { isValidURL } from '@/prose-utils'
+import { isValidURL } from '@st/prose-utils'
 const props = defineProps(linkModalProps)
 const emit = defineEmits(['closeModal'])
 const formRef = ref(null)

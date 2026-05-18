@@ -67,10 +67,10 @@
 <script setup lang="tsx">
 import { ref, type PropType, computed } from "vue";
 import type { Editor } from "@tiptap/core";
-import { DragHandle } from "@/components/dragHandle";
-import { useActive } from '@/hooks/useActive'
+import { DragHandle } from "@st/components/dragHandle";
+import { useActive } from '@st/hooks/useActive'
 import { TextSelection } from '@tiptap/pm/state'
-import { useBubble } from "@/hooks/useBubble";
+import { useBubble } from "@st/hooks/useBubble";
 import {
     HolderOutlined,
     CopyOutlined,
@@ -82,7 +82,7 @@ import {
     CodeOutlined,
     FileTextOutlined,
 } from "@ant-design/icons-vue";
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
     editor: {
         type: Object as PropType<Editor>,

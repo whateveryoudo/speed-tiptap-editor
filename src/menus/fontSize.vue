@@ -25,11 +25,11 @@
 <script setup lang="ts">
 import { type PropType, inject, computed, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import { useAttributes } from '@/hooks/useAttributes'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
+import { useAttributes } from '@st/hooks/useAttributes'
 import { CheckOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const { speedTiptapConfig, editableCpt } = useSpeedEditor();
 const props = defineProps({
   editor: {

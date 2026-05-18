@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\hooks\useWebsocket.ts
  */
 import { ref, reactive } from 'vue'
-import { useUserStore } from '@/store'
+import { useUserStore } from '@st/store'
 interface TransformData {
   socketType: number | string
   data: any

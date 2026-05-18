@@ -20,11 +20,11 @@
 <script setup lang="ts">
 import { Editor } from '@tiptap/core'
 import { BoldOutlined } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import { useMenuButtonEvents } from '@/hooks/useMenuButtonEvents'
-import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
+import { useMenuButtonEvents } from '@st/hooks/useMenuButtonEvents'
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'

@@ -36,14 +36,14 @@
 import { PropType, ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { LinkOutlined } from '@ant-design/icons-vue'
-import { isMarkActive } from '@/prose-utils'
+import { isMarkActive } from '@st/prose-utils'
 import LinkModalSetting from './modal.vue'
 import LinkBubble from './bubble.vue'
 import { LinkModalProps } from './modal'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import { isEmpty } from 'lodash-es'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

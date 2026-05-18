@@ -115,8 +115,8 @@
 </template>
 
 <script lang="ts" setup>
-import useWikiUser from '@/hooks/useWikiUser'
-import useWikiUsersStore from '@/hooks/useWikiUsersStore'
+import useWikiUser from '@st/hooks/useWikiUser'
+import useWikiUsersStore from '@st/hooks/useWikiUsersStore'
 
 defineProps<{
   modelVisible: boolean

@@ -10,7 +10,7 @@ import { mergeAttributes, Node } from '@tiptap/core';
 import { VueNodeViewRenderer  } from '@tiptap/vue-3';
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
-import { isInTitle, nodeAttrsToDataset } from '@/prose-utils';
+import { isInTitle, nodeAttrsToDataset } from '@st/prose-utils';
 
 import Wrapper from './Wrapper.vue';
 

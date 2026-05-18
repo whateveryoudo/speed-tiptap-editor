@@ -23,11 +23,11 @@
 <script setup lang="ts">
 import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import { TaskList as TaskListExtension } from '@/extensions/taskList';
-import { getShortcutTipByKey } from '@/helpers/registKeyMap'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
+import { TaskList as TaskListExtension } from '@st/extensions/taskList';
+import { getShortcutTipByKey } from '@st/helpers/registKeyMap'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = defineProps({
   editor: {
     type: Object as PropType<Editor>,

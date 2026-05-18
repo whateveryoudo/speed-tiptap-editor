@@ -10,11 +10,11 @@
 import { inject, ref, type Ref, computed, defineComponent } from 'vue'
 import { type Editor } from '@tiptap/core'
 import { TableOutlined } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
 import AutoExpandTableSelect from './autoExpandTableSelect.vue'
 import { Tooltip, Popover, Button } from 'ant-design-vue'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 export default defineComponent({
   name: 'TableMenu',
   components: {

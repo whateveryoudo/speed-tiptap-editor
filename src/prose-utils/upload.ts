@@ -7,13 +7,13 @@
  * @FilePath: \we-knowledge-base\src\tiptap\prose-utils\upload.ts
  */
 import { Editor } from '@tiptap/core'
-import { uploadFile } from '@/services/file'
-import { Attachment } from '@/extensions/attachment'
-import { Image } from '@/extensions/image'
-import { Loading } from '@/extensions/loading'
+import { uploadFile } from '@st/services/file'
+import { Attachment } from '@st/extensions/attachment'
+import { Image } from '@st/extensions/image'
+import { Loading } from '@st/extensions/loading'
 
 import { extractFileExtension, extractFilename } from './file'
-import { getImageWidthHeight} from '@/prose-utils'
+import { getImageWidthHeight} from '@st/prose-utils'
 export const acceptedMimes = {
   image: ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/svg+xml'],
 }

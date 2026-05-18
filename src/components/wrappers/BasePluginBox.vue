@@ -58,7 +58,7 @@
 <script setup lang="tsx">
 import { AlignCenterOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { ref, PropType, watch, computed, onMounted } from 'vue'
-import { ZOOM_DATA } from '@/enums/constants'
+import { ZOOM_DATA } from '@st/enums/constants'
 
 const props = defineProps({
   width: {

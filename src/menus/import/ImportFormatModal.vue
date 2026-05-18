@@ -80,12 +80,12 @@
 import { ref, computed, watch } from 'vue'
 import { type Editor } from '@tiptap/core'
 import { ArrowLeftOutlined, CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons-vue'
-import WordIcon from '@/assets/image/menus/word.svg'
-import MarkdownIcon from '@/assets/image/menus/markdown.svg'
-import SpeedIcon from '@/assets/image/menus/speed.svg'
-import { handleWordFileSelect } from '@/helpers/wordImport'
-import { handleMarkdownFileSelect } from '@/helpers/markdownImport'
-import { handleSpeedFileSelect } from '@/helpers/speedImport'
+import WordIcon from '@st/assets/image/menus/word.svg'
+import MarkdownIcon from '@st/assets/image/menus/markdown.svg'
+import SpeedIcon from '@st/assets/image/menus/speed.svg'
+import { handleWordFileSelect } from '@st/helpers/wordImport'
+import { handleMarkdownFileSelect } from '@st/helpers/markdownImport'
+import { handleSpeedFileSelect } from '@st/helpers/speedImport'
 const props = withDefaults(defineProps<{
     visible: boolean
     editor: Editor

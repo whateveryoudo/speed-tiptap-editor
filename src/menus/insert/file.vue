@@ -21,9 +21,9 @@
 import { inject, ref, type Ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { PaperClipOutlined } from '@ant-design/icons-vue'
-import { Title } from '@/extensions/title'
-import { useActive } from '@/hooks/useActive'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { Title } from '@st/extensions/title'
+import { useActive } from '@st/hooks/useActive'
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 const props = withDefaults(defineProps<{
   editor: Editor,
   triggerType?: 'menu' | 'bubble'

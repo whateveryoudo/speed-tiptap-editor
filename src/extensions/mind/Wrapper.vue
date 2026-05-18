@@ -18,11 +18,11 @@
 <script lang="ts" setup>
 import { ref, watch, computed, onMounted, nextTick } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
-import BasePluginBox from '@/components/wrappers/BasePluginBox.vue'
-// import useMind from '@/editor/collaboration/extendModals/mindModal/useMind'
+import BasePluginBox from '@st/components/wrappers/BasePluginBox.vue'
+// import useMind from '@st/editor/collaboration/extendModals/mindModal/useMind'
 import {
   getEditorContainerDOMSize,
-} from '@/prose-utils'
+} from '@st/prose-utils'
 
 const props = defineProps(nodeViewProps)
 const loading = ref(false)

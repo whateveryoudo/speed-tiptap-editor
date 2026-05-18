@@ -9,7 +9,7 @@
 
 import { type PropType, type VNode, isVNode, defineComponent, computed, unref, toRefs } from 'vue'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
-import { baseConfig } from '@/config/globalSetting'
+import { baseConfig } from '@st/config/globalSetting'
 let scriptUrls:string[] = baseConfig.iconFontScriptUrl; // 调用线上地址
 
 export default defineComponent({

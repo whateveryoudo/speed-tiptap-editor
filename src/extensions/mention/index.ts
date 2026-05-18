@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\mention\index.ts
  */
 import BulitInMention from '@tiptap/extension-mention'
-import { getDatasetAttribute } from '@/prose-utils';
+import { getDatasetAttribute } from '@st/prose-utils';
 
 export const Mention = BulitInMention.extend({
   addAttributes() {

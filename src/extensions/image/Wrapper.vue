@@ -44,15 +44,15 @@ import { PropType, inject, ref, computed, watch, Ref } from 'vue'
 import { NodeViewWrapper } from '@tiptap/vue-3'
 import { Editor } from '@tiptap/core'
 import Drager from 'es-drager'
-import ImgPlaceholder from '@/assets/image/img-placeholder.png'
+import ImgPlaceholder from '@st/assets/image/img-placeholder.png'
 import axios from 'axios'
 import {
   getEditorContainerDOMSize,
   getImageWidthHeight,
-} from '@/prose-utils'
+} from '@st/prose-utils'
 import { useCustomUpload } from 'speed-components-ui/hooks'
 import { message } from 'ant-design-vue';
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(
   "speedUseTiptapConfig",

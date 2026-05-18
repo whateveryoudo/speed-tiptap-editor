@@ -8,7 +8,7 @@
  */
 import { wrappingInputRule } from '@tiptap/core';
 import { Blockquote as BuiltInBlockquote } from '@tiptap/extension-blockquote';
-import { getMarkdownSource, getParents } from '@/prose-utils';
+import { getMarkdownSource, getParents } from '@st/prose-utils';
 
 export const Blockquote = BuiltInBlockquote.extend({
   addAttributes() {

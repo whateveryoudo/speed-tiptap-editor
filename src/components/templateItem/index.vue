@@ -13,7 +13,7 @@
           <arrow-right-outlined  class="edit text-2xl ml-2" @click="emit('useTemplate')"/>
         </a-tooltip>
       </div>
-      <!-- <img src="@/assets/image/file_bg.svg" alt="" /> -->
+      <!-- <img src="@st/assets/image/file_bg.svg" alt="" /> -->
     </div>
     <div class="text">
       <div class="t">{{ item.title }}</div>

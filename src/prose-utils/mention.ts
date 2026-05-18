@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\prose-utils\mention.ts
  */
 import { Editor } from '@tiptap/core';
-import { Mention } from '@/extensions/mention';
+import { Mention } from '@st/extensions/mention';
 
 export const findMentions = (editor: Editor) => {
   const content = editor.getJSON();

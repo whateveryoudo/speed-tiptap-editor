@@ -38,11 +38,11 @@
 import { PropType, watch, onMounted } from 'vue'
 import { type Editor } from '@tiptap/core'
 import { BubbleMenu as BaseBubbleMenu } from '@tiptap/vue-3/menus'
-import { Link } from '@/extensions/link'
-import { findMarkPosition, isMarkActive } from '@/prose-utils'
+import { Link } from '@st/extensions/link'
+import { findMarkPosition, isMarkActive } from '@st/prose-utils'
 import { LinkModalProps } from './modal'
 import { ShareAltOutlined, DisconnectOutlined, EditOutlined } from '@ant-design/icons-vue'
-import { useAttributes } from '@/hooks/useAttributes'
+import { useAttributes } from '@st/hooks/useAttributes'
 
 const props = defineProps({
   editor: {

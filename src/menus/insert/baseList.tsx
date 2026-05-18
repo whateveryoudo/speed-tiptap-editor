@@ -11,10 +11,10 @@ import { ref, watch, computed, onMounted, defineComponent, inject, type Ref } fr
 import { Input, Space, Button, Popover, Empty } from 'ant-design-vue'
 import { RightOutlined } from '@ant-design/icons-vue'
 import { type SubMenuGroup, type MenuGroup, useCommand } from './useCommand'
-import { createKeysLocalStorageLRUCache } from '@/helpers/lru-cache'
+import { createKeysLocalStorageLRUCache } from '@st/helpers/lru-cache'
 import AutoExpandTableSelect from './autoExpandTableSelect.vue'
 import styles from './baseList.module.less'
-import { useSpeedEditor } from '@/hooks/useSpeedEditorContext';
+import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 
 export default defineComponent({
   name: 'BaseList',

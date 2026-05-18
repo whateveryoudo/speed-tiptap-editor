@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CollaborationEditor } from '@/tiptap/editor'
+import { CollaborationEditor } from '@st/tiptap/editor'
 import { LeftOutlined } from '@ant-design/icons-vue'
 import { documentEditorProps } from './editor'
 const props = defineProps(documentEditorProps)

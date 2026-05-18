@@ -15,16 +15,16 @@ import {
   DeploymentUnitOutlined,
   TableOutlined,
 } from '@ant-design/icons-vue'
-import imgIcon from '@/assets/image/insert/img.svg'
-import tableIcon from '@/assets/image/insert/table.svg'
-import fileIcon from '@/assets/image/insert/file.svg'
-import mindIcon from '@/assets/image/insert/mind.svg'
-import flowIcon from '@/assets/image/insert/flow.svg'
-import tagIcon from '@/assets/image/insert/tag.svg'
-import emojiIcon from '@/assets/image/insert/emoji.svg'
-import codeBlockIcon from '@/assets/image/insert/code-block.svg'
-import formulaIcon from '@/assets/image/insert/formula.svg'
-import calloutIcon from '@/assets/image/insert/callout.svg'
+import imgIcon from '@st/assets/image/insert/img.svg'
+import tableIcon from '@st/assets/image/insert/table.svg'
+import fileIcon from '@st/assets/image/insert/file.svg'
+import mindIcon from '@st/assets/image/insert/mind.svg'
+import flowIcon from '@st/assets/image/insert/flow.svg'
+import tagIcon from '@st/assets/image/insert/tag.svg'
+import emojiIcon from '@st/assets/image/insert/emoji.svg'
+import codeBlockIcon from '@st/assets/image/insert/code-block.svg'
+import formulaIcon from '@st/assets/image/insert/formula.svg'
+import calloutIcon from '@st/assets/image/insert/callout.svg'
 export interface SubMenuGroup {
   key: string
   name: string

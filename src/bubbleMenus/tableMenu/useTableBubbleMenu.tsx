@@ -7,7 +7,7 @@ import {
   AlignLeftOutlined, AlignCenterOutlined, AlignRightOutlined,
   InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, DeleteOutlined, TableOutlined,
 } from '@ant-design/icons-vue'
-import BackgroundColor from '@/menus/backgroundColor.vue'
+import BackgroundColor from '@st/menus/backgroundColor.vue'
 // 表格节点信息接口
 export interface TableNodeInfo {
   table: any // Table node

@@ -8,7 +8,7 @@
  */
 import { Editor } from '@tiptap/core'
 import { posToDOMRect } from '@tiptap/core'
-import { deleteNode, copyNode } from '@/prose-utils'
+import { deleteNode, copyNode } from '@st/prose-utils'
 
 interface HandleBubbleOptions {
   tippyRectSelector?: string

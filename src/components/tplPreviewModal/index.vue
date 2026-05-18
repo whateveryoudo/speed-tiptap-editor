@@ -25,12 +25,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CollaborationEditor } from '@/tiptap/editor'
-import useDocCreate from '@/hooks/useDocCreate'
+import { CollaborationEditor } from '@st/tiptap/editor'
+import useDocCreate from '@st/hooks/useDocCreate'
 import { useRouter } from 'vue-router'
-import useDocListStore from '@/hooks/useDocListStore'
+import useDocListStore from '@st/hooks/useDocListStore'
 import { message } from 'ant-design-vue'
-import useRouteParams from '@/hooks/useRouteParams'
+import useRouteParams from '@st/hooks/useRouteParams'
 const props = defineProps({
   visible: {
     type: Boolean,
