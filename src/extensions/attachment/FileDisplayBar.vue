@@ -118,7 +118,7 @@ const handleDownLoad = () => {
     max-width: none;
     width: 100%;
     border: 1px solid var(--ant-color-border);
-    border-radius: calc(var(--ant-border-radius) * 1px);
+    border-radius: var(--ant-border-radius);
     padding: 8px 16px;
   }
 }

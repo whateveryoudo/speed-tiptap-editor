@@ -39,6 +39,7 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         "@st": resolve(__dirname, "src"),
+        "@sc": resolve(__dirname, "../../../speed-components/src"),
         "#example": resolve(__dirname, "example/src")
       },
     },
