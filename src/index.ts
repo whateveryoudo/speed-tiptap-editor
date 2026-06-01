@@ -8,7 +8,7 @@
 import type { App, Component } from "vue";
 import { computed, ref } from "vue";
 import SpeedTiptapEditor from "./editor.vue";
-import SpeedComponents from "speed-components-ui/components";
+import { ensureSpeedComponents } from "speed-components-ui/components";
 import { type ResponseType} from "speed-components-ui";
 import "speed-components-ui/dist/style.css";
 import "./assets/style/index.less";
@@ -71,12 +71,9 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
   app.component(SpeedTooltip.name as string, SpeedTooltip);
   // 注入响应式配置
   app.provide("speedUseTiptapConfig", currentConfig);
-  // 注册SpeedComponents（这里仅设置图标就行，这是editor自己的内置配置）
-  app.use(SpeedComponents, {
-    iconfontUrl: [
-      baseConfig.iconfontUrl
-      // currentConfig.value.iconfontUrl,
-    ]
+  // 合并 iconfont；宿主已 app.use(SpeedComponents) 时仅 setConfig，避免重复注册警告
+  ensureSpeedComponents(app, {
+    iconfontUrl: [baseConfig.iconfontUrl],
   });
 
 };
