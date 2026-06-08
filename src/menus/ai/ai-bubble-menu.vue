@@ -1,7 +1,8 @@
 <template>
     <div @click="emit('closeMenuBubble')" class="w-[600px] flex flex-col gap-2">
-        <div @click.stop v-if="session.status !== 'idle' && session.result" class="ai-result-wrapper">
-            <VMdPreview :text="session.result" />
+        <div @click.stop v-if="session.status !== 'idle' && session.result"
+            class="ai-result-wrapper hljs-theme-github-light">
+            <div class="ai-markdown-preview" v-html="resultHtml" />
         </div>
         <!-- 顶部提示词输入 -->
         <div @click.stop :class="['ai-input']">
@@ -67,17 +68,14 @@
 </template>
 
 <script setup lang="tsx">
-import { ref, computed, inject } from 'vue'
+import { ref, computed } from 'vue'
 import { message } from 'ant-design-vue'
 import type { Editor } from '@tiptap/core'
 import { useAiAssistant, type AIAction, type AIProcessOptions } from '@st/hooks/useAiAssistant'
 import AiPromptIcon from '@st/assets/image/ai-prompt-icon.svg'
-import VMdPreview from '@kangc/v-md-editor/lib/preview';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-import hljs from 'highlight.js';
 import { getSelectedText } from '@st/prose-utils/text'
 import { CheckOutlined, SyncOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { markdownToJSON } from '@st/helpers/markdown-to-json'
+import { markdownToHTML, markdownToJSON } from '@st/helpers/markdown-to-json'
 import { useSpeedEditor } from '@st/hooks/useSpeedEditorContext';
 
 // Props 定义
@@ -87,9 +85,6 @@ const props = defineProps<{
 
 // 方式1：从父组件注入扩展配置（推荐）⭐
 const { aiExtensions } = useSpeedEditor()
-VMdPreview.use(githubTheme, {
-    Hljs: hljs,
-});
 // 使用 AI 助手 Hook
 const {
     processTextStream,
@@ -98,6 +93,10 @@ const {
     resetSession,
     pendingText
 } = useAiAssistant()
+const resultHtml = computed(() => {
+    if (!session.value.result) return ''
+    return markdownToHTML(session.value.result)
+})
 const isProcessing = computed(() => session.value.status === 'pending')
 
 const emit = defineEmits<{
@@ -395,11 +394,34 @@ const handleResultAction = async (action: string) => {
         margin-bottom: 12px;
     }
 
-    :deep(.github-markdown-body) {
-        font-size: 14px; // 调整md预览字体大小
+    :deep(.ai-markdown-preview) {
+        font-size: 14px;
 
         p {
             margin: 10px 0;
+        }
+
+        pre {
+            margin: 10px 0;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5em;
+            margin: 10px 0;
+        }
+
+        blockquote {
+            margin: 10px 0;
+            padding-left: 12px;
+            border-left: 3px solid rgba(126, 134, 142, 0.4);
+            color: rgba(0, 0, 0, 0.65);
         }
     }
 

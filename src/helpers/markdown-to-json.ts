@@ -2,9 +2,21 @@
  * Markdown 转换工具
  */
 import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
 // 此方法很关键（@tiptap/core仅用于在浏览器环境使用，@tiptap/html支持两者 参考：https://tiptap.dev/docs/editor/api/utilities/html#generating-json-from-html）
 import { generateJSON } from '@tiptap/core'
 import type { Extensions, JSONContent } from '@tiptap/core'
+
+function highlightCode(str: string, lang?: string) {
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`
+    } catch {
+      // fall through to escaped output
+    }
+  }
+  return `<pre class="hljs"><code>${MarkdownIt().utils.escapeHtml(str)}</code></pre>`
+}
 
 // 创建 markdown-it 实例，配置与 CommonMark 兼容
 const md = new MarkdownIt({
@@ -12,6 +24,7 @@ const md = new MarkdownIt({
   linkify: true, // 自动识别链接
   typographer: true, // 启用一些语言中立的替换和引号美化
   breaks: true, // 转换段落里的 '\n' 到 <br>
+  highlight: highlightCode,
 })
 
 /**
