@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/whateveryoudo/speed-tiptap-editor/compare/v1.0.0...v1.0.1) (2026-06-09)
+
+
+### Bug Fixes
+
+* trigger npm release ([76631c4](https://github.com/whateveryoudo/speed-tiptap-editor/commit/76631c4b010ad75ca32d205c573656cf11d9dce7))
+* trigger npm release ([f584553](https://github.com/whateveryoudo/speed-tiptap-editor/commit/f58455360d1fed5deeeb38998c5022b5bac88c6b))
+
 # 1.0.0 (2026-06-09)
 
 
