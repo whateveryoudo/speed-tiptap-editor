@@ -41,6 +41,8 @@ export default defineConfig({
         {
           text: "基础",
           items: [
+            { text: "预设", link: "/config/preset" },
+            { text: "协同编辑", link: "/config/collaboration" },
             { text: "工具栏", link: "/config/toolbar" },
             { text: "图片上传", link: "/config/image" },
             { text: "文件上传", link: "/config/file" },

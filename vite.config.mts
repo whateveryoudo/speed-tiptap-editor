@@ -53,11 +53,21 @@ export default defineConfig(({ command, mode }) => {
         },
         rollupOptions: {
           external:
-            process.env.BUILD_MODE === "lib" ? ["vue", "ant-design-vue"] : [],
+            process.env.BUILD_MODE === "lib"
+              ? [
+                  "vue",
+                  "ant-design-vue",
+                  "yjs",
+                  "lib0",
+                  "y-protocols",
+                  "@hocuspocus/provider",
+                ]
+              : [],
           output: {
             globals: {
               vue: "Vue",
-              'ant-design-vue': 'AntDesignVue'
+              'ant-design-vue': 'AntDesignVue',
+              yjs: 'Y',
             },
             dir: "dist",
             assetFileNames: (assetInfo) => {

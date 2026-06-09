@@ -1,13 +1,14 @@
 {
   "name": "speed-tiptap-editor",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "基于 Ant Design Vue + Tiptap 的富文本编辑器",
   "main": "example/main.ts",
   "exports": {
     ".": {
       "import": "./dist/speed-tiptap-editor-index.es.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./dist/style.css": "./dist/style.css"
   },
   "files": [
     "dist"
@@ -50,6 +51,12 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.52.11",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.8",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/fs-extra": "^11.0.4",
     "@types/highlight.js": "^10.1.0",
     "@types/markdown-it": "^14.1.2",
@@ -71,6 +78,7 @@
     "interactjs": "^1.10.17",
     "less": "^4.2.0",
     "prettier": "^3.2.0",
+    "semantic-release": "^25.0.3",
     "typescript": "^5.3.0",
     "unocss": "^0.58.0",
     "unplugin-dts": "1.0.0-beta.0",

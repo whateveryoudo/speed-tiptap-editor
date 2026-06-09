@@ -1,3 +1,4 @@
+export { default as BubbleMenuBar } from './BubbleMenuBar'
 export { default as TextMenu } from './textMenu/index.vue'
 export { default as ImageMenu } from './imageMenu/index.vue'
 export { default as TableMenu } from './tableMenu/index.vue'

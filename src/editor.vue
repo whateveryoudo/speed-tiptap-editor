@@ -8,434 +8,328 @@
 -->
 <template>
   <a-config-provider :theme="cptTheme">
-    <div :class="['wrap speed-tiptap-editor', scene, hideBorder ? 'hide-border' : '']" :style="editorStyle">
-      <!-- 工具栏 -->
-      <menu-bar :style="headerStyle" :scene="scene" :toolbarKeys="toolbarKeys" v-if="menubar && editor" class="header"
-        :editor="editor" />
-      <!-- 扩展modal显示-mind -->
-      <!-- <extend-mind-modal
-      v-if="editor"
-      :editor="editor"
-      :data="mindState.data"
-      :visible="mindState.visible"
-      @triggerData="(data: any) => handleUpdateMindState('data', data)"
-      @update:visible="(val: boolean) => handleUpdateMindState('visible', val)"></extend-mind-modal> -->
-      <TextMenu v-if="editor && textBubbleMenu?.enabled" :editor="editor" />
-      <TagMenu v-if="editor" :editor="editor" />
-      <ImageMenu v-if="editor" :editor="editor" />
-      <AttachmentMenu v-if="editor" :editor="editor"></AttachmentMenu>
-      <!-- table的点击提示框 -->
-      <TableMenu v-if="editor" :editor="editor" />
-      <!-- table的选择气泡提示框 -->
-      <TableBubbleMenu v-if="editor" :editor="editor" />
-      <CalloutMenu v-if="editor" :editor="editor" />
-      <!-- 节点拖拽 -->
-      <DragNodeMenu v-if="editor" :editor="editor" />
-      <main :style="mainStyle" :class="['editor-content-wrap', scene === 'knowledge' ? 'knowledge-content-wrap' : '']">
-        <editor-content :editor="editor"
-          :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
-        <SuggestionToolTip :element="tooltipElement" :editor="editor" v-if="editor" />
+    <div :class="['wrap speed-tiptap-editor', activePreset.name, hideBorder ? 'hide-border' : '']" :style="editorStyle">
+      <menu-bar
+        :style="headerStyle"
+        :toolbarKeys="resolvedToolbarKeys"
+        v-if="menubar && editor"
+        class="header"
+        :editor="editor"
+      />
+      <bubble-menu-bar
+        v-if="editor"
+        :editor="editor"
+        :bubble-menus="resolvedBubbleMenus"
+        :text-bubble-menu="textBubbleMenu"
+      />
+      <main
+        :style="mainStyle"
+        :class="['editor-content-wrap', activePreset.name === 'knowledge' ? 'knowledge-content-wrap' : '']"
+      >
+        <editor-content
+          :editor="editor"
+          :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']"
+        />
+        <SuggestionToolTip
+          v-if="editor && activePreset.features.showDocumentSuggest"
+          :element="tooltipElement"
+          :editor="editor"
+        />
       </main>
-      <!-- 搜索替换弹框 -->
-      <SearchReplaceModal :editor="editor" v-if="editor" />
-      <!-- 文档建议提示框 -->
-      <!-- <ShortcutGuideModal v-if="editor?.isEditable && !isPreview" /> -->
+      <SearchReplaceModal v-if="editor && activePreset.features.showSearchReplace" :editor="editor" />
     </div>
   </a-config-provider>
 </template>
 
 <script setup lang="ts">
-import { watch, ref, inject, type Ref, PropType, provide, computed, VNode, onMounted, onUnmounted } from 'vue'
+import { watch, ref, inject, type Ref, computed, type VNode, onUnmounted } from 'vue'
 import MenuBar from './menus'
-import { getKnowledgeKit, getDefaultKit, tooltipElement } from './extensions/kit'
+import BubbleMenuBar from '@st/bubbleMenus/BubbleMenuBar'
+import { tooltipElement } from './extensions/kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
-import TableMenu from '@st/bubbleMenus/tableMenu/index.vue'
-import TableBubbleMenu from '@st/bubbleMenus/tableMenu/Bubble.vue'
-import ShortcutGuideModal from '@st/components/shortcutGuideModal/index.vue'
-import { TextMenu, ImageMenu, AttachmentMenu, TagMenu, CalloutMenu, DragNodeMenu } from '@st/bubbleMenus'
 import { useSpeedEditorProvider } from '@st/hooks/useSpeedEditorContext'
-import Collaboration from '@tiptap/extension-collaboration'
 import SuggestionToolTip from './extensions/documentSuggest/SuggestionTooltip.vue'
-// import { TiptapCollabProvider } from '@tiptap-pro/provider'
-// 采用自身ws服务
-import { HocuspocusProvider } from "@hocuspocus/provider";
-import CollaborationCaret from '@tiptap/extension-collaboration-caret'
-import { type CollaborationEditorProps } from './type'
 import { EditorPreviewImage } from '@st/helpers/previews'
 import baseConfig from './config'
 import { onKeyStroke } from '@vueuse/core'
-import { type onAwarenessUpdateParameters } from '@hocuspocus/provider'
 import { message, theme } from 'ant-design-vue'
 import { useAntdCssVars } from 'speed-components-ui/hooks'
 import SearchReplaceModal from '@st/components/searchReplaceModal/index.vue'
-import * as Y from 'yjs'
 import { debounce } from 'lodash-es'
-import { getRandomColor } from '@st/helpers/color'
 import { type GlobalConfig } from './index'
-import type { CSSProperties } from "vue";
-import type { Editor } from "@tiptap/core";
+import type { CSSProperties } from 'vue'
+import type { Editor, Extensions } from '@tiptap/core'
 import { type UserInfo, type IUploadConfig, type ToolBarConfig } from './type'
+import {
+  resolveEditorPreset,
+  resolveToolbarKeys,
+  resolveBubbleMenus,
+  type EditorPresetName,
+  type BubbleMenuKey,
+} from '@st/presets'
+import {
+  buildCollaborationExtensions,
+  type CollaborationUser,
+} from '@st/hooks/useCollaboration'
+import type { HocuspocusProvider } from '@hocuspocus/provider'
+import type * as Y from 'yjs'
 
-// 初始化注入的对象
 const speedUseTiptapConfig = inject<Ref<GlobalConfig>>(
-  "speedUseTiptapConfig",
-  ref<GlobalConfig>({})
-);
-onKeyStroke(e => {
+  'speedUseTiptapConfig',
+  ref<GlobalConfig>({}),
+)
+
+onKeyStroke((e) => {
   if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 's') {
     e.preventDefault()
     message.info(`${baseConfig.TITLE}会实时保存你的数据，无需手动保存。`)
     return false
   }
 })
+
 defineOptions({
   name: 'SpeedTiptapEditor',
 })
-// TODO: theme 类型提取出去不行？？
+
 const props = withDefaults(defineProps<{
-  /**
-   * 场景:
-   */
-  scene?: "default" | "knowledge";
-  theme?: "light" | "dark"; // 编辑器主题
-  antdToken?: any; // antd的token配置
-  editorStyle?: CSSProperties;
-  headerStyle?: CSSProperties;
-  mainStyle?: CSSProperties;
-  hideBorder?: boolean;
-  /**
-   * 内容
-   */
-  content?: string;
-
-  /**
-   * 内容(json数据,这里不提供更新操作，仅提供设置操作，目前仅开启了协同模式下使用)
-   */
-  json?: string | null | Record<string, any>;
-
-  /**
-   * 标题
-   */
-  title?: string;
-  /**
-   * 文档 id
-   */
-  docId?: string;
-  /**
-   *  类型
-   */
-  docType?: "document" | "template";
-  /**
-   * 是否可编辑
-   */
-  editable?: boolean;
-  /**
-   * 协作配置
-   */
-  collaboration?: {
-    documentId: string;
-    url: string;
-    token: string;
-    user: {
-      id: number;
-      username: string;
-      nickname?: string;
-      avatar?: string;
-      color?: string;
-      [key: string]: any;
-    }; // 一些用户信息(用于协作时显示用户名和颜色,不传入颜色下采用随机颜色)
-  };
-  /**
-   * 是否需要菜单
-   */
-  menubar?: boolean;
-  /**
-   * 是否隐藏评论功能
-   */
-  hideComment?: boolean;
-  /**
-   * 占位符
-   */
-  placeholder?: string;
-  hocuspocusProvider?: {
-    type: Object;
-  };
-
-  toolbarKeys?: ToolBarConfig[];
-  // 通用上传配置（此配置下会作用于image 和 file）
-  upload?: IUploadConfig;
-  // 图片
-  image?: IUploadConfig;
-  // 附件
-  file?: IUploadConfig;
+  /** 编辑器预设：lite 简易富文本，knowledge 完整知识库富文本 */
+  preset?: EditorPresetName
+  theme?: 'light' | 'dark'
+  antdToken?: any
+  editorStyle?: CSSProperties
+  headerStyle?: CSSProperties
+  mainStyle?: CSSProperties
+  hideBorder?: boolean
+  content?: string
+  /** 协同模式下用于初始化，内容以 Yjs 为准，不走 v-model:content */
+  json?: string | null | Record<string, any>
+  title?: string
+  docId?: string
+  docType?: 'document' | 'template'
+  editable?: boolean
+  /** 外部协同 Y.Doc，配合 useCollaboration 使用 */
+  ydoc?: Y.Doc | null
+  /** 外部协同 Provider，配合 useCollaboration 使用 */
+  provider?: HocuspocusProvider | null
+  /** 协同光标用户信息，传入 provider 时建议同时传入 */
+  collaborationUser?: CollaborationUser | null
+  menubar?: boolean
+  hideComment?: boolean
+  placeholder?: string
+  toolbarKeys?: ToolBarConfig[]
+  excludeKeys?: string[]
+  bubbleMenus?: BubbleMenuKey[]
+  upload?: IUploadConfig
+  image?: IUploadConfig
+  file?: IUploadConfig
   fontSize?: {
-    default?: string;
-    options?: {
-      value: string;
-      label: string;
-    }[];
-  };
-  // 文本浮动菜单
+    default?: string
+    options?: { value: string; label: string }[]
+  }
   textBubbleMenu?: {
-    enabled?: boolean;
+    enabled?: boolean
     items?: (
-      | {
-          icon: string | VNode;
-          title: string;
-          action?: (editor: Editor) => void;
-        }
+      | { icon: string | VNode; title: string; action?: (editor: Editor) => void }
       | string
-    )[];
-  };
-  // ai配置
+    )[]
+  }
   ai?: {
     doubao?: {
-      url: string;
-      header?: Record<string, any>;
+      url: string
+      header?: Record<string, any>
       bodyParams?: (
         action: string,
         content: string,
-        customPrompt: string
-      ) => Record<string, any>;
-    };
-  };
-  // 用户请求函数
-  mentionUserFetch?: (query: string) => Promise<UserInfo[]>;
-  // 文档检测配置
-  documentSuggestConfig?: {
-    rules?: any[];
-  };
-  // 对SpeedComponents的一些配置(注意这里)
+        customPrompt: string,
+      ) => Record<string, any>
+    }
+  }
+  mentionUserFetch?: (query: string) => Promise<UserInfo[]>
+  documentSuggestConfig?: { rules?: any[] }
   sdComponentsConfig?: {
-    apis?: {
-      [key: string]: any;
-    };
-    transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
-  };
+    apis?: { [key: string]: any }
+    transformRequestRes?: (res: any) => ResponseType
+  }
 }>(), {
-  scene: "default",
-  content: "",
-  docType: "document",
+  preset: 'lite',
+  content: '',
+  docType: 'document',
   editable: true,
   menubar: true,
   antdToken: () => ({}),
   editorStyle: () => ({}),
-  headerStyle: () => ({}), // 工具栏样式
-  mainStyle: () => ({}), // 内容区样式
+  headerStyle: () => ({}),
+  mainStyle: () => ({}),
   hideComment: true,
-  placeholder: "输入 / 唤起更多",
+  placeholder: '输入 / 唤起更多',
   theme: 'light',
-  textBubbleMenu: () => ({
-    enabled: true
-  }),
-  documentSuggestConfig: () => ({
-    rules: [],
-  })
+  textBubbleMenu: () => ({ enabled: true }),
+  documentSuggestConfig: () => ({ rules: [] }),
 })
-console.log(props);
-// 组合后的antd主题(这里需要处理, 支持全局配置和组件配置)
-const cptTheme = computed(() => {
-  const { antdToken: antdTokenFromConfig, theme: themeFromConfig } = speedUseTiptapConfig.value || {};
-  return (props.theme === 'dark' || themeFromConfig === 'dark') ? {
-    algorithm: theme.darkAlgorithm,
-    token: { ...(antdTokenFromConfig || props.antdToken) }
-  } : {
-    token: { ...(antdTokenFromConfig || props.antdToken) }
-  }
-})
-// 初始化编辑器的一些上下文
-const { previewInstance } = useSpeedEditorProvider(props)
-
-let provider: HocuspocusProvider | null = null;
-let doc = null;
-if (props.collaboration) {
-  doc = new Y.Doc() // Initialize Y.Doc for shared editing
-}
 
 const emit = defineEmits(['update:title', 'update:content', 'update:collaborators'])
 
-// 使用 Ant Design Vue CSS 变量
-const { cleanup, updateTheme } = useAntdCssVars();
-// onUnmounted(() => {
-//   cleanup?.();
-// });
-// 防抖处理 title 更新
+const activePreset = computed(() => resolveEditorPreset(props.preset))
+
+const resolvedToolbarKeys = computed(() =>
+  resolveToolbarKeys(activePreset.value, props.toolbarKeys, props.excludeKeys),
+)
+
+const resolvedBubbleMenus = computed(() =>
+  resolveBubbleMenus(activePreset.value, props.bubbleMenus),
+)
+
+const isCollaborationMode = computed(() => !!props.ydoc)
+
+const cptTheme = computed(() => {
+  const { antdToken: antdTokenFromConfig, theme: themeFromConfig } = speedUseTiptapConfig.value || {}
+  return props.theme === 'dark' || themeFromConfig === 'dark'
+    ? {
+        algorithm: theme.darkAlgorithm,
+        token: { ...(antdTokenFromConfig || props.antdToken) },
+      }
+    : {
+        token: { ...(antdTokenFromConfig || props.antdToken) },
+      }
+})
+
+const { previewInstance } = useSpeedEditorProvider(props)
+
+const { updateTheme } = useAntdCssVars()
+
 const debouncedEmitTitle = debounce((titleText: string) => {
-  // 对比当前 title 和 props.title，如果相同则不 emit
-  // 如果当前的titleText为空，则不emit
-  if (!titleText) {
+  if (!titleText || titleText === props.title) {
     return
   }
-  if (titleText !== props.title) {
-    emit('update:title', titleText)
-  }
-}, 500) // 500ms 防抖
-// 开启了协同编辑
-if (props.collaboration && doc && props.editable) {
-  provider = new HocuspocusProvider({
-    name: props.collaboration.documentId, // Unique document identifier for syncing. This is your document name.
-    // appId: '8mze223m', // Your Cloud Dashboard AppID or `baseURL` for on-premises
-    url: props.collaboration.url,
-    token: props.collaboration.token,
-    document: doc,
-    // 监听协同人员变化
-    onAwarenessUpdate: (params: onAwarenessUpdateParameters) => {
-      const { states } = params
-      const users = states
-        .map((s: any) => s.user)
-        .filter((u) => !!u) // 只保留有 user 信息的
-      // 抛给外层
-      emit('update:collaborators', users)
-    }
-    // onSynced: () => {
-    //   if (!doc.getMap('config').get('initialContentLoaded') && editor.value) {
-    //     doc.getMap('config').set('initialContentLoaded', true)
+  emit('update:title', titleText)
+}, 500)
 
-    //     editor.value.commands.setContent(`
-    //     <h1>ykx测试文档1</h1>
-    //     <p>This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.</p>
-    //     <p>The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.</p>
-    //     `)
-    //   }
-    // },
-  })
+const buildExtensions = (): Extensions => {
+  const baseExtensions = activePreset.value.getExtensions(props)
+  const collabExtensions = buildCollaborationExtensions(
+    props.ydoc,
+    props.provider,
+    props.collaborationUser,
+  )
+  return [...baseExtensions, ...collabExtensions]
 }
 
 const editor = useEditor({
   editable: props.editable,
   autofocus: 'end',
-  content: props.content || undefined,
+  content: isCollaborationMode.value ? undefined : (props.content || undefined),
   editorProps: {
-    // 追加class，用于设定样式
     attributes: {
-      class: props.scene === 'knowledge' ? 'editor-content has-drag-handle' : 'editor-content',
+      class: activePreset.value.features.hasDragHandle
+        ? 'editor-content has-drag-handle'
+        : 'editor-content',
     },
   },
-  onUpdate({ editor, transaction }) {
-    // 编辑器内容变化时，同步到外部
-    const html = editor.getHTML()
-    console.log(html);
-    emit('update:content', html)
+  onUpdate({ editor }) {
+    if (isCollaborationMode.value) {
+      return
+    }
 
-    // 原有的标题更新逻辑
-    try {
-      if (props.scene === 'knowledge') {
-        // 判断是否存在标题节点
+    emit('update:content', editor.getHTML())
+
+    if (activePreset.value.features.hasTitle) {
+      try {
         const titleNode = editor.state.doc?.content?.firstChild?.content.firstChild
         debouncedEmitTitle(titleNode?.textContent ?? '')
+      } catch {
+        //
       }
-    } catch (e) {
-      //
     }
   },
-  extensions: props.collaboration ? [
-    ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
-    Collaboration.configure({
-      document: doc,
-    }),
-    ...(props.collaboration && provider && props.editable ? [
-      CollaborationCaret.configure({
-        provider,
-        user: {
-          id: props.collaboration.user.id,
-          avatar: props.collaboration.user.avatar,
-          name: props.collaboration.user.nickname || props.collaboration.user.username,
-          color: props.collaboration.user.color ?? getRandomColor(),
-        },
-      }),
-    ] : []),
-  ] : [
-    ...(props.scene === 'knowledge' ? getKnowledgeKit(props) : getDefaultKit(props)),
-  ],
+  extensions: buildExtensions(),
   onCreate({ editor }) {
-    // 初始化图片预览
-    previewInstance.value = new EditorPreviewImage(editor);
-    // 查找是否是use使用
+    previewInstance.value = new EditorPreviewImage(editor)
     if (!speedUseTiptapConfig.value) {
-      throw new Error('请先调用app.use(SpeedTiptapEditor)进行初始化一些配置，否则可能会初始化一些图标显示问题！')
+      throw new Error(
+        '请先调用 app.use(SpeedTiptapEditor) 进行初始化一些配置，否则可能会初始化一些图标显示问题！',
+      )
     }
-  }
+  },
 })
-defineExpose({
-  editor
-})
-// 监听 content 变化，同步到编辑器
+
+defineExpose({ editor })
+
 watch(
   () => props.content,
   (newContent) => {
-    if (editor.value && newContent !== editor.value.getHTML()) {
+    if (isCollaborationMode.value || !editor.value) {
+      return
+    }
+    if (newContent !== editor.value.getHTML()) {
       editor.value.commands.setContent(newContent)
     }
-  }
+  },
 )
 
-
-// 监听 title 变化，同步到编辑器标题
 watch(
   () => props.title,
   (newTitle) => {
-    if (editor.value && newTitle) {
-      const { state } = editor.value
-      const { doc } = state
-      const firstChild = doc.firstChild
-
-      // 检查当前标题是否已经相同，避免循环
-      const currentTitle = firstChild?.type.name === 'title' ? firstChild.textContent : ''
-      if (currentTitle === newTitle) {
-        return // 如果标题相同，不执行更新
-      }
-
-      if (firstChild && firstChild.type.name === 'title') {
-        // 使用 insertContentAt 替换标题内容
-        editor.value.commands.insertContentAt(
-          { from: 0, to: firstChild.nodeSize },
-          newTitle
-        )
-      }
+    if (!editor.value || !newTitle || !activePreset.value.features.hasTitle) {
+      return
     }
-  }
+
+    const { doc } = editor.value.state
+    const firstChild = doc.firstChild
+    const currentTitle = firstChild?.type.name === 'title' ? firstChild.textContent : ''
+
+    if (currentTitle === newTitle) {
+      return
+    }
+
+    if (firstChild?.type.name === 'title') {
+      editor.value.commands.insertContentAt({ from: 0, to: firstChild.nodeSize }, newTitle)
+    }
+  },
 )
 
-// 监听 editable 变化，动态更新编辑器的可编辑状态
 watch(
   () => props.editable,
   (newEditable: boolean) => {
-    if (editor.value) {
-      editor.value.setEditable(newEditable)
-    }
-  }
+    editor.value?.setEditable(newEditable)
+  },
 )
+
 watch(
   () => props.json,
   (newJson: string | null | undefined | Record<string, any>) => {
-    if (editor.value) {
-      // 兼容字符串和json传入
-      editor.value.commands.setContent(newJson ? typeof newJson === 'string' ? JSON.parse(newJson) : newJson : '')
+    if (isCollaborationMode.value || !editor.value) {
+      return
     }
+    editor.value.commands.setContent(
+      newJson ? (typeof newJson === 'string' ? JSON.parse(newJson) : newJson) : '',
+    )
   },
-  {
-    immediate: true
-  }
+  { immediate: true },
 )
-// 监听外部antdToken变化，重新生成当前editor 的antd变量(用于同步一些主题变量)
+
 watch(
   () => props.antdToken,
   (newAntdToken: Record<string, any>) => {
-    updateTheme?.({ token: newAntdToken });
+    updateTheme?.({ token: newAntdToken })
   },
-  { immediate: true }
+  { immediate: true },
 )
-// 卸载前处理一些东西
-onUnmounted(() => {
-  // 从协同列表里移除自己
-  if (props.collaboration && provider) {
-    provider?.awareness?.setLocalState(null);
-    provider?.disconnect?.()
-    provider?.destroy?.()
-    provider = null
-  }
-});
 
+watch(
+  [() => props.ydoc, () => props.provider, () => props.collaborationUser, activePreset],
+  () => {
+    if (!editor.value) {
+      return
+    }
+    editor.value.setOptions({
+      extensions: buildExtensions(),
+    })
+  },
+)
+
+onUnmounted(() => {
+  editor.value?.destroy()
+})
 </script>
 
 <style scoped lang="less">
@@ -445,21 +339,16 @@ onUnmounted(() => {
   min-height: 240px;
   display: flex;
   flex-direction: column;
-  // overflow: hidden;
   position: relative;
 
   &.knowledge {
     &>header {
       justify-content: center;
       border: none;
-      // border-bottom: 1px solid var(--ant-color-border);
-      // 外界传入？？
       border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     }
 
     &>main {
-
-      // 知识库方式
       &.knowledge-content-wrap {
         max-width: 1000px;
         margin: 0 auto;
@@ -500,22 +389,19 @@ onUnmounted(() => {
     border-top: none;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    // overflow-y: auto; 去掉滚动条，这里加上会出现一些奇怪的问题（文字减少，拖拽宽高变化时会闪烁一下滚动条）
     padding: 0 10px;
     padding-bottom: 10px;
     box-sizing: border-box;
-    position: relative; // 为 BubbleMenu 提供定位上下文
+    position: relative;
 
     :deep(.editor-content) {
       min-height: 100%;
 
-      // 带有句柄的需要增加padding
       &.has-drag-handle {
         padding-left: 50px;
         padding-right: 50px;
       }
     }
   }
-
 }
 </style>

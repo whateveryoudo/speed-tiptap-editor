@@ -4,11 +4,11 @@ Speed Tiptap Editor 提供了灵活的工具栏配置，支持多种场景和自
 
 ## 基础配置
 
-### 场景配置
+### 预设工具栏
 
-编辑器内置了两种场景配置：
+编辑器内置了两种工具栏配置（由 `preset` 决定）：
 
-#### 默认场景 (default)
+#### lite 预设
 
 可当做普通富文本使用
 
@@ -45,7 +45,7 @@ const defaultToolbar = [
 ];
 ```
 
-#### 知识库场景 (knowledge)
+#### knowledge 预设
 
 更丰富的功能集(类似语雀)，适用于知识管理
 
@@ -90,18 +90,18 @@ const knowledgeToolbar = [
 
 ## 使用方式
 
-### 1. 使用场景配置
+### 1. 使用预设
 
 ```vue
 <template>
-  <!-- 默认场景 : scene 为 default 或 不传入 -->
+  <!-- 简易富文本（默认 preset="lite"） -->
   <SpeedTiptapEditor v-model:content="content" />
 
-  <!-- 知识库场景 -->
+  <!-- 知识库完整富文本 -->
   <SpeedTiptapEditor
-    v-model:content="content"
+    preset="knowledge"
     v-model:title="title"
-    scene="knowledge"
+    :json="contentJson"
   />
 </template>
 ```
@@ -278,7 +278,7 @@ interface InsertMenuItemConfig {
 
 ## 注意事项
 
-1. **优先级**: `toolbarKeys` 优先级高于 `scene` 和 `excludeKeys`
+1. **优先级**: `toolbarKeys` 优先级高于 `excludeKeys`
 2. **冲突处理**: 同时传入 `toolbarKeys` 和 `excludeKeys` 时，只会生效 `toolbarKeys`
 3. **分隔符**: 使用 `|` 作为工具栏分隔符
-4. 大多数场景下仅需配置scene，能够满足大多数场景
+4. 大多数场景下仅需配置 `preset`，能够满足大多数场景

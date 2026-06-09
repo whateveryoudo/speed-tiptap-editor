@@ -172,6 +172,16 @@ export const getDefaultKit = (props: any) => [
   Tag,
 ];
 
+/** 简易富文本扩展集：不含脑图、流程图、格式刷、查找替换等重型能力 */
+export const getLiteKit = (props: any) =>
+  getDefaultKit(props).filter(
+    (ext) =>
+      ext &&
+      !['mind', 'flowMap', 'formatPainter', 'searchAndReplace', 'tag'].includes(
+        ext.name as string,
+      ),
+  );
+
 // 知识库
 export const getKnowledgeKit = (props: any) => [
   Title,

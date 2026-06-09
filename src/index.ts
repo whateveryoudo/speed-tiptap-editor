@@ -79,8 +79,28 @@ const install = (app: App, config?: Partial<GlobalConfig>) => {
 };
 
 export { default as SpeedTiptapEditor } from "./editor.vue";
+export { default as BubbleMenuBar } from "./bubbleMenus/BubbleMenuBar";
+export { useCollaboration, buildCollaborationExtensions } from "./hooks/useCollaboration";
+export type {
+  CollaborationConfig,
+  CollaborationUser,
+  UseCollaborationOptions,
+} from "./hooks/useCollaboration";
+export {
+  resolveEditorPreset,
+  resolveToolbarKeys,
+  resolveBubbleMenus,
+  litePreset,
+  knowledgePreset,
+} from "./presets";
+export type {
+  EditorPreset,
+  EditorPresetName,
+  BubbleMenuKey,
+  EditorPresetFeatures,
+} from "./presets";
 export default {
   install,
   setConfig,
-  version: "0.1.0",
+  "version": "1.0.0",
 };

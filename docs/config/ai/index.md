@@ -144,7 +144,7 @@ data: [DONE]
     <SpeedTiptapEditor 
       v-model:content="content" 
       v-model:title="title"
-      scene="knowledge"
+      preset="knowledge"
       v-bind="knowledgeProps" 
     />
   </div>

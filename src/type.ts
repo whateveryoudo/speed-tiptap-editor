@@ -6,165 +6,112 @@
  * @Description:
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\editor.ts
  */
-import type { CSSProperties, VNode } from "vue";
-import type { Editor } from "@tiptap/core";
+import type { CSSProperties, VNode } from 'vue'
+import type { Editor } from '@tiptap/core'
+import type { HocuspocusProvider } from '@hocuspocus/provider'
+import type * as Y from 'yjs'
+import type {
+  BubbleMenuKey,
+  EditorPresetName,
+} from '@st/presets'
+import type { CollaborationUser } from '@st/hooks/useCollaboration'
+
 export type ToolBarConfig =
   | string
   | {
-      key: string;
-      title: string;
-      icon: string | VNode;
-      options?: ToolBarConfig[];
-    };
+      key: string
+      title: string
+      icon: string | VNode
+      options?: ToolBarConfig[]
+    }
+
 export interface UserInfo {
-  id: number;
-  username: string;
-  nickname?: string;
-  avatar?: string;
-  color?: string;
-  [key: string]: any;
+  id: number
+  username: string
+  nickname?: string
+  avatar?: string
+  color?: string
+  [key: string]: any
 }
-// 编辑器props
-// 上传配置（image | file | upload）
+
 export interface IUploadConfig {
-  transformFileItem?: (item: any) => any; // 单条数据转换
-  multiple?: boolean;
-  maxSize?: number; // 最大上传大小（单位：MB）
-  accept?: string; // ,拼接的mime或文件扩展名（如：.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,推荐使用.xx，mime仅会在选择文件进行过滤）,mime参考：https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file#accept
-  action?: string;
-  headers?: Record<string, string>;
-  data?: Record<string, any> | ((file: File) => Record<string, any>);
-  beforeUpload?: (file: File, fileList: File[]) => boolean | Promise<boolean>;
-  // 支持直接传入的ajax请求
+  transformFileItem?: (item: any) => any
+  multiple?: boolean
+  maxSize?: number
+  accept?: string
+  action?: string
+  headers?: Record<string, string>
+  data?: Record<string, any> | ((file: File) => Record<string, any>)
+  beforeUpload?: (file: File, fileList: File[]) => boolean | Promise<boolean>
   uploadApis?: {
-    fileDownload: () => Promise<string>;
-    fileUploadSingle: (file: File) => Promise<string>;
-    fileUploadMulti: (files: File[]) => Promise<string[]>;
-    fileDel: (fileId: string) => Promise<boolean>;
-    getPreviewUrl: (fileId: string) => string;
-  };
+    fileDownload: () => Promise<string>
+    fileUploadSingle: (file: File) => Promise<string>
+    fileUploadMulti: (files: File[]) => Promise<string[]>
+    fileDel: (fileId: string) => Promise<boolean>
+    getPreviewUrl: (fileId: string) => string
+  }
 }
 
-// 已经放到了editor中，不知道使用导入的一直不更新什么原因
 export interface CollaborationEditorProps {
-  /**
-   * 场景:
-   */
-  scene?: "default" | "knowledge";
-  theme?: "light" | "dark"; // 编辑器主题
-  antdToken?: any; // antd的token配置
-  editorStyle?: CSSProperties;
-  headerStyle?: CSSProperties;
-  mainStyle?: CSSProperties;
-  hideBorder?: boolean;
-  /**
-   * 内容
-   */
-  content?: string;
-
-  /**
-   * 内容(json数据,这里不提供更新操作，仅提供设置操作，目前仅开启了协同模式下使用)
-   */
-  json?: string | null | Record<string, any>;
-
-  /**
-   * 标题
-   */
-  title?: string;
-  /**
-   * 文档 id
-   */
-  docId?: string;
-  /**
-   *  类型
-   */
-  docType?: "document" | "template";
-  /**
-   * 是否可编辑
-   */
-  editable?: boolean;
-  /**
-   * 协作配置
-   */
-  collaboration?: {
-    documentId: string;
-    url: string;
-    token: string;
-    user: {
-      id: string;
-      username: string;
-      nickname?: string;
-      avatar?: string;
-      color?: string;
-      [key: string]: any;
-    }; // 一些用户信息(用于协作时显示用户名和颜色,不传入颜色下采用随机颜色)
-  };
-  /**
-   * 是否需要菜单
-   */
-  menubar?: boolean;
-  /**
-   * 是否隐藏评论功能
-   */
-  hideComment?: boolean;
-  /**
-   * 占位符
-   */
-  placeholder?: string;
-  hocuspocusProvider?: {
-    type: Object;
-  };
-
-  toolbarKeys?: ToolBarConfig[];
-  // 通用上传配置（此配置下会作用于image 和 file）
-  upload?: IUploadConfig;
-  // 图片
-  image?: IUploadConfig;
-  // 附件
-  file?: IUploadConfig;
+  preset?: EditorPresetName
+  theme?: 'light' | 'dark'
+  antdToken?: any
+  editorStyle?: CSSProperties
+  headerStyle?: CSSProperties
+  mainStyle?: CSSProperties
+  hideBorder?: boolean
+  content?: string
+  json?: string | null | Record<string, any>
+  title?: string
+  docId?: string
+  docType?: 'document' | 'template'
+  editable?: boolean
+  ydoc?: Y.Doc | null
+  provider?: HocuspocusProvider | null
+  collaborationUser?: CollaborationUser | null
+  menubar?: boolean
+  hideComment?: boolean
+  placeholder?: string
+  toolbarKeys?: ToolBarConfig[]
+  excludeKeys?: string[]
+  bubbleMenus?: BubbleMenuKey[]
+  upload?: IUploadConfig
+  image?: IUploadConfig
+  file?: IUploadConfig
   fontSize?: {
-    default?: string;
-    options?: {
-      value: string;
-      label: string;
-    }[];
-  };
-  // 文本浮动菜单
+    default?: string
+    options?: { value: string; label: string }[]
+  }
   textBubbleMenu?: {
-    enabled?: boolean;
+    enabled?: boolean
     items?: (
       | {
-          icon: string | VNode;
-          title: string;
-          action?: (editor: Editor) => void;
+          icon: string | VNode
+          title: string
+          action?: (editor: Editor) => void
         }
       | string
-    )[];
-  };
-  // ai配置
+    )[]
+  }
   ai?: {
     doubao?: {
-      url: string;
-      header?: Record<string, any>;
+      url: string
+      header?: Record<string, any>
       bodyParams?: (
         action: string,
         content: string,
-        customPrompt: string
-      ) => Record<string, any>;
-    };
-  };
-  // 用户请求函数
-  mentionUserFetch?: any;
-  // 文档检测配置
+        customPrompt: string,
+      ) => Record<string, any>
+    }
+  }
+  mentionUserFetch?: any
   documentSuggestConfig?: {
-    rules?: any[];
-  };
-  aa: number;
-  // 对SpeedComponents的一些配置(注意这里)
+    rules?: any[]
+  }
   sdComponentsConfig?: {
     apis?: {
-      [key: string]: any;
-    };
-    transformRequestRes?: (res: any) => ResponseType; // 请求返回数据转换
-  };
+      [key: string]: any
+    }
+    transformRequestRes?: (res: any) => ResponseType
+  }
 }

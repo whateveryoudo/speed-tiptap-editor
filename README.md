@@ -14,6 +14,16 @@
 
 详细的使用文档请参考：[在线文档](https://whateveryoudo.github.io/speed-tiptap-editor/docs/)
 
+## npm 发版
+
+向 `main` 推送符合 [Conventional Commits](CONTRIBUTING.md) 的 `feat` / `fix` 提交后，GitHub Actions 会自动构建并发布到 npm。
+
+- 工作流：`.github/workflows/release-npm.yml`
+- 版本基线：`1.0.0`
+- 需在仓库 Secrets 中配置 `NPM_TOKEN`
+
+详见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
 ## 功能清单
 
 ### ✅ 已完成功能

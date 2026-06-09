@@ -133,9 +133,18 @@ export default defineConfig({
 
 ```vue
 <template>
-  <speed-tiptap-editor v-model:content="content"/>
+  <!-- 默认 preset="lite" 简易富文本 -->
+  <speed-tiptap-editor v-model:content="content" />
+
+  <!-- 知识库完整富文本 -->
+  <speed-tiptap-editor preset="knowledge" v-model:title="title" :json="contentJson" />
 </template>
 ```
+
+## 预设与协同
+
+- 预设说明见 [预设配置](/config/preset)
+- 协同编辑需配合 `useCollaboration` hook，见 [协同编辑](/config/collaboration)
 
 ## 注意事项
 

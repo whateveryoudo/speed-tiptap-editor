@@ -5,7 +5,9 @@ Speed Tiptap Editor  是一个基于 [tiptap](https://tiptap.dev/docs){target="_
 ## 特性
 
 - 🚀 基于 tiptap
-- 📦 内置UI采用antd v4
+- 📦 内置 UI 采用 antd v4
+- 🎛️ 预设驱动：`lite` 简易富文本 / `knowledge` 完整知识库富文本
+- 🤝 协同编辑通过 `useCollaboration` hook 外置管理
 - 🔍 完整的 TypeScript 支持
 - 🔧 详细的文档和示例
 
