@@ -143,8 +143,8 @@ export default defineConfig({
 
 ## 预设与协同
 
-- 预设说明见 [预设配置](/config/preset)
-- 协同编辑需配合 `useCollaboration` hook，见 [协同编辑](/config/collaboration)
+- 预设说明见 [预设配置](/config/preset/)
+- 协同编辑需配合 `useCollaboration` hook，见 [协同编辑](/config/collaboration/)
 
 ## 注意事项
 

@@ -24,7 +24,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "指南", link: "/guide/" },
-      { text: "配置", link: "/config/toolbar" },
+      { text: "配置", link: "/config/toolbar/" },
       { text: "示例", link: "https://whateveryoudo.github.io/speed-tiptap-editor/example/" },
     ],
     sidebar: {
@@ -41,26 +41,26 @@ export default defineConfig({
         {
           text: "基础",
           items: [
-            { text: "预设", link: "/config/preset" },
-            { text: "协同编辑", link: "/config/collaboration" },
-            { text: "工具栏", link: "/config/toolbar" },
-            { text: "图片上传", link: "/config/image" },
-            { text: "文件上传", link: "/config/file" },
-            { text: "字体大小", link: "/config/font-size" },
-            { text: "文本气泡菜单", link: "/config/bubble-text" },
+            { text: "预设", link: "/config/preset/" },
+            { text: "协同编辑", link: "/config/collaboration/" },
+            { text: "工具栏", link: "/config/toolbar/" },
+            { text: "图片上传", link: "/config/image/" },
+            { text: "文件上传", link: "/config/file/" },
+            { text: "字体大小", link: "/config/font-size/" },
+            { text: "文本气泡菜单", link: "/config/bubble-text/" },
           ],
         },
         {
           text: 'AI相关',
           items: [
-            { text: "基础", link: "/config/ai" },
+            { text: "基础", link: "/config/ai/" },
           ],
         }
       ],
       "/demos/": [
         {
           text: "示例",
-          items: [{ text: "基础", link: "/demos/simple" }],
+          items: [{ text: "基础", link: "/demos/simple/" }],
         },
       ],
     },

@@ -66,7 +66,7 @@ Speed Tiptap Editor 通过 **预设（preset）** 提供开箱即用的编辑器
 
 ## 预设与协同的关系
 
-协同不是第三种预设，而是可组合能力。请配合 [`useCollaboration`](/config/collaboration) 在业务侧创建 `ydoc` / `provider`，再传入编辑器：
+协同不是第三种预设，而是可组合能力。请配合 [`useCollaboration`](/config/collaboration/) 在业务侧创建 `ydoc` / `provider`，再传入编辑器：
 
 ```vue
 <script setup>
