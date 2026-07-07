@@ -173,7 +173,7 @@ interface UseTableBubbleMenuOptions {
 
 // 表格固定气泡菜单
 
-export function useTableBubbleMenu(editor: Editor, options?: UseTableBubbleMenuOptions = {}) {
+export function useTableBubbleMenu(editor: Editor, options: UseTableBubbleMenuOptions = {}) {
   const isVisible = ref(false)
   const floatingElement = ref<HTMLElement | null>(null)
   let cleanup: (() => void) | null = null

@@ -35,7 +35,6 @@ import { Mention } from "./mention";
 import { getMentionSuggestion } from "./mention/suggestion";
 import { CodeBlock } from "./codeBlock";
 import { Callout } from "./callout";
-import CustomeFlowMap from "./flowMap/CustomeFlowMap";
 import { Table, TableRow, TableHeader } from "@tiptap/extension-table";
 import TableCell from "./tableCell";
 import { TaskList } from "./taskList";
@@ -116,7 +115,6 @@ export const getDefaultKit = (props: any) => [
   Attachment,
   FileHandler,
   BaseDocument, // 用普通的 document
-  CustomeFlowMap,
   TextStyle.extend({
     priority: 1000,
   }),
@@ -177,7 +175,7 @@ export const getLiteKit = (props: any) =>
   getDefaultKit(props).filter(
     (ext) =>
       ext &&
-      !['mind', 'flowMap', 'formatPainter', 'searchAndReplace', 'tag'].includes(
+      !['mind', 'formatPainter', 'searchAndReplace', 'tag'].includes(
         ext.name as string,
       ),
   );

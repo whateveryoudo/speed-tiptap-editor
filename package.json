@@ -78,6 +78,7 @@
     "interactjs": "^1.10.17",
     "less": "^4.2.0",
     "prettier": "^3.2.0",
+    "rollup-plugin-visualizer": "^7.0.1",
     "semantic-release": "^25.0.3",
     "typescript": "^5.3.0",
     "unocss": "^0.58.0",

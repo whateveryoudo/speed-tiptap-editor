@@ -7,10 +7,13 @@ import UnoCSS from "@unocss/vite";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import nodePolyfills from 'vite-plugin-node-stdlib-browser';
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const isLib = process.env.BUILD_MODE === "lib";
+  const analyze = process.env.VITE_BUILD_ANALYZE === '1'
+
   const exampleEnv = loadEnv(mode, process.cwd() + "/example"); // example的变量
   console.log(exampleEnv.VITE_RELEASE_URL)
   return {
@@ -34,7 +37,16 @@ export default defineConfig(({ command, mode }) => {
         ],
         dts: "src/components.d.ts", // 生成类型声明文件
       }),
-      nodePolyfills() // 用于处理html-to-docx 报错：https://github.com/privateOmega/html-to-docx/issues/128
+      nodePolyfills(), // 用于处理html-to-docx 报错：https://github.com/privateOmega/html-to-docx/issues/128
+       // 分析：只在 lib build 时生成
+       isLib && analyze &&
+       visualizer({
+         filename: 'dist/stats-lib.html',
+         open: true,
+         gzipSize: true,
+         brotliSize: true,
+         template: 'treemap',
+       })
     ],
     resolve: {
       alias: {

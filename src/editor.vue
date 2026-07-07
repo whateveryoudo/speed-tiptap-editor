@@ -9,32 +9,16 @@
 <template>
   <a-config-provider :theme="cptTheme">
     <div :class="['wrap speed-tiptap-editor', activePreset.name, hideBorder ? 'hide-border' : '']" :style="editorStyle">
-      <menu-bar
-        :style="headerStyle"
-        :toolbarKeys="resolvedToolbarKeys"
-        v-if="menubar && editor"
-        class="header"
-        :editor="editor"
-      />
-      <bubble-menu-bar
-        v-if="editor"
-        :editor="editor"
-        :bubble-menus="resolvedBubbleMenus"
-        :text-bubble-menu="textBubbleMenu"
-      />
-      <main
-        :style="mainStyle"
-        :class="['editor-content-wrap', activePreset.name === 'knowledge' ? 'knowledge-content-wrap' : '']"
-      >
-        <editor-content
-          :editor="editor"
-          :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']"
-        />
-        <SuggestionToolTip
-          v-if="editor && activePreset.features.showDocumentSuggest"
-          :element="tooltipElement"
-          :editor="editor"
-        />
+      <menu-bar :style="headerStyle" :toolbarKeys="resolvedToolbarKeys" v-if="menubar && editor" class="header"
+        :editor="editor" />
+      <bubble-menu-bar v-if="editor" :editor="editor" :bubble-menus="resolvedBubbleMenus"
+        :text-bubble-menu="textBubbleMenu" />
+      <main :style="mainStyle"
+        :class="['editor-content-wrap', activePreset.name === 'knowledge' ? 'knowledge-content-wrap' : '']">
+        <editor-content :editor="editor"
+          :class="['h-full', (editor && editor?.storage?.formatPainter?.isFormatPainterActive) ? 'format-painter-active' : '']" />
+        <SuggestionToolTip v-if="editor && activePreset.features.showDocumentSuggest" :element="tooltipElement"
+          :editor="editor" />
       </main>
       <SearchReplaceModal v-if="editor && activePreset.features.showSearchReplace" :editor="editor" />
     </div>
@@ -71,6 +55,7 @@ import {
   buildCollaborationExtensions,
   type CollaborationUser,
 } from '@st/hooks/useCollaboration'
+import { isChangeOrigin } from '@tiptap/extension-collaboration'
 import type { HocuspocusProvider } from '@hocuspocus/provider'
 import type * as Y from 'yjs'
 
@@ -185,12 +170,12 @@ const cptTheme = computed(() => {
   const { antdToken: antdTokenFromConfig, theme: themeFromConfig } = speedUseTiptapConfig.value || {}
   return props.theme === 'dark' || themeFromConfig === 'dark'
     ? {
-        algorithm: theme.darkAlgorithm,
-        token: { ...(antdTokenFromConfig || props.antdToken) },
-      }
+      algorithm: theme.darkAlgorithm,
+      token: { ...(antdTokenFromConfig || props.antdToken) },
+    }
     : {
-        token: { ...(antdTokenFromConfig || props.antdToken) },
-      }
+      token: { ...(antdTokenFromConfig || props.antdToken) },
+    }
 })
 
 const { previewInstance } = useSpeedEditorProvider(props)
@@ -225,14 +210,18 @@ const editor = useEditor({
         : 'editor-content',
     },
   },
-  onUpdate({ editor }) {
-    if (isCollaborationMode.value) {
-      return
+  onUpdate({ editor, transaction }) {
+    if (!isCollaborationMode.value) {
+      // 非协同下，支持双向绑定内容
+      emit('update:content', editor.getHTML())
     }
 
-    emit('update:content', editor.getHTML())
 
     if (activePreset.value.features.hasTitle) {
+      // 仅本机操作才更新标题
+      if (isCollaborationMode.value && transaction && isChangeOrigin(transaction)) {
+        return
+      }
       try {
         const titleNode = editor.state.doc?.content?.firstChild?.content.firstChild
         debouncedEmitTitle(titleNode?.textContent ?? '')
