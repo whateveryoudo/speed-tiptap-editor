@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/whateveryoudo/speed-tiptap-editor/compare/v1.0.1...v1.0.2) (2026-07-07)
+
+
+### Bug Fixes
+
+* 触发 npm 补丁版本发布 ([941811a](https://github.com/whateveryoudo/speed-tiptap-editor/commit/941811abc515fd41d83774410c23f4e1204340de))
+
 ## [1.0.1](https://github.com/whateveryoudo/speed-tiptap-editor/compare/v1.0.0...v1.0.1) (2026-06-09)
 
 
