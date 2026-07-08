@@ -1,12 +1,14 @@
 {
   "name": "@speed-tiptap-editor/collaboration-editor",
   "version": "2.0.0-alpha.0",
-  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "vite build",
@@ -36,5 +38,11 @@
     "vue": "^3.5.0",
     "vue-tsc": "^2.0.0",
     "yjs": "^13.6.27"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

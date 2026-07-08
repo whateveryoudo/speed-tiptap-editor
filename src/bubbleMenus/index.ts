@@ -1,8 +1,0 @@
-export { default as BubbleMenuBar } from './BubbleMenuBar'
-export { default as TextMenu } from './textMenu/index.vue'
-export { default as ImageMenu } from './imageMenu/index.vue'
-export { default as TableMenu } from './tableMenu/index.vue'
-export { default as AttachmentMenu } from './attachmentMenu/index.vue'
-export { default as TagMenu } from './tagMenu/index.vue'
-export { default as CalloutMenu } from './calloutMenu/index.vue'
-export { default as DragNodeMenu } from './dragNodeMenu/index.vue'

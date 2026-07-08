@@ -1,12 +1,8 @@
 import { defineConfig } from "vitepress";
-import { resolve } from "path";
-import { fileURLToPath } from "url";
 import UnoCSS from "unocss/vite";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
-
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 // 环境变量配置
 const VITE_APP_BASE_URL = process.env.VITE_APP_BASE_URL || "/api";
@@ -25,7 +21,7 @@ export default defineConfig({
     nav: [
       { text: "指南", link: "/guide/" },
       { text: "配置", link: "/config/toolbar/" },
-      { text: "示例", link: "https://whateveryoudo.github.io/speed-tiptap-editor/example/" },
+      { text: "示例", link: "https://whateveryoudo.github.io/speed-tiptap-editor/demo/" },
     ],
     sidebar: {
       "/guide/": [
@@ -66,11 +62,6 @@ export default defineConfig({
     },
   },
   vite: {
-    resolve: {
-      alias: {
-        "@": resolve(__dirname, "../../src"),
-      },
-    },
     optimizeDeps: {
       include: ["ant-design-vue/es/locale/zh_CN", "@ant-design/icons-vue"],
     },

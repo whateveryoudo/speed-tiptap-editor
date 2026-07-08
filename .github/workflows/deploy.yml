@@ -51,9 +51,7 @@ jobs:
       - name: Install dependencies (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
-      - name: Build docs + example (prepare deploy)
-        env:
-          VITE_RELEASE_URL: /speed-tiptap-editor/example/
+      - name: Build docs + demo (prepare deploy)
         run: pnpm run build:deploy
 
       - name: Setup Pages

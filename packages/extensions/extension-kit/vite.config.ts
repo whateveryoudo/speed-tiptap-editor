@@ -23,6 +23,7 @@ export default defineConfig({
         'ant-design-vue',
         '@ant-design/icons-vue',
         'lodash-es',
+        'axios',
         /^@tiptap\//,
         /^@floating-ui\//,
         '@speed-tiptap-editor/shared',

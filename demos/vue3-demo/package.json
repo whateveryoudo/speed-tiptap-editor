@@ -8,13 +8,22 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.0",
+    "@hocuspocus/provider": "^3.2.0",
     "@speed-tiptap-editor/base-editor": "workspace:^",
     "@speed-tiptap-editor/knowledge-editor": "workspace:^",
     "@speed-tiptap-editor/lite-editor": "workspace:^",
-    "@hocuspocus/provider": "^3.2.0",
+    "@tiptap/core": "^3.0.6",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/vue-3": "3.6.6",
     "@tiptap/y-tiptap": "^3.0.0",
+    "@vueuse/core": "^11.3.0",
     "ant-design-vue": "^4.1.0",
+    "axios": "^0.27.2",
+    "es-drager": "^1.2.11",
+    "lodash-es": "^4.17.21",
     "speed-components-ui": "^1.1.3",
+    "viewerjs": "^1.11.7",
     "vue": "^3.5.0",
     "yjs": "^13.6.27"
   },

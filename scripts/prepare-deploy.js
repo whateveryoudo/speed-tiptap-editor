@@ -2,32 +2,21 @@ const fs = require('fs-extra');
 const path = require('path');
 
 async function prepareDeploy() {
-  // 创建部署目录
   const deployDir = path.resolve(__dirname, '../dist-deploy');
   await fs.ensureDir(deployDir);
 
-  // 复制文档到 docs 目录
   const docsDistDir = path.resolve(__dirname, '../docs/.vitepress/dist');
   const docsTargetDir = path.resolve(deployDir, 'docs');
-  
-  // 确保目标目录存在
   await fs.ensureDir(docsTargetDir);
-  
-  // 复制所有文件
   await fs.copy(docsDistDir, docsTargetDir, {
-    filter: (src) => {
-      // 排除 .git 目录
-      return !src.includes('.git');
-    }
+    filter: (src) => !src.includes('.git'),
   });
 
-  // 复制示例到 example 目录
   await fs.copy(
-    path.resolve(__dirname, '../example/dist-example'),
-    path.resolve(deployDir, 'example')
+    path.resolve(__dirname, '../demos/vue3-demo/dist'),
+    path.resolve(deployDir, 'demo'),
   );
 
-  // 创建根目录的 index.html 重定向到 docs
   const indexHtml = `
 <!DOCTYPE html>
 <html>
@@ -35,9 +24,7 @@ async function prepareDeploy() {
     <meta charset="utf-8">
     <title>Speed Tiptap Editor</title>
     <script>
-      // 获取当前路径
       const path = window.location.pathname;
-      // 如果当前路径是根路径，重定向到 docs
       if (path === '/' || path === '/speed-tiptap-editor/' || path === '/speed-tiptap-editor/index.html') {
         window.location.href = '/speed-tiptap-editor/docs/';
       }
@@ -50,7 +37,6 @@ async function prepareDeploy() {
   `.trim();
 
   await fs.writeFile(path.resolve(deployDir, 'index.html'), indexHtml);
-
   console.log('Deploy files prepared successfully!');
 }
 

@@ -39,6 +39,9 @@ export default defineConfig({
         'speed-components-ui/components',
         'speed-components-ui/hooks',
         'speed-components-ui/dist/style.css',
+        '@vueuse/core',
+        'lodash-es',
+        'viewerjs',
         /^@tiptap\//,
       ],
       output: {

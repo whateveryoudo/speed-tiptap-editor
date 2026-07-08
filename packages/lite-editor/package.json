@@ -1,12 +1,14 @@
 {
   "name": "@speed-tiptap-editor/lite-editor",
   "version": "2.0.0-alpha.0",
-  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "vite build",
@@ -19,12 +21,20 @@
     "@speed-tiptap-editor/kit-base": "workspace:^",
     "@speed-tiptap-editor/shared": "workspace:^"
   },
-  "peerDependencies": { "vue": "^3.4.0" },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
     "typescript": "^5.6.0",
     "vite": "^5.0.0",
     "vue": "^3.5.0",
     "vue-tsc": "^2.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }
