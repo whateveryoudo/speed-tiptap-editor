@@ -1,7 +1,8 @@
 {
   "name": "speed-tiptap-editor",
   "version": "1.0.0",
-  "description": "基于 Ant Design Vue + Tiptap 的富文本编辑器",
+  "private": true,
+  "description": "基于 Ant Design Vue + Tiptap 的富文本编辑器（Monorepo）",
   "main": "example/main.ts",
   "exports": {
     ".": {
@@ -14,8 +15,13 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "npm run build:lib && npm run build:example",
+    "build": "turbo run build",
+    "build:legacy": "npm run build:lib && npm run build:example",
+    "dev": "turbo run dev --parallel",
+    "demo": "pnpm --filter @speed-tiptap-editor/vue3-demo dev",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "legacy:dev": "vite",
     "build:lib": "cross-env BUILD_MODE=lib vite build",
     "build:example": "vite build --outDir dist-example",
     "docs:dev": "vitepress dev docs",
@@ -87,7 +93,9 @@
     "vite": "^5.0.0",
     "vite-plugin-node-stdlib-browser": "^0.2.1",
     "vitest": "^1.2.0",
-    "vue-tsc": "^1.8.0"
+    "vue-tsc": "^1.8.0",
+    "turbo": "^2.3.0",
+    "tsup": "^8.3.0"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.0",
@@ -96,6 +104,7 @@
     "@highlightjs/vue-plugin": "^2.1.2",
     "@hocuspocus/provider": "^3.2.0",
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@speed-tiptap-editor/document-io": "workspace:*",
     "@tiptap/core": "^3.0.6",
     "@tiptap/extension-blockquote": "^3.0.6",
     "@tiptap/extension-bubble-menu": "^3.0.6",

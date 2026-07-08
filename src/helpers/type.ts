@@ -1,6 +1,1 @@
-// 公共结果结构
-export interface ExportSuccessResult {
-    value: any
-    fileName: string
-    type: string
-}
+export type { ExportSuccessResult } from '@speed-tiptap-editor/document-io'
