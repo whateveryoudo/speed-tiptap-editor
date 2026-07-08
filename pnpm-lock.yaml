@@ -14,6 +14,9 @@ importers:
       '@changesets/cli':
         specifier: ^2.31.0
         version: 2.31.0(@types/node@20.19.25)
+      '@highlightjs/vue-plugin':
+        specifier: ^2.1.2
+        version: 2.1.2(highlight.js@11.11.1)(vue@3.5.25(typescript@5.9.3))
       '@types/node':
         specifier: ^20.11.0
         version: 20.19.25
@@ -44,6 +47,9 @@ importers:
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.2
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
       husky:
         specifier: ^9.0.0
         version: 9.1.7

@@ -12,7 +12,5 @@ declare module 'vue' {
     CaretDownOutlined: typeof import('@ant-design/icons-vue')['CaretDownOutlined']
     CaretUpOutlined: typeof import('@ant-design/icons-vue')['CaretUpOutlined']
     CopyOutlined: typeof import('@ant-design/icons-vue')['CopyOutlined']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
   }
 }
