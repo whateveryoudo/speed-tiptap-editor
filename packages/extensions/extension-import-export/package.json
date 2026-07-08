@@ -1,0 +1,25 @@
+{
+  "name": "@speed-tiptap-editor/extension-import-export",
+  "version": "2.0.0-alpha.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@speed-tiptap-editor/document-io": "workspace:^",
+    "@speed-tiptap-editor/kit-base": "workspace:^",
+    "@speed-tiptap-editor/shared": "workspace:^"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 48</title>
+    <defs>
+        <path d="M3,0 L24.422311,0 C25.2038159,1.8828233e-15 25.9544731,0.304962124 26.514553,0.849994605 L37.5538793,11.5927316 C38.1342469,12.1575067 38.4616372,12.9329238 38.4616372,13.742737 L38.4616372,42.7457045 C38.4616372,44.4025587 37.1184915,45.7457045 35.4616372,45.7457045 L3,45.7457045 C1.34314575,45.7457045 6.46995335e-16,44.4025587 0,42.7457045 L0,3 C-2.02906125e-16,1.34314575 1.34314575,-1.39730022e-16 3,0 Z" id="path-1"></path>
+        <filter x="-32.5%" y="-20.8%" width="165.0%" height="156.8%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.08 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.08 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M25.6410915,0 L38.4616372,12.4761012 L27.6410915,12.4761012 C26.536522,12.4761012 25.6410915,11.5806707 25.6410915,10.4761012 L25.6410915,0 L25.6410915,0 Z" id="path-4"></path>
+        <filter x="-50.7%" y="-44.1%" width="201.4%" height="204.2%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.08 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.02 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-92.000000, -405.000000)">
+            <g id="编组备份" transform="translate(29.000000, 42.000000)">
+                <g id="编组-13备份-2" transform="translate(63.000000, 363.000000)">
+                    <rect id="矩形备份-4" stroke="#D9D9D9" stroke-width="1.77777778" fill="#FFFFFF" opacity="0" x="0.888888889" y="0.888888889" width="62.2222222" height="62.2222222" rx="3.55555556"></rect>
+                    <g id="Group-48" transform="translate(12.000000, 9.000000)">
+                        <g id="Group-2" transform="translate(0.657143, 0.000000)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <g id="Rectangle">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                            </g>
+                            <g id="编组" mask="url(#mask-2)">
+                                <g transform="translate(10.342857, 20.000000)" id="编组-12">
+                                    <rect id="矩形" fill="#3EA2FF" x="0" y="0" width="16.875" height="2.7" rx="1"></rect>
+                                    <rect id="矩形备份-3" fill="#3EA2FF" x="0" y="5.4" width="16.875" height="2.7" rx="1"></rect>
+                                    <rect id="矩形备份-5" fill="#3EA2FF" x="0" y="10.8" width="11.25" height="2.7" rx="1"></rect>
+                                </g>
+                            </g>
+                            <g id="Rectangle" mask="url(#mask-2)">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                                <use fill="#3EA2FF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

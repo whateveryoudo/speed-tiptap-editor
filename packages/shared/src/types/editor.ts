@@ -1,0 +1,119 @@
+import type { CSSProperties, VNode } from 'vue'
+import type { BubbleMenuKey } from './preset'
+
+export type ToolBarConfig =
+  | string
+  | {
+      key: string
+      title: string
+      icon: string | VNode
+      options?: ToolBarConfig[]
+    }
+
+export interface UserInfo {
+  id: number
+  username: string
+  nickname?: string
+  avatar?: string
+  color?: string
+  [key: string]: unknown
+}
+
+export interface IUploadConfig {
+  transformFileItem?: (item: unknown) => unknown
+  multiple?: boolean
+  maxSize?: number
+  accept?: string
+  action?: string
+  headers?: Record<string, string>
+  data?: Record<string, unknown> | ((file: File) => Record<string, unknown>)
+  beforeUpload?: (file: File, fileList: File[]) => boolean | Promise<boolean>
+  uploadApis?: {
+    fileDownload: () => Promise<string>
+    fileUploadSingle: (file: File) => Promise<string>
+    fileUploadMulti: (files: File[]) => Promise<string[]>
+    fileDel: (fileId: string) => Promise<boolean>
+    getPreviewUrl: (fileId: string) => string
+  }
+}
+
+export interface CollaborationUser {
+  id: string | number
+  username: string
+  nickname?: string
+  avatar?: string
+  color?: string
+  [key: string]: unknown
+}
+
+export interface CollaborationConfig {
+  documentId: string
+  url: string
+  token: string
+  user: CollaborationUser
+}
+
+/** SpeedEditor 壳层 props（无 yjs / provider，协同由 collaboration-editor 注入 extraExtensions） */
+export interface SpeedEditorShellProps {
+  theme?: 'light' | 'dark'
+  antdToken?: Record<string, unknown>
+  editorStyle?: CSSProperties
+  headerStyle?: CSSProperties
+  mainStyle?: CSSProperties
+  hideBorder?: boolean
+  content?: string
+  json?: string | null | Record<string, unknown>
+  title?: string
+  docId?: string
+  docType?: 'document' | 'template'
+  editable?: boolean
+  menubar?: boolean
+  hideComment?: boolean
+  placeholder?: string
+  toolbarKeys?: ToolBarConfig[]
+  excludeKeys?: string[]
+  bubbleMenus?: BubbleMenuKey[]
+  upload?: IUploadConfig
+  image?: IUploadConfig
+  file?: IUploadConfig
+  fontSize?: {
+    default?: string
+    options?: { value: string; label: string }[]
+  }
+  textBubbleMenu?: {
+    enabled?: boolean
+    items?: (
+      | {
+          icon: string | VNode
+          title: string
+          action?: (editor: unknown) => void
+        }
+      | string
+    )[]
+  }
+  ai?: {
+    doubao?: {
+      url: string
+      header?: Record<string, unknown>
+      bodyParams?: (
+        action: string,
+        content: string,
+        customPrompt: string,
+      ) => Record<string, unknown>
+    }
+  }
+  mentionUserFetch?: (query: string) => Promise<unknown[]>
+  documentSuggestConfig?: { rules?: unknown[] }
+  sdComponentsConfig?: {
+    apis?: Record<string, unknown>
+    transformRequestRes?: (res: unknown) => unknown
+  }
+}
+
+/** @deprecated 迁移期别名，请用 SpeedEditorShellProps */
+export type CollaborationEditorProps = SpeedEditorShellProps
+
+/** CollaborativeEditor 额外 props */
+export interface CollaborativeShellProps extends SpeedEditorShellProps {
+  collaborationConfig?: CollaborationConfig
+}

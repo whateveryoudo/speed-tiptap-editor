@@ -1,0 +1,19 @@
+import { defineConfig, type Options } from 'tsup'
+
+export function createLibConfig(overrides: Options = {}): Options {
+  return {
+    entry: ['src/index.ts'],
+    format: ['esm'],
+    dts: process.env.SKIP_DTS === '1' ? false : { resolve: true },
+    tsconfig: 'tsconfig.json',
+    sourcemap: true,
+    clean: true,
+    treeshake: true,
+    target: 'es2020',
+    ...overrides,
+  }
+}
+
+export function defineLibConfig(overrides: Options = {}) {
+  return defineConfig(createLibConfig(overrides))
+}

@@ -1,0 +1,54 @@
+{
+  "name": "@speed-tiptap-editor/kit-base",
+  "version": "2.0.0-alpha.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "vite build && cp src/shim.d.ts dist/index.d.ts",
+    "typecheck": "vue-tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@speed-tiptap-editor/composables": "workspace:^",
+    "@speed-tiptap-editor/document-io": "workspace:^",
+    "@speed-tiptap-editor/shared": "workspace:^"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0",
+    "ant-design-vue": "^4.0.0",
+    "@ant-design/icons-vue": "^7.0.0",
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/vue-3": "^3.0.0",
+    "@tiptap/y-tiptap": "^3.0.0",
+    "@floating-ui/dom": "^1.0.0",
+    "@microsoft/fetch-event-source": "^2.0.0",
+    "lodash-es": "^4.17.0",
+    "speed-components-ui": ">=1.1.3"
+  },
+  "devDependencies": {
+    "@ant-design/icons-vue": "^7.0.0",
+    "@tiptap/core": "^3.0.6",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/vue-3": "3.6.6",
+    "@tiptap/y-tiptap": "^3.0.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
+    "ant-design-vue": "^4.1.0",
+    "lodash-es": "^4.17.21",
+    "speed-components-ui": "^1.1.3",
+    "typescript": "^5.6.0",
+    "vite": "^5.0.0",
+    "vue": "^3.5.0",
+    "vue-tsc": "^2.0.0"
+  }
+}
