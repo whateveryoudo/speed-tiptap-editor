@@ -13,7 +13,7 @@
     @cancel="emit('closeModal')"
     @ok="handleSubmit"
   >
-    <a-form
+    <Form
       class="pt-4"
       ref="formRef"
       :model="formState"
@@ -21,33 +21,34 @@
       :wrapper-col="{ span: 15 }"
       autocomplete="off"
     >
-      <a-form-item
+      <FormItem
         label="文本"
         name="text"
       >
-        <a-input
+        <Input
           v-model:value="formState.text"
           allow-clear
           placeholder="描述"
         />
-      </a-form-item>
+      </FormItem>
 
-      <a-form-item
+      <FormItem
         label="链接"
         name="href"
         :rules="[{ validator: validLink, required: true }]"
       >
-        <a-input
+        <Input
           v-model:value="formState.href"
           allow-clear
           placeholder="链接地址"
         />
-      </a-form-item>
-    </a-form>
+      </FormItem>
+    </Form>
   </s-full-modal>
 </template>
 
 <script setup lang="ts">
+import { Form, FormItem, Input } from 'ant-design-vue'
 import { ref, reactive, watch } from 'vue'
 import { linkModalProps } from './modal'
 import { isValidURL } from '@kb/prose-utils'

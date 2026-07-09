@@ -9,12 +9,13 @@
 <template>
   <NodeViewWrapper>
     <div class="loading-wrapper">
-      <a-spin :tip="nodeAttrs.text ? `上传${nodeAttrs.text}中...` : ''"></a-spin>
+      <Spin :tip="nodeAttrs.text ? `上传${nodeAttrs.text}中...` : ''"></Spin>
     </div>
   </NodeViewWrapper>
 </template>
 
 <script setup lang="ts">
+import { Spin } from 'ant-design-vue'
 import { computed } from 'vue'
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
 const props = defineProps(nodeViewProps)

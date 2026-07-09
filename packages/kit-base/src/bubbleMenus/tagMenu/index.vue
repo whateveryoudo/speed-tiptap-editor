@@ -8,10 +8,10 @@
 -->
 <template>
   <BubbleContainer :editor="editor" plugin-key="tag-bubble-menu" :should-show="shouldShow">
-    <a-space :size="5">
-      <a-input placeholder="请输入标签" :value="attributes.text" @change="handleTextChange">
-      </a-input>
-      <a-divider type="vertical" class="menu-divider" />
+    <Space :size="5">
+      <Input placeholder="请输入标签" :value="attributes.text" @change="handleTextChange">
+      </Input>
+      <Divider type="vertical" class="menu-divider" />
       <template v-for="(item, index) in fixedOptions" :key="item.color">
         <span :style="{ backgroundColor: item.bgColor }"
           class="shadow-btn-wrapper cursor-pointer w-[25px] h-[25px] rounded-[2px] flex items-center justify-center"
@@ -20,34 +20,35 @@
           <span v-else :style="{ color: item.color }">A</span>
         </span>
       </template>
-      <a-popover trigger="click" placement="right">
+      <Popover trigger="click" placement="right">
         <template #content>
-          <a-flex vertical :gap="20" class="w-[150px]">
-            <a-flex :gap="5" align="center">
+          <Flex vertical :gap="20" class="w-[150px]">
+            <Flex :gap="5" align="center">
               <span class="flex-shrink-0">文字颜色:</span>
               <ColorPicker placement="right" class="flex-1  h-[15px]" :cur-color="attributes.color"
                 @triggerColor="(color: string) => handleUpdateAttributes({ color })">
                 <span :style="{ backgroundColor: attributes.color }"
                   class="cursor-pointer border border-solid border-gray-200"></span>
               </ColorPicker>
-            </a-flex>
-            <a-flex :gap="5" align="center">
+            </Flex>
+            <Flex :gap="5" align="center">
               <span class="flex-shrink-0">背景颜色:</span>
               <ColorPicker class="flex-1 h-[15px]" placement="right" :cur-color="attributes.bgColor"
                 @triggerColor="(color: string) => handleUpdateAttributes({ bgColor: color })">
                 <span :style="{ backgroundColor: attributes.bgColor }"
                   class="cursor-pointer border border-solid border-gray-200"></span>
               </ColorPicker>
-            </a-flex>
-          </a-flex>
+            </Flex>
+          </Flex>
         </template>
-        <a-button type="primary" size="small"> 自定义 </a-button>
-      </a-popover>
-    </a-space>
+        <Button type="primary" size="small"> 自定义 </Button>
+      </Popover>
+    </Space>
   </BubbleContainer>
 </template>
 
 <script setup lang="ts">
+import { Button, Divider, Flex, Input, Popover, Space } from 'ant-design-vue'
 import { PropType, computed, ref, watch } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { useAttributes } from "@speed-tiptap-editor/composables";

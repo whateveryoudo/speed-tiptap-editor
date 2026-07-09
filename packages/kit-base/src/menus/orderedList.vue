@@ -9,13 +9,14 @@
 
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '有序列表'">
-    <a-button :disabled="disableMenu" type="text" :class="['shadow-btn-wrapper', isOrderedListActive ? 'is-active' : '']"
+    <Button :disabled="disableMenu" type="text" :class="['shadow-btn-wrapper', isOrderedListActive ? 'is-active' : '']"
       @click="toggleOrderedList">
       <ordered-list-outlined />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { OrderedListOutlined } from '@ant-design/icons-vue'

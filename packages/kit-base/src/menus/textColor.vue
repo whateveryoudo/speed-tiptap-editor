@@ -9,23 +9,24 @@
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '字体颜色'">
     <div :class="['text-color-menu-wrapper']">
-      <a-button type="text" class="shadow-btn-wrapper middle" style="margin-top:-1px" :disabled="disableMenu"
+      <Button type="text" class="shadow-btn-wrapper middle" style="margin-top:-1px" :disabled="disableMenu"
         v-on="buttonEvents">
         <span class="text-wrapper" :style="{ color: disableMenu ? 'rgba(0, 0, 0, 0.25)' : '#000' }">A
           <span class="under-line"
             :style="{ backgroundColor: disableMenu ? 'rgba(0, 0, 0, 0.25)' : curColor || 'transparent' }" />
         </span>
-      </a-button>
+      </Button>
       <color-picker :cur-color="curColor" show-default :disabled="disableMenu" @triggerColor="setColor">
-        <a-button @mousedown.prevent type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="disableMenu">
+        <Button @mousedown.prevent type="text" class="shadow-btn-wrapper small dropdown-trigger" :disabled="disableMenu">
           <caret-down-outlined />
-        </a-button>
+        </Button>
       </color-picker>
     </div>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { PropType, ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import ColorPicker from '@kb/components/colorPicker/index.vue'

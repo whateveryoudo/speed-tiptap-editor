@@ -6,13 +6,13 @@
         <div v-if="isOpen" class="suggestion-tooltip-parent" ref="floating" :style="floatingStyles">
             <div class="suggestion-tooltip">
                 <div class="p-4">
-                    <a-alert class="mb-4 py-1!" :message="suggestion.message" :type="suggestion.severity === 'error' ? 'error' : suggestion.severity === 'warning' ? 'warning' : 'info'" />
-                    <a-space>
-                        <a-button size="small" type="primary" class="text-[12px]!"
-                            @click="applySuggestion(suggestion.id)">修复</a-button>
-                        <a-button size="small" danger class="text-[12px]!"
-                            @click="rejectSuggestion(suggestion.id)">拒绝</a-button>
-                    </a-space>
+                    <Alert class="mb-4 py-1!" :message="suggestion.message" :type="suggestion.severity === 'error' ? 'error' : suggestion.severity === 'warning' ? 'warning' : 'info'" />
+                    <Space>
+                        <Button size="small" type="primary" class="text-[12px]!"
+                            @click="applySuggestion(suggestion.id)">修复</Button>
+                        <Button size="small" danger class="text-[12px]!"
+                            @click="rejectSuggestion(suggestion.id)">拒绝</Button>
+                    </Space>
                 </div>
                 <div class="p-2 px-4 bg-[rgba(61,_37,_20,_0.05)]">
                     <p class="text-xs text-[rgba(28,_25,_23,_0.6)]">{{ element.ruleTitle }}</p>
@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { Alert, Button, Space } from 'ant-design-vue'
 import { offset, shift, useFloating } from '@floating-ui/vue'
 import { computed, ref } from 'vue'
 

@@ -7,9 +7,9 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\extensions\attachment\FileDisplayBar.vue
 -->
 <template>
-  <a-flex :class="['display-wrap max-w-[400px]', displayMode === 'card' && 'card']" align="center"
+  <Flex :class="['display-wrap max-w-[400px]', displayMode === 'card' && 'card']" align="center"
     justify="space-between">
-    <a-flex class="min-w-0 flex-1" align="center" gap="small">
+    <Flex class="min-w-0 flex-1" align="center" gap="small">
       <s-icon-font v-if="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons]"
         :icon-render="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons].icon"
         :color="fileTypeIcons[normalizeFileType(fileType) as keyof typeof fileTypeIcons].color" />
@@ -17,19 +17,20 @@
         <span class="truncate" :title="fileName">{{ fileName }}</span>
         <span class="size-text flex-shrink-0">({{ normalizeFileSize(fileSize || 0) }})</span>
       </span>
-    </a-flex>
-    <a-space :size="10" class="ml-2 flex-shrink-0" v-if="displayMode === 'card'">
-      <a-tooltip title="预览">
+    </Flex>
+    <Space :size="10" class="ml-2 flex-shrink-0" v-if="displayMode === 'card'">
+      <Tooltip title="预览">
         <eye-outlined @click="handlePreview" />
-      </a-tooltip>
-      <a-tooltip title="下载">
+      </Tooltip>
+      <Tooltip title="下载">
         <download-outlined @click="handleDownLoad" />
-      </a-tooltip>
-    </a-space>
-  </a-flex>
+      </Tooltip>
+    </Space>
+  </Flex>
 </template>
 
 <script setup lang="tsx">
+import { Flex, Space, Tooltip } from 'ant-design-vue'
 import { inject, ref, Ref } from "vue";
 import { normalizeFileType, normalizeFileSize } from "@ek/prose-utils/file";
 import {

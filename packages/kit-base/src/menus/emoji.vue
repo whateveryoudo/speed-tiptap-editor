@@ -8,20 +8,21 @@
 <template>
 
   <emoji-picker @triggerEmoji="setEmoji" v-if="!disableMenu">
-    <a-tooltip placement="bottom" :title="disableMenu ? null : '插入表情'">
-      <a-button type="text" :class="['shadow-btn-wrapper', isEmojiActive ? 'is-active' : '']">
+    <Tooltip placement="bottom" :title="disableMenu ? null : '插入表情'">
+      <Button type="text" :class="['shadow-btn-wrapper', isEmojiActive ? 'is-active' : '']">
         <s-icon-font type="icon-kl-emoji" :size="18" />
-      </a-button>
-    </a-tooltip>
+      </Button>
+    </Tooltip>
 
   </emoji-picker>
-  <a-button v-else type="text" :class="['shadow-btn-wrapper']" disabled>
+  <Button v-else type="text" :class="['shadow-btn-wrapper']" disabled>
     <s-icon-font type="icon-kl-emoji" :size="18" />
-  </a-button>
+  </Button>
 
 </template>
 
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import { PropType, computed, inject, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import EmojiPicker from '@kb/components/emojiPicker/index.vue'

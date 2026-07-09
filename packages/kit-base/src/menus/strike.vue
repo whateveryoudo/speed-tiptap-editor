@@ -8,16 +8,17 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '删除线' : null">
-    <a-button type="text" class="shadow-btn-wrapper"
+    <Button type="text" class="shadow-btn-wrapper"
       :class="[isStrikeActive ? 'is-active' : '', isTitleActive && 'disabled']"
       v-on="buttonEvents"
       :disabled="!editableCpt || isTitleActive">
       <strikethrough-outlined />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { type Editor } from '@tiptap/core'
 import { StrikethroughOutlined } from '@ant-design/icons-vue'
 import { useActive } from '@speed-tiptap-editor/composables'

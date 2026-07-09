@@ -1,29 +1,29 @@
 <template>
     占位
     <!-- <s-full-modal  :width="500" :footer="false" :visible="visible" @cancel="emit('update:visible', false)" height="auto" title="文件导入">
-        <a-flex v-if="currentView === 'progress'">
-            <a-space class="cursor-pointer text-[var(--ant-color-text-secondary)]"  @click="currentView = 'select'">
+        <Flex v-if="currentView === 'progress'">
+            <Space class="cursor-pointer text-[var(--ant-color-text-secondary)]"  @click="currentView = 'select'">
                 <ArrowLeftOutlined />
                 重新选择
-            </a-space>
-        </a-flex>
+            </Space>
+        </Flex>
 
         <div v-show="currentView === 'select'" class="p-4 flex gap-4 justify-around">
             <div @click="handleImport(item.value)" v-for="item in importItems" :key="item.value"
             class="w-[140px] py-2 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors" 
             >
-            <a-flex 
+            <Flex 
                 vertical
                 :key="item.value" 
                 align="center"
                 justify="center"
             >
                 <img class="w-[70px] h-[70px]" :src="item.icon" />
-                <a-tooltip :title="item.label">
+                <Tooltip :title="item.label">
                     <span class="text-sm truncate">{{ item.label }}</span>
-                </a-tooltip>
+                </Tooltip>
                 <span class="text-xs text-gray-500">{{ item.desc }}</span>
-            </a-flex>
+            </Flex>
         </div>
 
         </div>
@@ -39,7 +39,7 @@
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <a-progress
+                    <Progress
                         v-if="task.status === 'processing'"
                         type="circle"
                         trail-color="#e6f4ff"
@@ -62,14 +62,15 @@
         </div>
 
         <div v-if="importingLen > 0 && currentView === 'select'" class="mt-4 p-2 bg-blue-50 rounded-lg">
-            <a-button type="link" @click="currentView = 'progress'" class="p-0 h-auto">
+            <Button type="link" @click="currentView = 'progress'" class="p-0 h-auto">
                 当前 {{ importingLen }} 个导入任务
-            </a-button>
+            </Button>
         </div>
     </s-full-modal> -->
 </template>
 
 <!-- <script setup lang="ts">
+import { Button, Flex, Progress, Space, Tooltip } from 'ant-design-vue'
 import { ref, computed, watch } from 'vue'
 import { type Editor } from '@tiptap/core'
 import { ArrowLeftOutlined, CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons-vue'

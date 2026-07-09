@@ -15,7 +15,7 @@ import { useSpeedEditorProvider } from '@speed-tiptap-editor/composables'
 import { EditorPreviewImage } from './helpers/previews'
 import { editorConfig } from '@speed-tiptap-editor/shared'
 import { onKeyStroke } from '@vueuse/core'
-import { message, theme } from 'ant-design-vue'
+import { ConfigProvider, message, theme } from 'ant-design-vue'
 import { useAntdCssVars } from 'speed-components-ui/hooks'
 import { debounce } from 'lodash-es'
 import { type GlobalConfig } from './plugin'
@@ -202,15 +202,19 @@ const resolvePluginExtensions = (): Extensions => {
   return result
 }
 
+/** 合并 Tiptap extensions，来源分三层（顺序即注册顺序） */
 const buildExtensions = (): Extensions => {
   const shellProps = {
     ...(props as Record<string, unknown>),
     collaborationMode: props.collaborationMode,
   }
+  // ① preset 默认能力：layout.getExtensions，如 knowledge → getKnowledgeKit（extension-kit）
   const layoutExtensions = activeLayout.value.getExtensions(shellProps) as Extensions
   return [
     ...layoutExtensions,
+    // ② 插件追加能力：plugins[].extensions，如 extraPlugins、mind adapter、import-export
     ...resolvePluginExtensions(),
+    // ③ 壳层直注：extraExtensions prop，如 CollaborativeEditor 注入 Yjs / Collaboration
     ...(props.extraExtensions ?? []),
   ]
 }
@@ -338,7 +342,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <a-config-provider :theme="cptTheme">
+  <ConfigProvider :theme="cptTheme">
     <div :class="['wrap speed-tiptap-editor', activeLayout.name, hideBorder ? 'hide-border' : '']" :style="editorStyle">
       <MenuBarShell :style="headerStyle" :toolbar-keys="resolvedToolbarKeys" v-if="menubar && editor" class="header"
         :editor="editor" :buttons="resolvedToolbarButtons" :insert-items="resolvedInsertItems" />
@@ -353,7 +357,7 @@ onUnmounted(() => {
         </template>
       </main>
     </div>
-  </a-config-provider>
+  </ConfigProvider>
 </template>
 
 <style scoped lang="less">

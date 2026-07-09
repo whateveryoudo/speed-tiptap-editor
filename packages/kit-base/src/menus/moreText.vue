@@ -7,42 +7,43 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\moreText.vue
 -->
 <template>
-  <a-popover v-if="!disableMenu" @open-change="handlePopoverOpenChange" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click"
+  <Popover v-if="!disableMenu" @open-change="handlePopoverOpenChange" overlay-class-name="toolbar-popover-wrapper text-popover-wrapper" trigger="click"
     placement="bottom">
     <template #content>
-      <a-space>
+      <Space>
         <ul class="text-list-wrapper">
           <li v-for="item in textItems" :key="item.key" class="list-item">
             <s-keymap-tip :keyMap="item.keyMap" :title="item.name" placement="right">
-              <a-button type="text" class="shadow-btn-wrapper" v-on="item.action ? getButtonEvents(item.action) : {}"
+              <Button type="text" class="shadow-btn-wrapper" v-on="item.action ? getButtonEvents(item.action) : {}"
                 style="width: 100%; text-align: left;">
                 <s-icon-font v-if="item.iconType" :size="item.size || 17" :type="item.iconType" />
                 {{ item.name }}
-              </a-button>
+              </Button>
               <s-icon-font v-if="selectItem && selectItem.key === item.key" type="icon-kl-gouxuan"
                 class="absolute top-[50%] translate-y-[-50%] left-[13px]" />
             </s-keymap-tip>
           </li>
         </ul>
-      </a-space>
+      </Space>
     </template>
-    <a-tooltip placement="bottom" v-model:open="tooltipOpen">
+    <Tooltip placement="bottom" v-model:open="tooltipOpen">
       <template #title> 更多文本样式 </template>
-      <a-button type="text" class="shadow-btn-wrapper">
+      <Button type="text" class="shadow-btn-wrapper">
         <s-icon-font :size="16" type="icon-kl-text" />
         <caret-down-outlined class="dropdown-trigger" />
-      </a-button>
-    </a-tooltip>
-  </a-popover>
-  <a-tooltip v-else :title="false">
-    <a-button type="text" class="shadow-btn-wrapper" disabled>
+      </Button>
+    </Tooltip>
+  </Popover>
+  <Tooltip v-else :title="false">
+    <Button type="text" class="shadow-btn-wrapper" disabled>
       <s-icon-font :size="16" type="icon-kl-text" />
       <caret-down-outlined class="dropdown-trigger" />
-    </a-button>
-  </a-tooltip>
+    </Button>
+  </Tooltip>
 </template>
 
 <script setup lang="tsx">
+import { Button, Popover, Space, Tooltip } from 'ant-design-vue'
 import { Editor } from '@tiptap/core'
 import { CaretDownOutlined } from '@ant-design/icons-vue'
 import { useActive } from '@speed-tiptap-editor/composables'

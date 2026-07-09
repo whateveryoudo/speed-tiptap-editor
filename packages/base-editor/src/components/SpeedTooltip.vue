@@ -1,13 +1,14 @@
 
 <template>
-  <a-tooltip :title="title" v-model:open="open">
+  <Tooltip :title="title" v-model:open="open">
     <div @click="open = false">
       <slot />
     </div>
-  </a-tooltip>
+  </Tooltip>
 </template>
 
 <script setup lang="ts">
+import { Tooltip } from 'ant-design-vue'
 import { ref } from 'vue'
 
 defineOptions({ name: 'SpeedTooltip' })

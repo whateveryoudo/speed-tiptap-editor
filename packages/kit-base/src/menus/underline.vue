@@ -8,7 +8,7 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '下划线' : null">
-    <a-button
+    <Button
       type="text"
       class="shadow-btn-wrapper"
       :class="[isUnderlineActive ? 'is-active' : '', isTitleActive && 'disabled']"
@@ -16,11 +16,12 @@
       :disabled="!editableCpt || isTitleActive"
     >
       <underline-outlined />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { Editor } from '@tiptap/core'
 import { UnderlineOutlined } from '@ant-design/icons-vue'
 import { useActive } from '@speed-tiptap-editor/composables'

@@ -8,37 +8,38 @@
 -->
 <template>
   <BubbleContainer :editor="editor" plugin-key="image-bubble-menu" :should-show="shouldShow">
-    <a-space :size="5">
+    <Space :size="5">
 
       <!-- 尺寸设置 -->
       <SizeSetting v-if="isActiveImage" :editor="editor" />
-      <a-tooltip title="锁定比例">
+      <Tooltip title="锁定比例">
         <div :class="['shadow-bg-wrapper', equalProportion ? 'is-active' : '']" @click="handleLockProportion">
           <s-icon-font type="icon-kl-lock-size"></s-icon-font>
         </div>
-      </a-tooltip>
+      </Tooltip>
       <!-- 直接调用通用的居中配置 -->
       <align v-if="isActiveImage" :editor="editor" placement="top"></align>
-      <a-tooltip v-if="isActiveImage" title="预览">
+      <Tooltip v-if="isActiveImage" title="预览">
         <div :class="['shadow-bg-wrapper']" @click="handlePreivew">
           <eye-outlined />
         </div>
-      </a-tooltip>
-      <a-tooltip title="复制">
+      </Tooltip>
+      <Tooltip title="复制">
         <div :class="['shadow-bg-wrapper']" @click="handleCopyNode('image')">
           <copy-outlined />
         </div>
-      </a-tooltip>
+      </Tooltip>
       <speed-tooltip title="删除">
         <div :class="['shadow-bg-wrapper']" @click="handleDelNode('image')">
           <delete-outlined />
         </div>
       </speed-tooltip>
-    </a-space>
+    </Space>
   </BubbleContainer>
 </template>
 
 <script setup lang="ts">
+import { Space, Tooltip } from 'ant-design-vue'
 import { inject, PropType, computed, Ref, ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import align from "@kb/menus/align";

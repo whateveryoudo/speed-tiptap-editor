@@ -7,17 +7,18 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-  <a-tooltip :title="disableMenu ? null : '附件'">
-    <a-button type="text" @click="handleClickImg" class="shadow-btn-wrapper"
+  <Tooltip :title="disableMenu ? null : '附件'">
+    <Button type="text" @click="handleClickImg" class="shadow-btn-wrapper"
       :class="[isFileActive ? 'is-active' : '', isTitleActive && 'disabled']" :disabled="disableMenu">
       <PaperClipOutlined />
-      </a-button>
+      </Button>
       <input ref="FileInput" @change="handleFileChange" :multiple="fileConfig?.multiple ?? true" type="file"
         :accept="fileConfig?.accept ?? '.docx,.doc,.txt,.lake,.lakebook,.lakesheet,.pdf,.xls,.xlsx,.xlsm,.csv,.pptx,.ppt,.pages,.numbers,.key,.keynote,.md,.mark,.markdown,.xmind,.mindnode,.mmap,.mm,.rp,.psd,.sketch,.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic,.heif,.ts,.mp3,.mpga,.wav,.bat,.c,.cpp,.css,.go,.h,.java,.js,.json,.jsonl,.log,.m,.mkd,.php,.py,.r,.sh,.sql,.xml,.jmx,.yaml,.yml,.ipynb,.mp4'" hidden />
-  </a-tooltip>
+  </Tooltip>
 </template>
 
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import { inject, ref, type Ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { PaperClipOutlined } from '@ant-design/icons-vue'

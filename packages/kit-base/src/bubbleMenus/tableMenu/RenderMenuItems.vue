@@ -1,6 +1,6 @@
 <template>
 
-    <a-space>
+    <Space>
         <template :key="item.key" v-for="item in tableItems" :title="item.title">
             <!-- 使用自定义组件 -->
             <template v-if="item.useComponnent">
@@ -8,33 +8,34 @@
             </template>
             <!-- 使用配置式 -->
             <template v-else>
-                <a-tooltip :title="item.title">
-                    <a-button v-if="!item.children" type="text" class="shadow-btn-wrapper" :disabled="item.disabled?.(editor)"
+                <Tooltip :title="item.title">
+                    <Button v-if="!item.children" type="text" class="shadow-btn-wrapper" :disabled="item.disabled?.(editor)"
                         @click="handleItemClick(item, $event)">
                         <component :is="item.iconRender" />
-                    </a-button>
+                    </Button>
                     <!-- 带有下拉项 -->
-                    <a-dropdown v-else>
-                        <a-button type="text" class="shadow-btn-wrapper" :disabled="item.disabled">
+                    <Dropdown v-else>
+                        <Button type="text" class="shadow-btn-wrapper" :disabled="item.disabled">
                             <component :is="item.iconRender" />
-                        </a-button>
+                        </Button>
                         <template #overlay>
-                            <a-menu>
-                                <a-menu-item v-for="child in item.children" :key="child.key"
+                            <Menu>
+                                <MenuItem v-for="child in item.children" :key="child.key"
                                     @click="handleItemClick(child, $event)">
                                     <component :is="child.iconRender" />
                                     {{ child.title }}
-                                </a-menu-item>
-                            </a-menu>
+                                </MenuItem>
+                            </Menu>
                         </template>
-                    </a-dropdown>
-                </a-tooltip>
+                    </Dropdown>
+                </Tooltip>
             </template>
         </template>
 
-    </a-space>
+    </Space>
 </template>
 <script setup lang="ts">
+import { Button, Dropdown, Menu, MenuItem, Space, Tooltip } from 'ant-design-vue'
 import type { Editor } from '@tiptap/vue-3'
 import type { TableBubbleMenuItem } from './useTableBubbleMenu'
 const props = defineProps<{

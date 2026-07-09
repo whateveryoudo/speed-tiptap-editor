@@ -9,13 +9,13 @@
 <template>
   <NodeViewWrapper class="node-image">
     <!-- <div v-if="nodeAttrs.error" :class="styles.wrapper">
-      <a-typography-text>{{ nodeAttrs.error }}</a-typography-text>
+      <TypographyText>{{ nodeAttrs.error }}</TypographyText>
     </div> -->
     <div v-if="!nodeAttrs.src" :class="['wrapper', uploadFailed ? 'upload-failed' : '']" @click="uploadAgain">
-      <a-spin :spinning="uploadLoading">
+      <Spin :spinning="uploadLoading">
         <img :class="uploadFailed ? 'upload-failed' : ''" :src="ImgPlaceholder" alt="请选择图片"
           style="width: 150px; height: auto">
-      </a-spin>
+      </Spin>
     </div>
     <!-- <Resizeable v-else :editor="editor" class="render-wrapper" :isEditable="isEditable" :width="nodeAttrs.width || maxWidth"
       :height="nodeAttrs.height" :maxWidth="maxWidth" @changeEnd="updateImageAttrs">
@@ -51,7 +51,7 @@ import {
   getImageWidthHeight,
 } from '@ek/prose-utils'
 import { useCustomUpload } from 'speed-components-ui/hooks'
-import { message } from 'ant-design-vue';
+import { Spin, TypographyText, message } from 'ant-design-vue';
 import { useSpeedEditor } from '@speed-tiptap-editor/composables';
 // 初始化注入的对象
 const speedUseTiptapConfig = inject(

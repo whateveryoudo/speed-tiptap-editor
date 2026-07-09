@@ -23,18 +23,18 @@
         minZoomed && item.key === 'minus' && 'disabled',
         maxZoomed && item.key === 'plus' && 'disabled',
       ]" :key="item.key" @click="handleExec(item.key)">
-        <a-dropdown v-if="item.type === 'rateCom'" trigger="click">
+        <Dropdown v-if="item.type === 'rateCom'" trigger="click">
           <div class="shadow-bg-wrapper">{{ zoom }}%</div>
           <template #overlay>
-            <a-menu :selectedKeys="[zoom]" @click="handleMenuClick">
-              <a-menu-item :key="item.value" v-for="item in rangeZoomData">
+            <Menu :selectedKeys="[zoom]" @click="handleMenuClick">
+              <MenuItem :key="item.value" v-for="item in rangeZoomData">
                 {{ item.label }}
-              </a-menu-item>
-            </a-menu>
+              </MenuItem>
+            </Menu>
           </template>
-        </a-dropdown>
+        </Dropdown>
 
-        <!-- <a-select
+        <!-- <Select
           :dropdownMatchSelectWidth="70"
           :options="rangeZoomData"
           class="shadow-bg-wrapper zoom-select"
@@ -43,19 +43,20 @@
           :bordered="false"
           :showArrow="false"
           size="small">
-        </a-select> -->
-        <a-tooltip placement="bottom" v-else>
+        </Select> -->
+        <Tooltip placement="bottom" v-else>
           <template #title>
             <s-keymap-tip :title="item.tip" :keyMap="pluginType === 'mind' && item.keyMap" />
           </template>
           <s-icon-font v-if="item.iconRender" :icon-render="item.iconRender" />
-        </a-tooltip>
+        </Tooltip>
       </li>
     </ul>
   </s-resizeable>
 </template>
 
 <script setup lang="tsx">
+import { Dropdown, Menu, MenuItem, Select, Tooltip } from 'ant-design-vue'
 import { AlignCenterOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { ref, PropType, watch, computed, onMounted } from 'vue'
 import { ZOOM_DATA } from '@ek/enums/constants'

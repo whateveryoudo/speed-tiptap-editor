@@ -8,11 +8,11 @@
 -->
 
 <template>
-  <a-popover :open="visible" @openChange="val => visible = val" v-if="!disabled"
+  <Popover :open="visible" @openChange="val => visible = val" v-if="!disabled"
     overlay-class-name="emoji-board-popover-wrapper" trigger="click" placement="bottomLeft">
     <template #content>
-      <a-flex vertical class="emoji-board-wrapper" ref="emojiWrapperRef">
-        <a-input-search v-model:value="searchValue" placeholder="搜索表情" style="margin-bottom: 8px" allow-clear />
+      <Flex vertical class="emoji-board-wrapper" ref="emojiWrapperRef">
+        <InputSearch v-model:value="searchValue" placeholder="搜索表情" style="margin-bottom: 8px" allow-clear />
         <div class="flex-1 overflow-y-auto emoji-scroll-wrapper">
           <ul class="emoji-board-group-wrapper" v-if="filteredEmojiList.length > 0">
             <li v-for="(item, index) in filteredEmojiList" :key="index" class="emoji-board-group-item">
@@ -20,27 +20,28 @@
               <ul class="emoji-board-list-wrapper">
                 <li v-for="(em, eIndex) in item.data" :key="eIndex" class="shadow-bg-wrapper emoji-board-list-item"
                   @click="onSelectEmoji(em)">
-                  <a-tooltip :title="em.zh_cn" :arrow="false" placement="top">
+                  <Tooltip :title="em.zh_cn" :arrow="false" placement="top">
                     <span>{{ em.text }}</span>
-                  </a-tooltip>
+                  </Tooltip>
                 </li>
               </ul>
             </li>
           </ul>
-          <a-empty v-else description="无匹配表情" />
+          <Empty v-else description="无匹配表情" />
         </div>
         <!-- 分组锚点导航（Antd Anchor） -->
-        <a-anchor :getContainer="getEmojiScrollContainer" :affix="false" direction="horizontal" :showInkInFixed="false"
+        <Anchor :getContainer="getEmojiScrollContainer" :affix="false" direction="horizontal" :showInkInFixed="false"
           class="emoji-board-anchor" :items="LIST">
-        </a-anchor>
-      </a-flex>
+        </Anchor>
+      </Flex>
     </template>
     <slot />
-  </a-popover>
+  </Popover>
   <slot v-else />
 </template>
 
 <script setup lang="tsx">
+import { Anchor, Empty, Flex, InputSearch, Popover, Tooltip } from 'ant-design-vue'
 import { ref, PropType, computed, nextTick, onMounted } from 'vue'
 import { createKeysLocalStorageLRUCache } from '@kb/helpers/lru-cache';
 import { ACTIVITIES, EXPRESSIONES, GESTURES, OBJECTS, SKY_WEATHER, SYMBOLS } from './data';

@@ -8,13 +8,14 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '查找替换' : null">
-    <a-button type="text" class="shadow-btn-wrapper" :disabled="!editableCpt" v-on="buttonEvents">
+    <Button type="text" class="shadow-btn-wrapper" :disabled="!editableCpt" v-on="buttonEvents">
       <FileSearchOutlined />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { Editor } from '@tiptap/core'
 import { FileSearchOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@speed-tiptap-editor/composables'

@@ -8,8 +8,8 @@
 -->
 
 <template>
-  <a-tooltip placement="bottom" :title="disableMenu ? null : '插入引用'">
-    <a-button
+  <Tooltip placement="bottom" :title="disableMenu ? null : '插入引用'">
+    <Button
       type="text"
       class="shadow-btn-wrapper"
       :class="[isBlockquoteActive ? 'is-active' : '']"
@@ -17,10 +17,11 @@
       :disabled="disableMenu"
     >
     <s-icon-font type="icon-kl-quote1"></s-icon-font>
-    </a-button>
-  </a-tooltip>
+    </Button>
+  </Tooltip>
 </template>
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { useActive } from '@speed-tiptap-editor/composables'

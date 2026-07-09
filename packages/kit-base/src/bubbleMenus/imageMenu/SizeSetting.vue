@@ -7,7 +7,7 @@
  * @FilePath: src/bubbleMenus/ImageMenu/SizeSetting.vue
 -->
 <template>
-    <a-popover v-model:open="visible" overlay-class-name="size-popover-wrapper" trigger="click" placement="bottom"
+    <Popover v-model:open="visible" overlay-class-name="size-popover-wrapper" trigger="click" placement="bottom"
         :destroy-tooltip-on-hide="true">
         <template #content>
             <div class="size-setting-content">
@@ -15,12 +15,12 @@
                 <div class="size-inputs">
                     <div class="input-group">
                         <label>宽度:</label>
-                        <a-input v-model:value="tempWidth" placeholder="宽度" @blur="handleWidthBlur"
+                        <Input v-model:value="tempWidth" placeholder="宽度" @blur="handleWidthBlur"
                             @input="handleWidthInput" :disabled="!hasOriginalSize" />
                     </div>
                     <div class="input-group">
                         <label>高度:</label>
-                        <a-input v-model:value="tempHeight" placeholder="高度" @blur="handleHeightBlur"
+                        <Input v-model:value="tempHeight" placeholder="高度" @blur="handleHeightBlur"
                             @input="handleHeightInput" :disabled="!hasOriginalSize" />
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                 <!-- 百分比选择 -->
                 <div class="percentage-buttons" v-if="hasOriginalSize">
                     <div class="percentage-label">快速设置:</div>
-                    <a-segmented block :value="attributes.percent" @change="handlePercentChange"
+                    <Segmented block :value="attributes.percent" @change="handlePercentChange"
                         :options="percentageOptions" />
                 </div>
 
@@ -39,15 +39,16 @@
             </div>
         </template>
 
-        <a-tooltip title="尺寸设置">
+        <Tooltip title="尺寸设置">
             <div class="shadow-bg-wrapper">
                 <s-icon-font type="icon-kl-measurement-1" :size="16" />
             </div>
-        </a-tooltip>
-    </a-popover>
+        </Tooltip>
+    </Popover>
 </template>
 
 <script setup lang="ts">
+import { Input, Popover, Segmented, Tooltip } from 'ant-design-vue'
 import { ref, computed, watch, PropType } from 'vue'
 import { Editor } from '@tiptap/core'
 import { useAttributes } from '@speed-tiptap-editor/composables'

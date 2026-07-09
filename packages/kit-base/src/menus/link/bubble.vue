@@ -13,28 +13,29 @@
     strategy: 'absolute',
   }" :should-show="shouldShow" plugin-key="link-bubble-menu">
     <div class="bubble-menu-wrapper">
-      <a-space :size="5">
-        <a-tooltip title="访问链接">
-          <a-button type="text" class="shadow-btn-wrapper" @click="visitLink">
+      <Space :size="5">
+        <Tooltip title="访问链接">
+          <Button type="text" class="shadow-btn-wrapper" @click="visitLink">
             <share-alt-outlined />
-          </a-button>
-        </a-tooltip>
-        <a-tooltip title="编辑链接">
-          <a-button type="text" class="shadow-btn-wrapper" @click="openEditLinkModal">
+          </Button>
+        </Tooltip>
+        <Tooltip title="编辑链接">
+          <Button type="text" class="shadow-btn-wrapper" @click="openEditLinkModal">
             <edit-outlined />
-          </a-button>
-        </a-tooltip>
-        <a-tooltip title="去除链接">
-          <a-button type="text" class="shadow-btn-wrapper" @click="unsetLink">
+          </Button>
+        </Tooltip>
+        <Tooltip title="去除链接">
+          <Button type="text" class="shadow-btn-wrapper" @click="unsetLink">
             <disconnect-outlined />
-          </a-button>
-        </a-tooltip>
-      </a-space>
+          </Button>
+        </Tooltip>
+      </Space>
     </div>
   </BaseBubbleMenu>
 </template>
 
 <script setup lang="ts">
+import { Button, Space, Tooltip } from 'ant-design-vue'
 import { PropType, watch, onMounted } from 'vue'
 import { type Editor } from '@tiptap/core'
 import { BubbleMenu as BaseBubbleMenu } from '@tiptap/vue-3/menus'

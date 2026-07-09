@@ -3,8 +3,6 @@ import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from '@unocss/vite'
-import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import nodePolyfills from 'vite-plugin-node-stdlib-browser'
 import { defineConfig } from 'vite'
 
@@ -15,10 +13,6 @@ export default defineConfig({
     vue(),
     vueJsx(),
     UnoCSS(),
-    Components({
-      resolvers: [AntDesignVueResolver({ importStyle: false, resolveIcons: true })],
-      dts: false,
-    }),
     nodePolyfills(),
   ],
   build: {

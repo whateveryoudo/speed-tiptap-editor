@@ -7,15 +7,16 @@
  * @FilePath: \speed-tiptap-editor\src\menus\export\index.vue
 -->
 <template>
-    <a-tooltip placement="bottom" :title="editableCpt ? '文件导出' : null">
-        <a-button type="text" class="shadow-btn-wrapper" v-on="buttonEvents" :disabled="!editableCpt">
+    <Tooltip placement="bottom" :title="editableCpt ? '文件导出' : null">
+        <Button type="text" class="shadow-btn-wrapper" v-on="buttonEvents" :disabled="!editableCpt">
             <ExportOutlined />
-        </a-button>
-    </a-tooltip>
+        </Button>
+    </Tooltip>
     <ExportFormatModal :editor="editor" v-model:visible="modalVisible" />
 </template>
 
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import { Editor } from '@tiptap/core'
 import { ExportOutlined } from '@ant-design/icons-vue'
 import { useMenuButtonEvents } from '@speed-tiptap-editor/composables'

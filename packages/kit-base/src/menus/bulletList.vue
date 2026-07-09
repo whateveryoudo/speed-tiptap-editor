@@ -8,14 +8,15 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '无序列表'">
-    <a-button type="text" :class="['shadow-btn-wrapper', isBulletListActive ? 'is-active' : '']"
+    <Button type="text" :class="['shadow-btn-wrapper', isBulletListActive ? 'is-active' : '']"
       @click="toggleBulletList" :disabled="disableMenu">
       <unordered-list-outlined />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { UnorderedListOutlined } from '@ant-design/icons-vue'

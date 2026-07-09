@@ -7,31 +7,32 @@
  * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\bubbleMenus\ImageMenu\AlignSetting.vue
 -->
 <template>
-  <a-popover v-model:open="visible" overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
+  <Popover v-model:open="visible" overlay-class-name="align-popover-wrapper" trigger="click" placement="bottom">
     <template #content>
-      <a-space class="align-list-wrapper">
-        <a-tooltip v-for="item in alignButtons" :key="item.key">
+      <Space class="align-list-wrapper">
+        <Tooltip v-for="item in alignButtons" :key="item.key">
           <template #title>
             {{ item.tip }}
           </template>
-          <a-button type="text" :class="['shadow-btn-wrapper', selectButton.key === item.key && 'is-active']" @click="visible = false;
+          <Button type="text" :class="['shadow-btn-wrapper', selectButton.key === item.key && 'is-active']" @click="visible = false;
           emit('triggerAlign', item.key)">
             <s-icon-font v-if="item.iconRender" :icon-render="item.iconRender" />
-          </a-button>
-        </a-tooltip>
-      </a-space>
+          </Button>
+        </Tooltip>
+      </Space>
     </template>
-    <a-tooltip>
+    <Tooltip>
       <template #title> 对齐方式 </template>
       <div class="shadow-bg-wrapper">
         <s-icon-font v-if="selectButton.iconRender" style="margin-right: 5px" :icon-render="selectButton.iconRender" />
         <caret-down-outlined class="dropdown-trigger" />
       </div>
-    </a-tooltip>
-  </a-popover>
+    </Tooltip>
+  </Popover>
 </template>
 
 <script setup lang="tsx">
+import { Button, Popover, Space, Tooltip } from 'ant-design-vue'
 import { Editor } from '@tiptap/core'
 import {
   CaretDownOutlined,

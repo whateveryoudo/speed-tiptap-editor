@@ -1,51 +1,52 @@
 <template>
     <div class="search-replace-modal" v-if="searchReplaceVisible">
-        <a-card ref="modalRef" style="box-shadow: 0 8px 16px 4px rgba(0,0,0,.04)">
+        <Card ref="modalRef" style="box-shadow: 0 8px 16px 4px rgba(0,0,0,.04)">
             <template #title>
                 <FileSearchOutlined class="mr-2" />
                 <span>查找替换</span>
             </template>
             <template #extra><close-outlined @click="updateSearchReplaceVisible(false)" /></template>
-            <a-flex vertical :gap="15">
-                <a-flex>
-                    <a-input allow-clear @press-enter="goToResult('next')" v-model:value="search" @change="handleSearch"
+            <Flex vertical :gap="15">
+                <Flex>
+                    <Input allow-clear @press-enter="goToResult('next')" v-model:value="search" @change="handleSearch"
                         placeholder="需要查找的字符">
                         <template #suffix>
-                            <a-space :size="5">
+                            <Space :size="5">
                                 {{ resultLength > 0 ? resultIndex + 1 : 0 }}<span>/</span>{{ resultLength }}
-                            </a-space>
+                            </Space>
                         </template>
-                    </a-input>
-                    <!-- <a-space>
-                        <a-button :disabled="resultLength === 0" @click="goToResult('next')" type="text"
+                    </Input>
+                    <!-- <Space>
+                        <Button :disabled="resultLength === 0" @click="goToResult('next')" type="text"
                             class="shadow-btn-wrapper">
                             <DownOutlined/>
-                        </a-button>
-                        <a-button :disabled="resultLength === 0"
+                        </Button>
+                        <Button :disabled="resultLength === 0"
                             @click="goToResult('previous')" type="text" class="shadow-btn-wrapper">
                             <UpOutlined/>
-                        </a-button>
-                    </a-space> -->
-                </a-flex>
-                <a-flex>
+                        </Button>
+                    </Space> -->
+                </Flex>
+                <Flex>
                     <!-- 改变时调用一次doSearch -->
-                    <a-input v-model:value="replace" @change="() => doSearch()" placeholder="要替换的字符" />
-                </a-flex>
-                <a-space>
-                    <a-checkbox v-model:checked="caseSensitive">区分大小写</a-checkbox>
-                </a-space>
-                <a-flex justify="end" size="small" :gap="10">
-                    <a-button :disabled="resultLength === 0" @click="handleReplace">替换</a-button>
-                    <a-button :disabled="resultLength === 0" @click="handleReplaceAll">替换全部</a-button>
-                    <a-button :disabled="resultLength === 0" @click="goToResult('previous')">上一个</a-button>
-                    <a-button :disabled="resultLength === 0" @click="goToResult('next')">下一个</a-button>
-                </a-flex>
-            </a-flex>
-        </a-card>
+                    <Input v-model:value="replace" @change="() => doSearch()" placeholder="要替换的字符" />
+                </Flex>
+                <Space>
+                    <Checkbox v-model:checked="caseSensitive">区分大小写</Checkbox>
+                </Space>
+                <Flex justify="end" size="small" :gap="10">
+                    <Button :disabled="resultLength === 0" @click="handleReplace">替换</Button>
+                    <Button :disabled="resultLength === 0" @click="handleReplaceAll">替换全部</Button>
+                    <Button :disabled="resultLength === 0" @click="goToResult('previous')">上一个</Button>
+                    <Button :disabled="resultLength === 0" @click="goToResult('next')">下一个</Button>
+                </Flex>
+            </Flex>
+        </Card>
     </div>
 </template>
 
 <script setup lang="ts">
+import { Button, Card, Checkbox, Flex, Input, Space } from 'ant-design-vue'
 import { ref, inject, computed } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { Editor } from '@tiptap/core'

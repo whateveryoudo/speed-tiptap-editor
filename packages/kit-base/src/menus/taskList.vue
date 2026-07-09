@@ -9,7 +9,7 @@
 
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="disableMenu ? null : '任务列表'">
-    <a-button
+    <Button
       type="text"
       class="shadow-btn-wrapper"
       :class="[isTaskListActive ? 'is-active' : '']"
@@ -17,10 +17,11 @@
       :disabled="disableMenu"
     >
     <s-icon-font type="icon-kl-task"></s-icon-font>
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { PropType, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { useActive } from '@speed-tiptap-editor/composables'

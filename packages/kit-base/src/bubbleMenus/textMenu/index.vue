@@ -9,30 +9,31 @@
 <template>
     <BubbleContainer :editor="editor" :bubble-class-name="aiBubbleMenuVisible ? 'ai-bubble-out-container' : ''"
         :should-show="shouldShow" plugin-key="text-bubble-menu">
-        <a-space :size="5" v-if="!aiBubbleMenuVisible">
+        <Space :size="5" v-if="!aiBubbleMenuVisible">
             <template v-for="item in bubbleMenuItems" :key="item">
                 <template v-if="typeof item === 'string'">
-                    <a-divider v-if="item === '|'" type="vertical" class="menu-divider" />
+                    <Divider v-if="item === '|'" type="vertical" class="menu-divider" />
                     <component :is="bubbleMenuMap[item as keyof typeof bubbleMenuMap]" trigger-type="bubble" v-else
                         :editor="editor" @show-ai-bubble="showAiBubble" />
                 </template>
                 <!-- 先不要选中样式 -->
                 <template v-else>
-                    <a-tooltip :title="item.title">
-                        <a-button type="text" class="shadow-btn-wrapper" :class="[isTitleActive && 'disabled']"
+                    <Tooltip :title="item.title">
+                        <Button type="text" class="shadow-btn-wrapper" :class="[isTitleActive && 'disabled']"
                             @click="() => item.action?.(editor)" :disabled="isTitleActive">
                             <s-icon-font :type="item.icon" />
-                        </a-button>
-                    </a-tooltip>
+                        </Button>
+                    </Tooltip>
                 </template>
             </template>
-        </a-space>
+        </Space>
         <!-- ai 二级气泡 -->
         <AiBubbleMenu v-else :editor="editor" @closeMenuBubble="handleCloseMenuBubble" />
     </BubbleContainer>
 </template>
 
 <script setup lang="ts">
+import { Button, Divider, Space, Tooltip } from 'ant-design-vue'
 import { computed, inject, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import BubbleContainer from '../BubbleContainer.vue'
 import Bold from '@kb/menus/bold.vue'

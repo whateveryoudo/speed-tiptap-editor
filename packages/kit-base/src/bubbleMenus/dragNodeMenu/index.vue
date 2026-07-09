@@ -2,43 +2,43 @@
     <DragHandle :editor="editor" pluginKey="speed-tiptap-draghandle" @node-change="onNodeChange"
         @drag-state-change="onDragStateChange">
         <div class="speed-drag-handle" title="拖拽或点击">
-            <a-dropdown trigger="click" placement="bottom" v-model:open="isOpen">
+            <Dropdown trigger="click" placement="bottom" v-model:open="isOpen">
                 <HolderOutlined />
                 <template #overlay>
-                    <a-menu class="w-[150px]" @click="handleMenuClick">
+                    <Menu class="w-[150px]" @click="handleMenuClick">
                         <template v-for="item in dropdownMenuItems" :key="item.key">
-                            <a-popover v-model:open="changePopoverOpen" :title="false"
+                            <Popover v-model:open="changePopoverOpen" :title="false"
                                 :getPopupContainer="(trigger: any) => trigger.parentElement"
                                 v-if="'change' === item.key && item.children && item.children.length" placement="right">
                                 <template #content>
-                                    <a-flex vertical :gap="5">
-                                        <a-space>
-                                            <a-tooltip v-for="child in (item.children || []).slice(0, 6)"
+                                    <Flex vertical :gap="5">
+                                        <Space>
+                                            <Tooltip v-for="child in (item.children || []).slice(0, 6)"
                                                 :key="child.key" :title="child.label">
-                                                <a-button type="text"
+                                                <Button type="text"
                                                     :class="[nodeChangeActivedMap[child.key as keyof typeof nodeChangeActivedMap] ? 'is-active' : '', 'shadow-btn-wrapper']"
                                                     :key="child.key" @click="handleChangeNode(child)">
                                                     <s-icon-font :size="16" :type="child.icon"
                                                         v-if="typeof child.icon === 'string'" />
                                                     <s-icon-font v-else :icon-render="child.icon" />
-                                                </a-button>
-                                            </a-tooltip>
-                                        </a-space>
-                                        <a-space>
-                                            <a-tooltip v-for="child in (item.children || []).slice(6)" :key="child.key"
+                                                </Button>
+                                            </Tooltip>
+                                        </Space>
+                                        <Space>
+                                            <Tooltip v-for="child in (item.children || []).slice(6)" :key="child.key"
                                                 :title="child.label">
-                                                <a-button type="text"
+                                                <Button type="text"
                                                     :class="[nodeChangeActivedMap[child.key as keyof typeof nodeChangeActivedMap] ? 'is-active' : '', 'shadow-btn-wrapper']"
                                                     :key="child.key" @click="handleChangeNode(child)">
                                                     <s-icon-font :size="16" :type="child.icon"
                                                         v-if="typeof child.icon === 'string'" />
                                                     <s-icon-font v-else :icon-render="child.icon" />
-                                                </a-button>
-                                            </a-tooltip>
-                                        </a-space>
-                                    </a-flex>
+                                                </Button>
+                                            </Tooltip>
+                                        </Space>
+                                    </Flex>
                                 </template>
-                                <a-menu-item :key="item.key">
+                                <MenuItem :key="item.key">
                                     <div class="flex justify-between items-center">
                                         <span>
                                             <component :is="item.icon" class="mr-2" />
@@ -46,25 +46,26 @@
                                         </span>
                                         <RightOutlined />
                                     </div>
-                                </a-menu-item>
-                            </a-popover>
+                                </MenuItem>
+                            </Popover>
                             <template v-else>
-                                <a-menu-item v-if="item.type !== 'divider'" :key="item.key"
+                                <MenuItem v-if="item.type !== 'divider'" :key="item.key"
                                     :danger="item.key === 'delete'">
                                     <component :is="item.icon" class="mr-2" />
                                     {{ item.label }}
-                                </a-menu-item>
-                                <a-menu-divider v-else />
+                                </MenuItem>
+                                <MenuDivider v-else />
                             </template>
                         </template>
-                    </a-menu>
+                    </Menu>
                 </template>
-            </a-dropdown>
+            </Dropdown>
         </div>
     </DragHandle>
 </template>
 
 <script setup lang="tsx">
+import { Button, Dropdown, Flex, Menu, MenuDivider, MenuItem, Popover, Space, Tooltip } from 'ant-design-vue'
 import { ref, type PropType, computed } from "vue";
 import type { Editor } from "@tiptap/core";
 import { DragHandle } from "@kb/components/dragHandle";

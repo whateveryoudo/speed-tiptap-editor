@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <a-popover :placement="placement" v-if="!disabled" overlay-class-name="color-board-popover-wrapper" trigger="click" placement="bottomLeft">
+  <Popover :placement="placement" v-if="!disabled" overlay-class-name="color-board-popover-wrapper" trigger="click" placement="bottomLeft">
     <template #content>
       <div class="color-board-wrapper">
         <div class="top-choosed-wrapper transition-bg" @mousedown.prevent="chooseColor(showDefault ? defaultColor : null)">
@@ -42,24 +42,25 @@
         <s-color-picker placement="right" :color="curColor" @update:color="chooseColor">
           <!-- 这里需要包一个div?? -->
           <div>
-            <a-flex align="center" justify="space-between"
+            <Flex align="center" justify="space-between"
               class="px-2 py-2 cursor-pointer hover:bg-gray-100 rounded-b-[4px] border-t border-solid border-l-0 border-r-0 border-b-0 border-gray-200">
-              <a-flex align="center" :gap="6">
+              <Flex align="center" :gap="6">
                 <img :src="CustomColor" alt="自定义颜色" class="w-[17px] h-[auto]">
                 更多颜色
-              </a-flex>
+              </Flex>
               <CaretRightOutlined />
-            </a-flex>
+            </Flex>
           </div>
         </s-color-picker>
       </div>
     </template>
     <slot />
-  </a-popover>
+  </Popover>
   <slot v-else />
 </template>
 
 <script setup lang="tsx">
+import { Flex, Popover } from 'ant-design-vue'
 import { ref, PropType, onMounted } from 'vue'
 import { colors, type ColorType } from './data'
 import CustomColor from '@kb/assets/image/custom-color.png'

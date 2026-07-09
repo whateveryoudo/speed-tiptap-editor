@@ -8,7 +8,7 @@
 -->
 
 <template>
-  <a-select :bordered="false" class="w-[80px] shadow-ant-select" :value="currentFontSize" :disabled="!editableCpt || isTitleActive"
+  <Select :bordered="false" class="w-[80px] shadow-ant-select" :value="currentFontSize" :disabled="!editableCpt || isTitleActive"
     popupClassName="popover-check-dropdown" :options="fontSizeOptions" @change="handleChange">
     <template #option="{ value: val, label }">
       <span class="place-check-icon">
@@ -19,10 +19,11 @@
     <template #suffixIcon>
       <CaretDownOutlined :style="{ color: (!isTitleActive && editableCpt) ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
     </template>
-  </a-select>
+  </Select>
 </template>
 
 <script setup lang="ts">
+import { Select } from 'ant-design-vue'
 import { type PropType, inject, computed, ref, type Ref } from 'vue'
 import { Editor } from '@tiptap/core'
 import { useActive } from '@speed-tiptap-editor/composables'

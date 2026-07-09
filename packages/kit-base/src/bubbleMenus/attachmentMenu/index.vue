@@ -8,39 +8,40 @@
 -->
 <template>
   <BubbleContainer :editor="editor" plugin-key="image-bubble-menu" :should-show="shouldShow">
-    <a-space :size="5">
-      <a-tooltip title="标题" v-if="editableCpt">
+    <Space :size="5">
+      <Tooltip title="标题" v-if="editableCpt">
         <div :class="[
           'shadow-bg-wrapper',
           attributes.displayMode === 'title' && 'is-active',
         ]" @click="handleUpdateAttributes({ displayMode: 'title' })">
           <ProfileOutlined />
         </div>
-      </a-tooltip>
-      <a-tooltip title="卡片" v-if="editableCpt">
-        <a-button type="text" :class="[
+      </Tooltip>
+      <Tooltip title="卡片" v-if="editableCpt">
+        <Button type="text" :class="[
           'shadow-bg-wrapper',
           attributes.displayMode === 'card' && 'is-active',
         ]" @click="handleUpdateAttributes({ displayMode: 'card' })">
           <CreditCardOutlined />
-        </a-button>
-      </a-tooltip>
-      <a-divider type="vertical" class="menu-divider" v-if="editableCpt"/>
-      <a-tooltip title="预览">
-        <a-button type="text" class="shadow-btn-wrapper" @click="handlePreivew">
+        </Button>
+      </Tooltip>
+      <Divider type="vertical" class="menu-divider" v-if="editableCpt"/>
+      <Tooltip title="预览">
+        <Button type="text" class="shadow-btn-wrapper" @click="handlePreivew">
           <eye-outlined />
-        </a-button>
-      </a-tooltip>
-      <a-tooltip title="下载">
-        <a-button type="text" class="shadow-btn-wrapper" @click="handleDownload">
+        </Button>
+      </Tooltip>
+      <Tooltip title="下载">
+        <Button type="text" class="shadow-btn-wrapper" @click="handleDownload">
           <download-outlined />
-        </a-button>
-      </a-tooltip>
-    </a-space>
+        </Button>
+      </Tooltip>
+    </Space>
   </BubbleContainer>
 </template>
 
 <script setup lang="ts">
+import { Button, Divider, Space, Tooltip } from 'ant-design-vue'
 import { PropType, computed, inject, ref, Ref } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import { useAttributes } from "@speed-tiptap-editor/composables";

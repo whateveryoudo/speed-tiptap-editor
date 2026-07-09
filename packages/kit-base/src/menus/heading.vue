@@ -7,7 +7,7 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\heading.vue
 -->
 <template>
-  <a-select :dropdownMatchSelectWidth="false" :bordered="false" class="w-[80px] shadow-ant-select" :value="current"
+  <Select :dropdownMatchSelectWidth="false" :bordered="false" class="w-[80px] shadow-ant-select" :value="current"
     :disabled="!editableCpt || isTitleActive" popupClassName="popover-check-dropdown popover-heading-dropdown" :options="headingOptions"
     @change="handleChange">
     <template #option="{ value: val, label, style }">
@@ -21,10 +21,11 @@
     <template #suffixIcon>
       <CaretDownOutlined :style="{ color: (!isTitleActive && editableCpt) ? 'rgba(0, 0, 0, 0.88)' : 'rgba(0, 0, 0, 0.25)' }" />
     </template>
-  </a-select>
+  </Select>
 </template>
 
 <script setup lang="ts">
+import { Select } from 'ant-design-vue'
 import { PropType, reactive, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { useActive } from '@speed-tiptap-editor/composables'

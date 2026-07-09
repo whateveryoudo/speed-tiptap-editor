@@ -1,17 +1,18 @@
 <template>
     <NodeViewWrapper class="callout-wrapper">
-        <a-flex class="callout-content" :style="{
+        <Flex class="callout-content" :style="{
             color: nodeAttrs.color,
             backgroundColor: nodeAttrs.bgColor,
         }">
             <span v-if="node.attrs.icon" class="text-[16px] mr-2" contenteditable="false">{{ node.attrs.icon }}</span>
             <NodeViewContent class="w-full" />
-        </a-flex>
+        </Flex>
 
     </NodeViewWrapper>
 </template>
 
 <script setup lang="ts">
+import { Flex } from 'ant-design-vue'
 import { computed } from "vue";
 import { NodeViewWrapper, NodeViewContent, nodeViewProps } from "@tiptap/vue-3";
 

@@ -7,8 +7,8 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\link\index.vue
 -->
 <template>
-  <a-tooltip placement="bottom" :title="disableMenu ? null : '插入链接'">
-    <a-button
+  <Tooltip placement="bottom" :title="disableMenu ? null : '插入链接'">
+    <Button
       type="text"
       class="shadow-btn-wrapper"
       :class="[isLinkActive ? 'is-active' : '']"
@@ -16,8 +16,8 @@
       :disabled="disableMenu"
     >
       <link-outlined />
-    </a-button>
-  </a-tooltip>
+    </Button>
+  </Tooltip>
   <!-- bubble气泡 -->
   <link-bubble
     v-if="!isEmpty(editor)"
@@ -33,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import { PropType, ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { LinkOutlined } from '@ant-design/icons-vue'

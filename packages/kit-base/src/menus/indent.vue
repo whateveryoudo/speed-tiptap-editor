@@ -3,38 +3,39 @@
  * @Description: 缩进菜单组件
 -->
 <template>
-    <a-popover v-if="!disableMenu" overlay-class-name="toolbar-popover-wrapper indent-popover-wrapper" trigger="click"
+    <Popover v-if="!disableMenu" overlay-class-name="toolbar-popover-wrapper indent-popover-wrapper" trigger="click"
         placement="bottom">
         <template #content>
             <ul class="text-list-wrapper">
                 <li v-for="item in indentButtons" :key="item.key" class="list-item">
-                    <a-button type="text" class="shadow-btn-wrapper" @click="item.action"
+                    <Button type="text" class="shadow-btn-wrapper" @click="item.action"
                         style="width: 100%; text-align: left;">
                         <s-icon-font :icon-render="item.iconRender" />
                         {{ item.tip }}
-                    </a-button>
+                    </Button>
                 </li>
             </ul>
         </template>
-        <a-tooltip placement="bottom">
+        <Tooltip placement="bottom">
             <template #title>
                 缩进
             </template>
-            <a-button type="text" class="shadow-btn-wrapper">
+            <Button type="text" class="shadow-btn-wrapper">
                 <MenuUnfoldOutlined />
                 <caret-down-outlined class="dropdown-trigger" />
-            </a-button>
-        </a-tooltip>
-    </a-popover>
-    <a-tooltip v-else :title="false" class="menu-disabled">
-        <a-button type="text" class="shadow-btn-wrapper" disabled>
+            </Button>
+        </Tooltip>
+    </Popover>
+    <Tooltip v-else :title="false" class="menu-disabled">
+        <Button type="text" class="shadow-btn-wrapper" disabled>
             <MenuUnfoldOutlined />
             <caret-down-outlined class="dropdown-trigger" />
-        </a-button>
-    </a-tooltip>
+        </Button>
+    </Tooltip>
 </template>
 
 <script setup lang="tsx">
+import { Button, Popover, Tooltip } from 'ant-design-vue'
 import { type Editor } from '@tiptap/core'
 import { CaretDownOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
 import { useActive } from '@speed-tiptap-editor/composables'

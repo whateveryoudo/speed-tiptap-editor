@@ -9,62 +9,62 @@
 <template>
   <NodeViewWrapper :class="['code-block', nodeAttrs.theme, isHover && 'is-hover']" @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave">
-    <a-flex vertical class="rounded-md code-block-wrapper h-full  bg-[var(--speed-color-bg-gray)] relative ">
+    <Flex vertical class="rounded-md code-block-wrapper h-full  bg-[var(--speed-color-bg-gray)] relative ">
       <!-- 工具条:收起的时候添加圆角 -->
       <!-- 为什么收起时候非NodeViewContent还能输入呢？？？ -->
       <div :contenteditable="false">
-        <a-flex justify="space-between" :contenteditable="false"
+        <Flex justify="space-between" :contenteditable="false"
           :class="['p-2 code-block-toolbar border-rounded-lt-md border-rounded-rt-md border-b border-b-solid border-b-[var(--speed-color-border-gray)] bg-[var(--speed-color-bg-gray-1)]', !nodeAttrs.isExpanded && 'rounded-md']"
           :style="[!nodeAttrs.isExpanded && { border: 'none' }]">
-          <a-space>
+          <Space>
             <s-question-tip placement="top" :tip="nodeAttrs.isExpanded ? '收起' : '展开'">
-              <a-button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme === 'atom-one-dark' && 'dark']"
+              <Button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme === 'atom-one-dark' && 'dark']"
                 @click="updateAttributes({ isExpanded: !nodeAttrs.isExpanded })">
                 <CaretDownOutlined :style="{ color: nodeAttrs.theme === 'atom-one-dark' ? '#e2e2e2' : '#000' }"
                   v-if="nodeAttrs.isExpanded" />
                 <CaretRightOutlined :style="{ color: nodeAttrs.theme === 'atom-one-dark' ? '#e2e2e2' : '#000' }"
                   v-else />
-              </a-button>
+              </Button>
             </s-question-tip>
-            <a-input v-if="editableCpt" :value="nodeAttrs.title" @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
+            <Input v-if="editableCpt" :value="nodeAttrs.title" @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
             <span v-else>{{ nodeAttrs.title }}</span>
-          </a-space>
-          <a-space :size="5">
+          </Space>
+          <Space :size="5">
             <!-- 注意这里存入的是个对象 -->
-            <a-select :dropdownMatchSelectWidth="false" :bordered="false"
+            <Select :dropdownMatchSelectWidth="false" :bordered="false"
               :disabled="!editableCpt"
               :class="['auto-width shadow-ant-select', nodeAttrs.theme]" show-search :value="nodeAttrs.languageAlias"
               @change="(lan: string, option: any) => updateAttributes({ languageAlias: option.value, language: option.lang })"
               optionFilterProp="label" :options="extendedLanguages">
-            </a-select>
-            <a-divider type="vertical" :class="['divider-small', nodeAttrs.theme === 'atom-one-dark' && 'dark']" />
-            <a-select :dropdownMatchSelectWidth="false" :bordered="false"
+            </Select>
+            <Divider type="vertical" :class="['divider-small', nodeAttrs.theme === 'atom-one-dark' && 'dark']" />
+            <Select :dropdownMatchSelectWidth="false" :bordered="false"
               :disabled="!editableCpt"
               :class="['auto-width shadow-ant-select', nodeAttrs.theme]" :value="nodeAttrs.theme"
               @change="(theme: string) => updateAttributes({ theme: theme })">
-              <a-select-option value="atom-one-light">atom-one-light</a-select-option>
-              <a-select-option value="atom-one-dark">atom-one-dark</a-select-option>
-              <a-select-option value="github-light">github-light</a-select-option>
-              <a-select-option value="github-dark">github-dark</a-select-option>
-            </a-select>
-            <a-divider type="vertical" :class="['divider-small', nodeAttrs.theme]" />
+              <SelectOption value="atom-one-light">atom-one-light</SelectOption>
+              <SelectOption value="atom-one-dark">atom-one-dark</SelectOption>
+              <SelectOption value="github-light">github-light</SelectOption>
+              <SelectOption value="github-dark">github-dark</SelectOption>
+            </Select>
+            <Divider type="vertical" :class="['divider-small', nodeAttrs.theme]" />
             <s-question-tip v-if="editableCpt" placement="top" :tip="nodeAttrs.wrap ? '取消自动换行' : '自动换行'">
-              <a-button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme, nodeAttrs.wrap && 'is-active']"
+              <Button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme, nodeAttrs.wrap && 'is-active']"
                 @click="updateAttributes({ wrap: !nodeAttrs.wrap })">
                 <s-icon-font type="icon-kl-multilinetext" />
-              </a-button>
+              </Button>
             </s-question-tip>
-            <a-divider type="vertical" :class="['divider-small', nodeAttrs.theme]" />
+            <Divider type="vertical" :class="['divider-small', nodeAttrs.theme]" />
             <s-question-tip placement="top" tip="复制代码">
-              <a-button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="copyCode">
+              <Button type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="copyCode">
                 <CopyOutlined />
-              </a-button>
+              </Button>
             </s-question-tip>
-            <a-button v-if="editableCpt" type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="handleDelNode('codeBlock')">
+            <Button v-if="editableCpt" type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="handleDelNode('codeBlock')">
               <DeleteOutlined />
-            </a-button>
-          </a-space>
-        </a-flex>
+            </Button>
+          </Space>
+        </Flex>
       </div>
       <!-- 内容区 -->
       <div v-if="nodeAttrs.isExpanded" :class="[`hljs-theme-${nodeAttrs.theme}`,]" class="content-wrap" ref="wrapRef"
@@ -73,7 +73,7 @@
           class='h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content'><NodeViewContent :class="['hljs']" as="code" :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"/></pre>
           <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
       </div>
-    </a-flex>
+    </Flex>
   </NodeViewWrapper>
 </template>
 
@@ -173,3 +173,4 @@ const copyCode = () => {
   cursor: ns-resize;
 }
 </style>
+import { Button, Divider, Flex, Input, Select, SelectOption, Space } from 'ant-design-vue'

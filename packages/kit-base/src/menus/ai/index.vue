@@ -7,14 +7,15 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-    <a-tooltip title="AI助手">
-        <a-button type="text" @click="emit('showAiBubble')" class="shadow-btn-wrapper">
+    <Tooltip title="AI助手">
+        <Button type="text" @click="emit('showAiBubble')" class="shadow-btn-wrapper">
             <img :src="AiIcon">
-        </a-button>
-    </a-tooltip>
+        </Button>
+    </Tooltip>
 </template>
 
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import AiIcon from '@kb/assets/image/ai.svg'
 import { Editor } from '@tiptap/core'
 

@@ -15,12 +15,12 @@
                         <span class="dot">.</span>
                         <span class="dot">.</span>
                     </span>
-                    <a-textarea v-else ref="textAreaRef" auto-size v-model:value="inputValue" placeholder="向智能助手提问..."
+                    <Textarea v-else ref="textAreaRef" auto-size v-model:value="inputValue" placeholder="向智能助手提问..."
                         :maxlength="1000" @press-enter="inputSendSession" />
 
                 </div>
             </div>
-            <a-button v-if="inputValue && !isProcessing" type="text"
+            <Button v-if="inputValue && !isProcessing" type="text"
                 class="self-end text-[var(--ant-color-text-secondary)] px-[6px] py-[5px]" @click="handleSendClick">
                 <template #icon>
                     <span
@@ -29,8 +29,8 @@
                     </span>
                 </template>
                 发送
-            </a-button>
-            <a-button v-if="isProcessing" type="text"
+            </Button>
+            <Button v-if="isProcessing" type="text"
                 class="self-end text-[var(--ant-color-text-secondary)] px-[6px] py-[5px]" @click="cancelProcess">
                 <template #icon>
                     <span
@@ -39,29 +39,29 @@
                     </span>
                 </template>
                 停止
-            </a-button>
-            <a-tooltip title="关闭" @click="emit('closeMenuBubble')">
+            </Button>
+            <Tooltip title="关闭" @click="emit('closeMenuBubble')">
                 <CloseOutlined />
-            </a-tooltip>
+            </Tooltip>
         </div>
         <!-- 这里追加一个div,阻止冒泡 -->
         <div @click.stop class="w-[200px]">
             <!-- 生成结果,或者取消后的操作菜单 -->
 
-            <a-menu v-if="['cancelled', 'success'].includes(session.status)"
+            <Menu v-if="['cancelled', 'success'].includes(session.status)"
                 @click="({ key }: any) => handleResultAction(key)" :selectable="false" class="ai-commands-menu"
                 :items="finishedItems" />
             <!-- 快捷指令菜单 -->
-            <a-menu v-else @click="({ key }: any) => handleAICommand(key as AIAction)" :selectable="false"
+            <Menu v-else @click="({ key }: any) => handleAICommand(key as AIAction)" :selectable="false"
                 class="ai-commands-menu" :disabled="isProcessing">
                 <template v-for="item in aiCommandsItems" :key="item.key">
-                    <a-menu-divider v-if="item.type === 'divider'"></a-menu-divider>
-                    <a-menu-item :key="item.key" v-else :disabled="isProcessing">
+                    <MenuDivider v-if="item.type === 'divider'"></MenuDivider>
+                    <MenuItem :key="item.key" v-else :disabled="isProcessing">
                         <s-icon-font :size="16" :type="item.icon" class="mr-2" />
                         {{ item.label }}
-                    </a-menu-item>
+                    </MenuItem>
                 </template>
-            </a-menu>
+            </Menu>
         </div>
 
     </div>
@@ -69,7 +69,7 @@
 
 <script setup lang="tsx">
 import { ref, computed } from 'vue'
-import { message } from 'ant-design-vue'
+import { Button, Menu, MenuDivider, MenuItem, Textarea, Tooltip, message } from 'ant-design-vue'
 import type { Editor } from '@tiptap/core'
 import { useAiAssistant, type AIAction, type AIProcessOptions } from '@kb/hooks/useAiAssistant'
 import AiPromptIcon from '@kb/assets/image/ai-prompt-icon.svg'

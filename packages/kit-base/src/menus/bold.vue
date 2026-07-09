@@ -8,16 +8,17 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '粗体' : null">
-    <a-button type="text" class="shadow-btn-wrapper"
+    <Button type="text" class="shadow-btn-wrapper"
       :class="[isBoldActive ? 'is-active' : '', isTitleActive && 'disabled']"
       v-on="buttonEvents"
       :disabled="!editableCpt || isTitleActive">
       <bold-outlined />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { Editor } from '@tiptap/core'
 import { BoldOutlined } from '@ant-design/icons-vue'
 import { useActive } from '@speed-tiptap-editor/composables'

@@ -7,17 +7,18 @@
  * @FilePath: \we-knowledge-base\src\tiptap\core\menus\bold.vue
 -->
 <template>
-  <a-tooltip :title="disableMenu ? null : '图片'">
-    <a-button type="text" @click="handleClickImg" class="shadow-btn-wrapper"
+  <Tooltip :title="disableMenu ? null : '图片'">
+    <Button type="text" @click="handleClickImg" class="shadow-btn-wrapper"
       :class="[isImageActive ? 'is-active' : '', isTitleActive && 'disabled']" :disabled="disableMenu">
       <FileImageOutlined />
-    </a-button>
+    </Button>
     <input ref="ImageInput" @change="handleFileChange" :multiple="imageConfig?.multiple ?? true" type="file"
       :accept="imageConfig?.accept ?? '.svg,.png,.bmp,.jpg,.jpeg,.gif,.webp,.heic'" hidden />
-  </a-tooltip>
+  </Tooltip>
 </template>
 
 <script setup lang="ts">
+import { Button, Tooltip } from 'ant-design-vue'
 import { inject, ref, type Ref, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { FileImageOutlined } from '@ant-design/icons-vue'

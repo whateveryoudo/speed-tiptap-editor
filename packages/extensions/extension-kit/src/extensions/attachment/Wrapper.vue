@@ -10,16 +10,16 @@
   <NodeViewWrapper :class="['cursor-pointer', nodeAttrs.displayMode !== 'card' && 'inline-block']">
     <div v-if="isEditable && !nodeAttrs.fileId" :class="['wrap px-2', uploadFailed ? 'upload-failed' : '']"
       @click="uploadAgain">
-      <a-spin :spinning="uploadLoading">
+      <Spin :spinning="uploadLoading">
         <!-- 先不要进度条 -->
-        <a-typography-text style="cursor: pointer" @click="uploadAgain">
-          <!-- <a-progress v-if="showProgress" :percent="percent" showInfo></a-progress> -->
+        <TypographyText style="cursor: pointer" @click="uploadAgain">
+          <!-- <Progress v-if="showProgress" :percent="percent" showInfo></Progress> -->
           <span>
             {{ uploadLoading ? "正在上传中" : "请选择文件" }}
           </span>
           <InfoCircleOutlined class="ml-2 text-[var(--ant-color-error)]" v-if="uploadFailed"/>
-        </a-typography-text>
-      </a-spin>
+        </TypographyText>
+      </Spin>
     </div>
     <file-display-bar v-if="nodeAttrs.fileId" v-bind="nodeAttrs" @download="handleDownloadFile" />
     <input ref="AttachmentInput" @change="handleFileChange" type="file"
@@ -34,7 +34,7 @@ import { NodeViewWrapper } from "@tiptap/vue-3";
 import { Editor } from "@tiptap/core";
 import FileDisplayBar from "./FileDisplayBar.vue";
 import { useCustomUpload, type IFileItem } from "speed-components-ui/hooks";
-import { message } from 'ant-design-vue';
+import { Progress, Spin, TypographyText, message } from 'ant-design-vue';
 import axios from 'axios';
 import { useSpeedEditor } from '@speed-tiptap-editor/composables';
 import { InfoCircleOutlined } from '@ant-design/icons-vue';

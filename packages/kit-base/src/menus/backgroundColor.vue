@@ -10,23 +10,24 @@
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '背景颜色' : null">
     <div :class="['bg-color-menu-wrapper', isTitleActive && 'menu-disabled']">
-      <a-button type="text" class="shadow-btn-wrapper small" :disabled="disableMenu"
+      <Button type="text" class="shadow-btn-wrapper small" :disabled="disableMenu"
         @mousedown.prevent="setBackgroundColor(curColor)">
         <span class="text-wrapper">
           <s-icon-font :size="17" type="icon-kl-fill-color" />
           <span class="under-line" :style="{ backgroundColor: curColor || '#fff' }" />
         </span>
-      </a-button>
+      </Button>
       <color-picker :cur-color="curColor" :disabled="disableMenu" @triggerColor="setBackgroundColor">
-        <a-button type="text" class="shadow-btn-wrapper small" :disabled="disableMenu">
+        <Button type="text" class="shadow-btn-wrapper small" :disabled="disableMenu">
           <caret-down-outlined />
-        </a-button>
+        </Button>
       </color-picker>
     </div>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { ref, inject, computed } from 'vue'
 import { type Ref } from 'vue'
 import { Editor } from '@tiptap/core'

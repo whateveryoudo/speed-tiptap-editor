@@ -8,18 +8,19 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '重做' : null">
-    <a-button
+    <Button
       :disabled="!editableCpt"
       type="text"
       class="shadow-btn-wrapper"
       @click="redo"
     >
       <RedoOutlined class="text-[16px]"/>
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { type PropType } from 'vue'
 import { Editor } from '@tiptap/core'
 import { getShortcutTipByKey } from '@speed-tiptap-editor/shared'

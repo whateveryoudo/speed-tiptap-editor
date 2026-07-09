@@ -8,16 +8,17 @@
 -->
 <template>
   <s-keymap-tip :keyMap="keyMap" :title="editableCpt ? '格式刷' : null">
-    <a-button class="shadow-btn-wrapper"  @click="toggleFormatPainter" type="text"
+    <Button class="shadow-btn-wrapper"  @click="toggleFormatPainter" type="text"
       :class="[isActive ? 'is-active' : '']"
       :disabled="disableMenu"
       >
       <ClearOutlined style="font-size: 16px;" />
-    </a-button>
+    </Button>
   </s-keymap-tip>
 </template>
 
 <script setup lang="ts">
+import { Button } from 'ant-design-vue'
 import { PropType, ref, watch, computed } from 'vue'
 import { Editor } from '@tiptap/core'
 import { useActive } from '@speed-tiptap-editor/composables'
