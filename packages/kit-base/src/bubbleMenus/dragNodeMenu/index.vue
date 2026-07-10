@@ -82,6 +82,7 @@ import {
     OrderedListOutlined,
     CodeOutlined,
     FileTextOutlined,
+    RightOutlined,
 } from "@ant-design/icons-vue";
 import { useSpeedEditor } from '@speed-tiptap-editor/composables';
 const props = defineProps({

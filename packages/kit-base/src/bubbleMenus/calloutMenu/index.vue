@@ -70,7 +70,7 @@ import { useAttributes } from "@speed-tiptap-editor/composables";
 import { type Editor } from "@tiptap/core";
 import ColorPicker from "@kb/components/colorPicker/index.vue";
 import { useNodeTopCenterBubble } from "@kb/bubbleMenus/useNodeTopCenterBubble";
-import { MinusCircleOutlined } from "@ant-design/icons-vue";
+import { MinusCircleOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 import EmojiPicker from "@kb/components/emojiPicker/index.vue";
 import { useBubble } from "@kb/hooks/useBubble";
 const props = defineProps({

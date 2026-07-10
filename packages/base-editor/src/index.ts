@@ -1,3 +1,6 @@
+import './assets/index.less'
+import 'uno.css'
+
 export { default as SpeedEditor } from './SpeedEditor.vue'
 /** @deprecated 兼容 v1 命名 */
 export { default as SpeedTiptapEditor } from './SpeedEditor.vue'
@@ -12,4 +15,3 @@ export type {
   BubbleMenuKey,
   SpeedEditorPlugin,
 } from '@speed-tiptap-editor/shared'
-export { default } from './plugin'

@@ -39,6 +39,7 @@ import {
   FileImageOutlined,
   VideoCameraOutlined,
   EyeOutlined,
+  DownloadOutlined,
   FilePdfOutlined,
   FileWordOutlined,
   FileZipOutlined,

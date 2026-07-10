@@ -9,7 +9,7 @@
 <template>
   <NodeViewWrapper :class="['code-block', nodeAttrs.theme, isHover && 'is-hover']" @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave">
-    <Flex vertical class="rounded-md code-block-wrapper h-full  bg-[var(--speed-color-bg-gray)] relative ">
+    <Flex vertical class="rounded-md code-block-wrapper bg-[var(--speed-color-bg-gray)] relative">
       <!-- 工具条:收起的时候添加圆角 -->
       <!-- 为什么收起时候非NodeViewContent还能输入呢？？？ -->
       <div :contenteditable="false">
@@ -66,19 +66,36 @@
           </Space>
         </Flex>
       </div>
-      <!-- 内容区 -->
-      <div v-if="nodeAttrs.isExpanded" :class="[`hljs-theme-${nodeAttrs.theme}`,]" class="content-wrap" ref="wrapRef"
-        :style="{ height: height + 'px' }">
+      <!-- 内容区：勿用 v-if，否则会卸载 NodeViewContent 导致展开后光标/内容异常 -->
+      <div
+        v-show="nodeAttrs.isExpanded"
+        :class="[`hljs-theme-${nodeAttrs.theme}`]"
+        class="content-wrap"
+        ref="wrapRef"
+        :style="{ height: height + 'px' }"
+      >
         <pre
-          class='h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content'><NodeViewContent :class="['hljs']" as="code" :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"/></pre>
-          <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
+          class="h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content"
+        ><NodeViewContent
+          :class="['hljs']"
+          as="code"
+          :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"
+        /></pre>
+        <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
       </div>
     </Flex>
   </NodeViewWrapper>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { Button, Divider, Flex, Input, Select, SelectOption, Space } from 'ant-design-vue'
+import {
+  CaretDownOutlined,
+  CaretRightOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons-vue'
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
 import { useEdgeResize } from '@ek/hooks/useEdgeResize'
 import { lowlightInstance } from './index'
@@ -119,7 +136,20 @@ const extendedLanguages = computed(() => {
 })
 // 使用通用四边缩放，仅启用 bottom 边（作用于外层容器高度）
 const wrapRef = ref<HTMLElement | null>(null)
-const { height, startResize } = useEdgeResize(wrapRef, { height: nodeAttrs.value.height }, { minHeight: 100 })
+const initialHeight = Number(nodeAttrs.value.height) || 250
+const { height, startResize } = useEdgeResize(
+  wrapRef,
+  { height: initialHeight },
+  { minHeight: 100 },
+)
+
+watch(
+  () => nodeAttrs.value.height,
+  (h) => {
+    const next = Number(h) || 250
+    if (next !== height.value) height.value = next
+  },
+)
 
 const copyCode = () => {
   copy(props.node.textContent)
@@ -173,4 +203,3 @@ const copyCode = () => {
   cursor: ns-resize;
 }
 </style>
-import { Button, Divider, Flex, Input, Select, SelectOption, Space } from 'ant-design-vue'

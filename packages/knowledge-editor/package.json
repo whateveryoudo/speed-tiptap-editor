@@ -8,8 +8,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.less",
+    "dist/*.css"
+  ],
   "scripts": {
     "build": "vite build",
     "typecheck": "vue-tsc --noEmit",

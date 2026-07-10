@@ -16,7 +16,7 @@
         <div class="flex-1 overflow-y-auto emoji-scroll-wrapper">
           <ul class="emoji-board-group-wrapper" v-if="filteredEmojiList.length > 0">
             <li v-for="(item, index) in filteredEmojiList" :key="index" class="emoji-board-group-item">
-              <span class="group-title" :id="item.key">{{ item.title }}</span>
+              <span class="group-title" :id="item.key || `emoji-group-${index}`">{{ item.title }}</span>
               <ul class="emoji-board-list-wrapper">
                 <li v-for="(em, eIndex) in item.data" :key="eIndex" class="shadow-bg-wrapper emoji-board-list-item"
                   @click="onSelectEmoji(em)">
@@ -31,7 +31,7 @@
         </div>
         <!-- 分组锚点导航（Antd Anchor） -->
         <Anchor :getContainer="getEmojiScrollContainer" :affix="false" direction="horizontal" :showInkInFixed="false"
-          class="emoji-board-anchor" :items="LIST">
+          class="emoji-board-anchor" :items="anchorItems">
         </Anchor>
       </Flex>
     </template>
@@ -84,6 +84,11 @@ const filteredEmojiList = computed(() => {
     }))
     .filter(group => group.data.length > 0);
 });
+const anchorItems = computed(() =>
+  filteredEmojiList.value
+    .filter((item): item is typeof LIST[number] => 'href' in item && !!item.href)
+    .map(({ key, href, title }) => ({ key, href, title })),
+)
 const emit = defineEmits(['triggerEmoji'])
 const visible = ref(false)
 const onSelectEmoji = (emojiItem: any) => {
@@ -98,7 +103,8 @@ const onSelectEmoji = (emojiItem: any) => {
   visible.value = false
 }
 // Anchor锚点导航需要的容器获取方法
-const getEmojiScrollContainer = () => document.querySelector('.emoji-scroll-wrapper') || null
+const getEmojiScrollContainer = () =>
+  emojiWrapperRef.value?.querySelector('.emoji-scroll-wrapper') as HTMLElement | null
 
 // 初始化时加载
 onMounted(() => {
@@ -130,9 +136,13 @@ onMounted(() => {
 
   .emoji-board-wrapper {
     height: 400px;
+    display: flex;
+    flex-direction: column;
 
     .emoji-scroll-wrapper {
       overflow-y: auto;
+      flex: 1;
+      min-height: 0;
     }
 
     .emoji-board-list-wrapper {
@@ -155,6 +165,15 @@ onMounted(() => {
       }
     }
 
+  }
+
+  .emoji-board-anchor {
+    flex-shrink: 0;
+
+    .ant-anchor-link-title {
+      font-size: 12px;
+      color: var(--ant-color-text-secondary);
+    }
   }
 
   .ant-anchor {

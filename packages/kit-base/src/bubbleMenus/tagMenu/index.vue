@@ -54,6 +54,7 @@ import BubbleContainer from "../BubbleContainer.vue";
 import { useAttributes } from "@speed-tiptap-editor/composables";
 import { type Editor } from "@tiptap/core";
 import ColorPicker from "@kb/components/colorPicker/index.vue";
+import { CheckOutlined } from '@ant-design/icons-vue'
 import { debounce } from "lodash-es";
 const props = defineProps({
   editor: {

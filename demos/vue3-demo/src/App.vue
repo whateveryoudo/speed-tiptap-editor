@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@speed-tiptap-editor/knowledge-editor/style.css'
 import { ref } from 'vue'
 import { LiteEditor } from '@speed-tiptap-editor/lite-editor'
 import { KnowledgeEditor } from '@speed-tiptap-editor/knowledge-editor'

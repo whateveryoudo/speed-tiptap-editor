@@ -1,10 +1,14 @@
+import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import UnoCSS from '@unocss/vite'
 import { defineConfig } from 'vite'
 
+const dirname = fileURLToPath(new URL('.', import.meta.url))
+
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(), vueJsx(), UnoCSS()],
   resolve: {
     alias: {
       '@ek': fileURLToPath(new URL('./src', import.meta.url)),
@@ -12,11 +16,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+      entry: resolve(dirname, 'src/index.ts'),
       name: 'SpeedTiptapExtensionKit',
       formats: ['es'],
       fileName: 'index',
     },
+    cssCodeSplit: false,
     rollupOptions: {
       external: [
         'vue',
@@ -35,6 +40,12 @@ export default defineConfig({
         '@tiptap/y-tiptap',
         '@hocuspocus/provider',
       ],
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'style.css') return 'style.css'
+          return assetInfo.name ?? 'asset'
+        },
+      },
     },
     sourcemap: true,
     emptyOutDir: true,

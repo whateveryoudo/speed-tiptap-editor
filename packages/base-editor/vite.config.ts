@@ -17,11 +17,14 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(dirname, 'src/index.ts'),
-      name: 'SpeedTiptapEditor',
+      entry: {
+        index: resolve(dirname, 'src/index.ts'),
+        plugin: resolve(dirname, 'src/plugin-entry.ts'),
+      },
       formats: ['es'],
-      fileName: 'index',
+      fileName: (format, entryName) => `${entryName}.js`,
     },
+    cssCodeSplit: false,
     rollupOptions: {
       external: [
         'vue',
@@ -32,7 +35,6 @@ export default defineConfig({
         'speed-components-ui',
         'speed-components-ui/components',
         'speed-components-ui/hooks',
-        'speed-components-ui/dist/style.css',
         '@vueuse/core',
         'lodash-es',
         'viewerjs',
@@ -45,7 +47,7 @@ export default defineConfig({
           yjs: 'Y',
         },
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') return 'style.css'
+          if (assetInfo.name?.endsWith('.css')) return 'style.css'
           return assetInfo.name ?? 'asset'
         },
       },

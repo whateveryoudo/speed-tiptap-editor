@@ -61,6 +61,7 @@
 
 <script setup lang="tsx">
 import { Flex, Popover } from 'ant-design-vue'
+import { CaretRightOutlined, CheckOutlined } from '@ant-design/icons-vue'
 import { ref, PropType, onMounted } from 'vue'
 import { colors, type ColorType } from './data'
 import CustomColor from '@kb/assets/image/custom-color.png'

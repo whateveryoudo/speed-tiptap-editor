@@ -51,6 +51,7 @@ import { ref, inject, computed } from 'vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { Editor } from '@tiptap/core'
 import { useSpeedEditor } from '@speed-tiptap-editor/composables'
+import { FileSearchOutlined } from '@ant-design/icons-vue'
 const props = withDefaults(defineProps<{
     editor: Editor
 }>(), {

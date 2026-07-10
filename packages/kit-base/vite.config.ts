@@ -1,7 +1,9 @@
 import { fileURLToPath, URL } from 'node:url'
 import { createVueLibConfig } from '../../tools/vite.lib'
 
-export default createVueLibConfig(fileURLToPath(new URL('.', import.meta.url)), {
+export default createVueLibConfig(
+  fileURLToPath(new URL('.', import.meta.url)),
+  {
   resolve: {
     alias: {
       '@kb': fileURLToPath(new URL('./src', import.meta.url)),
@@ -26,4 +28,6 @@ export default createVueLibConfig(fileURLToPath(new URL('.', import.meta.url)), 
       ],
     },
   },
-})
+  },
+  { unocss: true },
+)

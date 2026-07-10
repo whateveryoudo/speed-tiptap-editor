@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { Button } from 'ant-design-vue'
+import { UndoOutlined } from '@ant-design/icons-vue'
 import { type PropType } from 'vue'
 import { Editor } from '@tiptap/core'
 import { getShortcutTipByKey } from '@speed-tiptap-editor/shared'

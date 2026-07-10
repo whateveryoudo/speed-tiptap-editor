@@ -1,18 +1,42 @@
+import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createVueLibConfig } from '../../tools/vite.lib'
 
-export default createVueLibConfig(fileURLToPath(new URL('.', import.meta.url)), {
+const dirname = fileURLToPath(new URL('.', import.meta.url))
+
+export default createVueLibConfig(dirname, {
   build: {
+    lib: {
+      entry: {
+        index: resolve(dirname, 'src/index.ts'),
+      },
+      formats: ['es'],
+      fileName: (format, entryName) => `${entryName}.js`,
+    },
+    cssCodeSplit: false,
     rollupOptions: {
-      external: [
-        'vue',
-        '@speed-tiptap-editor/base-editor',
-        '@speed-tiptap-editor/collaboration-editor',
-        '@speed-tiptap-editor/shared',
-        '@speed-tiptap-editor/kit-base',
-        '@speed-tiptap-editor/extension-kit',
-        /^@speed-tiptap-editor\/extension-/
-      ],
+      external: (id) => {
+        // CSS 不 external → 合并进 knowledge-editor/dist/style.css
+        if (id.endsWith('.css') || id.includes('.css?')) {
+          return false
+        }
+    
+        if (id === 'vue') return true
+        if (id.startsWith('@speed-tiptap-editor/base-editor')) return true
+        if (id.startsWith('@speed-tiptap-editor/collaboration-editor')) return true
+        if (id.startsWith('@speed-tiptap-editor/shared')) return true
+        if (id.startsWith('@speed-tiptap-editor/kit-base')) return true
+        if (id.startsWith('@speed-tiptap-editor/extension-kit')) return true
+        if (/^@speed-tiptap-editor\/extension-/.test(id)) return true
+    
+        return false
+      },
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) return 'style.css'
+          return assetInfo.name ?? 'asset'
+        },
+      },
     },
   },
 })

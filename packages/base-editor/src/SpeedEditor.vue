@@ -121,7 +121,6 @@ const props = withDefaults(defineProps<{
   editable: true,
   menubar: true,
   collaborationMode: false,
-  antdToken: () => ({}),
   editorStyle: () => ({}),
   headerStyle: () => ({}),
   mainStyle: () => ({}),
@@ -167,16 +166,34 @@ const resolvedBubbleRegistry = computed(() => {
 
 const resolvedOverlays = computed(() => pluginRegistry.value.overlays)
 
+/** 解析 antdToken：支持 props 与 app.use 配置；配置可为对象或 () => object */
+function resolveAntdTokenSource(source: unknown): Record<string, unknown> | undefined {
+  if (source == null) return undefined
+  const value = typeof source === 'function'
+    ? (source as () => Record<string, unknown>)()
+    : source
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+  return Object.keys(value).length > 0 ? (value as Record<string, unknown>) : undefined
+}
+
+/** plugin 配置优先，props 覆盖（与 cptTheme / CSS 变量同步） */
+const resolvedAntdToken = computed(() => {
+  const fromConfig = resolveAntdTokenSource(speedUseTiptapConfig.value?.antdToken)
+  const fromProp = resolveAntdTokenSource(props.antdToken)
+  if (!fromConfig && !fromProp) return undefined
+  return { ...(fromConfig ?? {}), ...(fromProp ?? {}) }
+})
+
 const cptTheme = computed(() => {
-  const { antdToken: antdTokenFromConfig, theme: themeFromConfig } = speedUseTiptapConfig.value || {}
-  return props.theme === 'dark' || themeFromConfig === 'dark'
-    ? {
-      algorithm: theme.darkAlgorithm,
-      token: { ...(antdTokenFromConfig || props.antdToken) },
-    }
-    : {
-      token: { ...(antdTokenFromConfig || props.antdToken) },
-    }
+  const { theme: themeFromConfig } = speedUseTiptapConfig.value || {}
+  const isDark = props.theme === 'dark' || themeFromConfig === 'dark'
+  const token = resolvedAntdToken.value
+  if (isDark) {
+    return token
+      ? { algorithm: theme.darkAlgorithm, token }
+      : { algorithm: theme.darkAlgorithm }
+  }
+  return token ? { token } : {}
 })
 
 const { previewInstance } = useSpeedEditorProvider(props)
@@ -314,17 +331,17 @@ watch(
 )
 
 watch(
-  () => props.antdToken,
-  (newAntdToken: Record<string, any>) => {
-    updateTheme?.({ token: newAntdToken })
+  resolvedAntdToken,
+  (token) => {
+    if (token) {
+      updateTheme?.({ token })
+    }
   },
   { immediate: true },
 )
-console.log('进入了22');
 watch(
   [() => props.extraExtensions, () => props.layout, () => props.plugins],
   () => {
-    debugger;
     if (!editor.value) {
       return
     }
