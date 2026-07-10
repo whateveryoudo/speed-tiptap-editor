@@ -1,5 +1,11 @@
 # @speed-tiptap-editor/base-editor
 
+## 2.0.2
+
+### Patch Changes
+
+- 9bcb3cb: 修复一些样式引用问题,一些antd自动注册报错问题
+
 ## 2.0.1
 
 ### Patch Changes
