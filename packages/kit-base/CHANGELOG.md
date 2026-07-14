@@ -1,5 +1,14 @@
 # @speed-tiptap-editor/kit-base
 
+## 2.0.3
+
+### Patch Changes
+
+- aa7f88d: 调整样式导出方式,提取公共扩展到schema
+- Updated dependencies [aa7f88d]
+  - @speed-tiptap-editor/composables@2.0.1
+  - @speed-tiptap-editor/schema@2.0.1
+
 ## 2.0.2
 
 ### Patch Changes
