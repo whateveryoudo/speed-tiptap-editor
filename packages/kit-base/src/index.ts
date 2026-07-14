@@ -1,5 +1,3 @@
-import 'uno.css'
-
 export {
   createKitBasePlugin,
   createKitBasePlugins,

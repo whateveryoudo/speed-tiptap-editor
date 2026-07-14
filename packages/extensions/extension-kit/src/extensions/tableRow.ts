@@ -1,3 +1,3 @@
-import TableRow from '@tiptap/extension-table-row'
+import { TableRow as SchemaTableRow } from '@speed-tiptap-editor/schema'
 
-export default TableRow
+export default SchemaTableRow

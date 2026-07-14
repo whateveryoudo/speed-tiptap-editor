@@ -1,17 +1,12 @@
 /*
- * @Author: ykx
- * @Date: 2022-11-09 09:27:33
- * @LastEditTime: 2022-11-17 15:44:39
- * @LastEditors: your name
- * @Description:
- * @FilePath: \think-main\packages\client\src\tiptap\core\extensions\link.ts
+ * 编辑器侧 Link：schema 契约 + Markdown 输入规则
  */
-import { markInputRule } from '@tiptap/core';
-import { Link as BuiltInLink } from '@tiptap/extension-link';
+import { markInputRule } from '@tiptap/core'
+import { Link as SchemaLink } from '@speed-tiptap-editor/schema'
 
 const extractHrefFromMatch = (match: any) => {
-  return { href: match.groups.href };
-};
+  return { href: match.groups.href }
+}
 
 export const extractHrefFromMarkdownLink = (match: any) => {
   /**
@@ -21,14 +16,15 @@ export const extractHrefFromMarkdownLink = (match: any) => {
    *
    * https://github.com/ueberdosis/tiptap/blob/%40tiptap/core%402.0.0-beta.75/packages/core/src/inputRules/markInputRule.ts#L11
    */
-  match.pop();
-  return extractHrefFromMatch(match);
-};
+  match.pop()
+  return extractHrefFromMatch(match)
+}
 
-export const Link = BuiltInLink.extend({
+export const Link = SchemaLink.extend({
   addInputRules() {
     // 支持 Markdown 链接语法: [文本](链接)
-    const markdownLinkSyntaxInputRuleRegExp = /(?:^|\s)\[([\w|\s|-|\u4e00-\u9fa5]+)\]\((?<href>.+?)\)$/gm;
+    const markdownLinkSyntaxInputRuleRegExp =
+      /(?:^|\s)\[([\w|\s|-|\u4e00-\u9fa5]+)\]\((?<href>.+?)\)$/gm
 
     return [
       markInputRule({
@@ -36,10 +32,10 @@ export const Link = BuiltInLink.extend({
         type: this.type,
         getAttributes: extractHrefFromMarkdownLink,
       }),
-    ];
+    ]
   },
 }).configure({
   openOnClick: true,
   linkOnPaste: true,
   autolink: true,
-});
+})

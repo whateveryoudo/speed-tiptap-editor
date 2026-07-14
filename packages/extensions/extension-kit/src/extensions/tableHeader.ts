@@ -1,7 +1,3 @@
-import TableHeader from '@tiptap/extension-table-header'
+import { TableHeader as SchemaTableHeader } from '@speed-tiptap-editor/schema'
 
-export default TableHeader.configure({
-  // HTMLAttributes: {
-  //   background: 'tomato',
-  // },
-})
+export default SchemaTableHeader

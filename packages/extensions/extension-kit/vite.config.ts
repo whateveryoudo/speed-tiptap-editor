@@ -16,10 +16,13 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(dirname, 'src/index.ts'),
+      entry: {
+        index: resolve(dirname, 'src/index.ts'),
+        style: resolve(dirname, 'src/style.ts'),
+      },
       name: 'SpeedTiptapExtensionKit',
       formats: ['es'],
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
     },
     cssCodeSplit: false,
     rollupOptions: {
@@ -33,7 +36,9 @@ export default defineConfig({
         /^@floating-ui\//,
         '@speed-tiptap-editor/shared',
         '@speed-tiptap-editor/composables',
+        '@speed-tiptap-editor/schema',
         'speed-components-ui/components',
+        'es-drager',
         'yjs',
         'y-protocols',
         'lib0',

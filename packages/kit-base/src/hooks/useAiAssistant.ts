@@ -217,7 +217,6 @@ export const useAiAssistant = () => {
 
       return true
     } catch (error: any) {
-      debugger;
       // 用户主动取消不显示错误
       if (error.name === 'AbortError') {
         session.value.status = 'cancelled'

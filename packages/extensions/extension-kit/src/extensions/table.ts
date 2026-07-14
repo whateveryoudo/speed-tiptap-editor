@@ -1,11 +1,9 @@
-import Table from '@tiptap/extension-table'
+import { Table as SchemaTable } from '@speed-tiptap-editor/schema'
 import '@ek/assets/style/table.less'
-console.log(Table.configure, 'Table.Configure');
-export default Table.configure({
+
+/** 编辑器侧：开启列宽拖拽（样式仍在本包） */
+export default SchemaTable.configure({
   resizable: true,
   handleWidth: 5,
   lastColumnResizable: false,
-  HTMLAttributes: {
-    background: '',
-  },
 })

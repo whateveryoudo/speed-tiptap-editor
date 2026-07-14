@@ -74,17 +74,14 @@ import type { Editor } from '@tiptap/core'
 import { useAiAssistant, type AIAction, type AIProcessOptions } from '@kb/hooks/useAiAssistant'
 import AiPromptIcon from '@kb/assets/image/ai-prompt-icon.svg'
 import { getSelectedText } from '@kb/prose-utils/text'
-import { CheckOutlined, SyncOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { markdownToHTML, markdownToJSON } from '@speed-tiptap-editor/document-io'
-import { useSpeedEditor } from '@speed-tiptap-editor/composables';
-
+import { CheckOutlined, SyncOutlined, CloseOutlined, EnterOutlined } from '@ant-design/icons-vue';
+import { markdownToHTML, markdownToJSON } from '@kb/helpers/markdown'
+import { importKit } from '@speed-tiptap-editor/schema'
 // Props 定义
 const props = defineProps<{
     editor: Editor
 }>()
 
-// 方式1：从父组件注入扩展配置（推荐）⭐
-const { aiExtensions } = useSpeedEditor()
 // 使用 AI 助手 Hook
 const {
     processTextStream,
@@ -217,16 +214,11 @@ const handleSendClick = () => {
 const replaceSelectedText = (markdownText: string) => {
     try {
         const { from, to } = props.editor.state.selection
+        const jsonDoc = markdownToJSON(markdownText, importKit)
 
-        // 转换为 Tiptap 原生 JSON 格式
-        const jsonDoc = markdownToJSON(markdownText, aiExtensions)
-
-        // 🎯 关键：只取 content 数组，不要外层 doc 节点
-        // generateJSON 返回：{ type: 'doc', content: [...] }
-        // 插入时只需要：[...]
+        // generateJSON 返回：{ type: 'doc', content: [...] } — 插入时只要 content
         const content = jsonDoc.content || []
 
-        // 使用原生 JSON 格式插入，性能最优
         props.editor.chain().focus().deleteRange({ from, to }).insertContent(content).run()
         message.success('已替换选中内容')
     } catch (error) {
@@ -240,18 +232,16 @@ const replaceSelectedText = (markdownText: string) => {
  * 将 Markdown 转为 Tiptap JSON 格式后插入（原生格式，最佳实践）
  */
 const insertBelowSelection = (markdownText: string) => {
-    let jsonDoc: any = null;
+    let jsonDoc: any = null
     try {
-        // 转换为 Tiptap 原生 JSON 格式
-        jsonDoc = markdownToJSON(markdownText, aiExtensions)
+        jsonDoc = markdownToJSON(markdownText, importKit)
     } catch (error) {
         console.error('转换 Markdown 失败:', error)
         message.error('内容转换失败，请重试')
+        return
     }
-    // 🎯 关键：只取 content 数组
     const content = jsonDoc.content || []
     const { to } = props.editor.state.selection
-    // 使用原生 JSON 格式插入
     props.editor.chain().focus().insertContentAt(to, content).run()
     message.success('已插入到选区下方')
 }
@@ -273,7 +263,6 @@ const handleResultAction = async (action: string) => {
             return
         }
         insertBelowSelection(session.value.result)
-        message.success('已插入到选区下方')
         resetSession()
     } else if (action === 'regenerate') {
         if (!lastAIOptions.value) {

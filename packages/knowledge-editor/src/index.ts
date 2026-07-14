@@ -1,7 +1,3 @@
-import '@speed-tiptap-editor/base-editor/style.css'
-import '@speed-tiptap-editor/kit-base/style.css'
-import '@speed-tiptap-editor/extension-kit/style.css'
-
 export { default as KnowledgeEditor } from './KnowledgeEditor.vue'
 export {
   createKnowledgeEditorPlugins,

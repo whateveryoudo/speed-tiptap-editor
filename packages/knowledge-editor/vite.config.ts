@@ -9,6 +9,7 @@ export default createVueLibConfig(dirname, {
     lib: {
       entry: {
         index: resolve(dirname, 'src/index.ts'),
+        style: resolve(dirname, 'src/style.ts'),
       },
       formats: ['es'],
       fileName: (format, entryName) => `${entryName}.js`,

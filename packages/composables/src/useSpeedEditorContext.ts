@@ -1,7 +1,6 @@
 import { createInjectionState } from '@vueuse/core'
 import { computed, ref, type ComputedRef, type Ref } from 'vue'
 import type { SpeedEditorShellProps } from '@speed-tiptap-editor/shared'
-import type { Extensions } from '@tiptap/core'
 
 export interface SpeedEditorContext {
   speedTiptapConfig: ComputedRef<SpeedEditorShellProps>
@@ -11,7 +10,6 @@ export interface SpeedEditorContext {
   updateSearchReplaceVisible: (visible: boolean) => void
   globalTiptapStorage: Ref<Record<string, unknown>>
   updateGlobalTiptapStorageFunc: (key: string, value: unknown) => void
-  aiExtensions: Extensions
 }
 
 function initStateFunc(props: SpeedEditorShellProps): SpeedEditorContext {
@@ -35,7 +33,6 @@ function initStateFunc(props: SpeedEditorShellProps): SpeedEditorContext {
     updateSearchReplaceVisible,
     globalTiptapStorage,
     updateGlobalTiptapStorageFunc,
-    aiExtensions: [],
   }
 }
 
