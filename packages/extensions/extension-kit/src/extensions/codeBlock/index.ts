@@ -12,6 +12,7 @@ import { VueNodeViewRenderer } from "@tiptap/vue-3";
 import Wrapper from "./Wrapper.vue";
 import { common, createLowlight } from "lowlight";
 import { TextSelection } from "@tiptap/pm/state";
+import { LanguageDetectPlugin } from "./languageDetectPlugin";
 // import { Selection } from "@tiptap/pm/state";
 // 添加一些其他语言
 
@@ -43,6 +44,10 @@ export const CodeBlock = CodeBlockLowlight.extend({
       languageAlias: {
         default: "plaintext",
       },
+      /** 用户手动选过语言后不再自动检测覆盖 */
+      languageManual: {
+        default: false,
+      },
       wrap: {
         default: true,
       },
@@ -52,13 +57,23 @@ export const CodeBlock = CodeBlockLowlight.extend({
       isExpanded: {
         default: true,
       },
+      // null = 贴内容高度；用户拖拽底边后才写入具体 px
       height: {
-        default: "250",
+        default: null,
       },
     };
   },
   addNodeView() {
     return VueNodeViewRenderer(Wrapper);
+  },
+  addProseMirrorPlugins() {
+    return [
+      ...(this.parent?.() || []),
+      LanguageDetectPlugin({
+        name: this.name,
+        lowlight: lowlightInstance,
+      }),
+    ];
   },
   addKeyboardShortcuts() {
     // 继承父级键盘快捷键
@@ -88,6 +103,6 @@ export const CodeBlock = CodeBlockLowlight.extend({
     };
   },
 }).configure({
-  defaultLanguage: "auto",
+  defaultLanguage: "plaintext",
   lowlight: lowlightInstance,
 });

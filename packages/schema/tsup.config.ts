@@ -1,3 +1,5 @@
-import { defineLibConfig } from '../../tools/tsup.lib'
+import { defineLibConfig } from "../../tools/tsup.lib";
 
-export default defineLibConfig()
+export default defineLibConfig({
+  format: ["esm", "cjs"],
+});

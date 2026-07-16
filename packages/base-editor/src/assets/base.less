@@ -8,7 +8,7 @@
   --speed-color-bg-dark-2: #3c424d;
   --speed-color-text-white-1: #e2e2e2;
   --speed-color-border-light: rgba(0, 0, 0, .04);
-  
+  --speed-color-primary: #1677ff;
   // 搜索结果样式
   --speed-color-search-result-background: rgb(255, 255, 195);
   --speed-color-search-result-current-background: rgb(255, 190, 187);
@@ -85,6 +85,17 @@
     font-weight: normal;
     line-height: 1.714;
     letter-spacing: -0.005em;
+  }
+
+  // 行内 code（避开 pre > code 代码块）
+  :not(pre) > code {
+    background-color: var(--speed-color-bg-gray);
+    border: 1px solid var(--speed-color-border-gray);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875em;
+    word-break: break-all;
   }
 
   blockquote {
@@ -200,7 +211,7 @@
 
   // 提及样式
   .mention {
-    color: var(--ant-color-primary);
+    color: var(--speed-color-primary);
     cursor: pointer;
   }
 }

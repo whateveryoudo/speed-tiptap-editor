@@ -266,7 +266,10 @@ const editor = useEditor({
   },
   extensions: buildExtensions(),
   onCreate({ editor }) {
-    previewInstance.value = new EditorPreviewImage(editor)
+    previewInstance.value = new EditorPreviewImage(
+      editor,
+      () => speedUseTiptapConfig.value?.access_token,
+    )
     if (!speedUseTiptapConfig.value) {
       throw new Error(
         '请先调用 app.use(SpeedTiptapEditor) 进行初始化一些配置，否则可能会初始化一些图标显示问题！',

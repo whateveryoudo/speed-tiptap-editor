@@ -14,6 +14,11 @@ export interface UseEdgeResizeOptions {
   maxHeight?: number
   keepAspectRatio?: boolean
   onResize?: (rect: { width: number; height: number }) => void
+  /** 指针抬起时触发；didMove 为 false 表示仅点击未拖拽 */
+  onResizeEnd?: (
+    rect: { width: number; height: number },
+    meta: { didMove: boolean },
+  ) => void
 }
 
 export function useEdgeResize(
@@ -29,6 +34,7 @@ export function useEdgeResize(
   let startW = 0
   let startH = 0
   let activeEdge: Edge | null = null
+  let didMove = false
 
   const applyBounds = (w: number, h: number) => {
     const {
@@ -56,6 +62,7 @@ export function useEdgeResize(
 
   const onPointerMove = (e: PointerEvent) => {
     if (!activeEdge) return
+    didMove = true
     const clientX = e.clientX
     const clientY = e.clientY
     const dx = clientX - startX
@@ -74,7 +81,14 @@ export function useEdgeResize(
   }
 
   const endResize = () => {
+    if (activeEdge) {
+      options.onResizeEnd?.(
+        { width: width.value, height: height.value },
+        { didMove },
+      )
+    }
     activeEdge = null
+    didMove = false
     window.removeEventListener('pointermove', onPointerMove)
     window.removeEventListener('pointerup', endResize)
   }
@@ -82,19 +96,24 @@ export function useEdgeResize(
   const startResize = (edge: Edge, e: PointerEvent) => {
     if (!targetEl.value) return
     activeEdge = edge
-    
+    didMove = false
+
     const clientX = e.clientX
     const clientY = e.clientY
     startX = clientX
     startY = clientY
-    startW = Number(width.value) || 0
-    startH = Number(height.value) || 0
+    const rect = targetEl.value.getBoundingClientRect()
+    // height/width 为 0（auto 模式）时，从实际 DOM 尺寸起步
+    startW = Number(width.value) || Math.round(rect.width) || 0
+    startH = Number(height.value) || Math.round(rect.height) || 0
+    if (!width.value && startW) width.value = startW
+    if (!height.value && startH) height.value = startH
     e.preventDefault()
-    
+
     if ('pointerId' in e) {
       targetEl.value.setPointerCapture?.(e.pointerId)
     }
-    
+
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     window.addEventListener('pointerup', endResize, { once: true })
   }

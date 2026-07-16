@@ -5,6 +5,7 @@
   "description": "基于 Ant Design Vue + Tiptap 的富文本编辑器（Monorepo）",
   "scripts": {
     "build": "turbo run build",
+    "build:lib": "node scripts/build-lib.mjs",
     "dev": "turbo run dev --parallel",
     "demo": "pnpm --filter @speed-tiptap-editor/vue3-demo dev --host 0.0.0.0",
     "typecheck": "turbo run typecheck",

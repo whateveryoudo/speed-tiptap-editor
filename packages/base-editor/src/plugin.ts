@@ -14,6 +14,7 @@ export interface GlobalConfig {
   apis?: Record<string, AjaxMethod>
   registerGlobal?: boolean
   iconfontUrl?: string
+  access_token?: string // 访问token（用于一些可能需要权限的资源访问）
   transformFileItem?: (item: unknown) => unknown
   transformRequestRes?: (res: unknown) => ResponseType
   upload?: IUploadConfig

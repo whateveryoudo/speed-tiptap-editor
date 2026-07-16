@@ -421,14 +421,18 @@ export const CodeBlock = Node.create<CodeBlockOptions>({
         find: backtickInputRegex,
         type: this.type,
         getAttributes: (match) => ({
-          language: match[1],
+          language: match[1] || "plaintext",
+          languageAlias: match[1] || "plaintext",
+          languageManual: Boolean(match[1]),
         }),
       }),
       textblockTypeInputRule({
         find: tildeInputRegex,
         type: this.type,
         getAttributes: (match) => ({
-          language: match[1],
+          language: match[1] || "plaintext",
+          languageAlias: match[1] || "plaintext",
+          languageManual: Boolean(match[1]),
         }),
       }),
     ];
@@ -469,7 +473,16 @@ export const CodeBlock = Node.create<CodeBlockOptions>({
 
             // create a code block with the text node
             // replace selection with the code block
-            tr.replaceSelectionWith(this.type.create({ language }, textNode));
+            tr.replaceSelectionWith(
+              this.type.create(
+                {
+                  language,
+                  languageAlias: language,
+                  languageManual: true,
+                },
+                textNode,
+              ),
+            );
 
             if (tr.selection.$from.parent.type !== this.type) {
               // put cursor inside the newly created code block

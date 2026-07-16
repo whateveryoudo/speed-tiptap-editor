@@ -9,7 +9,7 @@
 <template>
   <NodeViewWrapper :class="['code-block', nodeAttrs.theme, isHover && 'is-hover']" @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave">
-    <Flex vertical class="rounded-md code-block-wrapper bg-[var(--speed-color-bg-gray)] relative">
+    <Flex vertical class="rounded-md code-block-wrapper relative">
       <!-- 工具条:收起的时候添加圆角 -->
       <!-- 为什么收起时候非NodeViewContent还能输入呢？？？ -->
       <div :contenteditable="false">
@@ -26,26 +26,26 @@
                   v-else />
               </Button>
             </s-question-tip>
-            <Input v-if="editableCpt" :value="nodeAttrs.title" @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
+            <Input v-if="editableCpt" :value="nodeAttrs.title"
+              @change="(e: any) => updateAttributes({ title: e.target.value })" placeholder="请输入代码块名称(选填)" />
             <span v-else>{{ nodeAttrs.title }}</span>
           </Space>
           <Space :size="5">
             <!-- 注意这里存入的是个对象 -->
-            <Select :dropdownMatchSelectWidth="false" :bordered="false"
-              :disabled="!editableCpt"
+            <Select :dropdownMatchSelectWidth="false" :bordered="false" :disabled="!editableCpt"
               :class="['auto-width shadow-ant-select', nodeAttrs.theme]" show-search :value="nodeAttrs.languageAlias"
-              @change="(lan: string, option: any) => updateAttributes({ languageAlias: option.value, language: option.lang })"
+              @change="(lan: string, option: any) => updateAttributes({ languageAlias: option.value, language: option.lang, languageManual: true })"
               optionFilterProp="label" :options="extendedLanguages">
             </Select>
             <Divider type="vertical" :class="['divider-small', nodeAttrs.theme === 'atom-one-dark' && 'dark']" />
-            <Select :dropdownMatchSelectWidth="false" :bordered="false"
-              :disabled="!editableCpt"
+            <Select :dropdownMatchSelectWidth="false" :bordered="false" :disabled="!editableCpt"
               :class="['auto-width shadow-ant-select', nodeAttrs.theme]" :value="nodeAttrs.theme"
               @change="(theme: string) => updateAttributes({ theme: theme })">
               <SelectOption value="atom-one-light">atom-one-light</SelectOption>
               <SelectOption value="atom-one-dark">atom-one-dark</SelectOption>
-              <SelectOption value="github-light">github-light</SelectOption>
-              <SelectOption value="github-dark">github-dark</SelectOption>
+              <!-- 暂不提供太多 -->
+              <!-- <SelectOption value="github-light">github-light</SelectOption> -->
+              <!-- <SelectOption value="github-dark">github-dark</SelectOption> -->
             </Select>
             <Divider type="vertical" :class="['divider-small', nodeAttrs.theme]" />
             <s-question-tip v-if="editableCpt" placement="top" :tip="nodeAttrs.wrap ? '取消自动换行' : '自动换行'">
@@ -60,29 +60,25 @@
                 <CopyOutlined />
               </Button>
             </s-question-tip>
-            <Button v-if="editableCpt" type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]" @click="handleDelNode('codeBlock')">
+            <Button v-if="editableCpt" type="text" :class="['shadow-btn-wrapper', nodeAttrs.theme]"
+              @click="handleDelNode('codeBlock')">
               <DeleteOutlined />
             </Button>
           </Space>
         </Flex>
       </div>
       <!-- 内容区：勿用 v-if，否则会卸载 NodeViewContent 导致展开后光标/内容异常 -->
-      <div
-        v-show="nodeAttrs.isExpanded"
-        :class="[`hljs-theme-${nodeAttrs.theme}`]"
-        class="content-wrap"
-        ref="wrapRef"
-        :style="{ height: height + 'px' }"
-      >
-        <pre
-          class="h-full border-rounded-bl-md border-rounded-br-md box-border overflow-y-auto code-block-content"
-        ><NodeViewContent
+      <div v-show="nodeAttrs.isExpanded" :class="[`hljs-theme-${nodeAttrs.theme}`]" class="content-wrap" ref="wrapRef"
+        :style="contentWrapStyle">
+        <pre class="border-rounded-bl-md border-rounded-br-md box-border code-block-content"><NodeViewContent
           :class="['hljs']"
           as="code"
           :style="{ whiteSpace: nodeAttrs.wrap ? 'pre-wrap' : 'pre' }"
         /></pre>
-        <div class="resize-bottom" @pointerdown="startResize('bottom', $event)" />
       </div>
+      <!-- 放在滚动容器外，避免 bottom 负偏移撑出滚动条/遮挡内容；居中用 transform 不用负 margin -->
+      <div v-if="editableCpt && nodeAttrs.isExpanded" class="resize-bottom"
+        @pointerdown="handleStartResize('bottom', $event)" />
     </Flex>
   </NodeViewWrapper>
 </template>
@@ -97,7 +93,7 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons-vue'
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
-import { useEdgeResize } from '@ek/hooks/useEdgeResize'
+import { useEdgeResize, type Edge } from '@ek/hooks/useEdgeResize'
 import { lowlightInstance } from './index'
 import { copy } from '@ek/helpers/copy-to-clipboard'
 import { useBubble } from '@ek/hooks/useBubble'
@@ -134,22 +130,68 @@ const extendedLanguages = computed(() => {
     label: 'tsx'
   },]
 })
-// 使用通用四边缩放，仅启用 bottom 边（作用于外层容器高度）
+
+/** 贴内容时的上限，超出后内容区滚动 */
+const MAX_AUTO_HEIGHT = 480
+
+const resolveFixedHeight = (raw: unknown): number | null => {
+  if (raw == null || raw === '' || raw === 'auto') return null
+  const n = Number(raw)
+  if (!Number.isFinite(n) || n <= 0) return null
+  return n
+}
+
 const wrapRef = ref<HTMLElement | null>(null)
-const initialHeight = Number(nodeAttrs.value.height) || 250
+const isResizing = ref(false)
+const initialFixed = resolveFixedHeight(nodeAttrs.value.height)
+
 const { height, startResize } = useEdgeResize(
   wrapRef,
-  { height: initialHeight },
-  { minHeight: 100 },
+  { height: initialFixed ?? 0 },
+  {
+    minHeight: 100,
+    onResizeEnd: ({ height: h }, { didMove }) => {
+      isResizing.value = false
+      if (didMove) {
+        props.updateAttributes({ height: String(h) })
+        return
+      }
+      // 未拖拽：若仍是贴内容模式，清掉临时测量高度
+      if (resolveFixedHeight(nodeAttrs.value.height) == null) {
+        height.value = 0
+      }
+    },
+  },
 )
 
 watch(
   () => nodeAttrs.value.height,
   (h) => {
-    const next = Number(h) || 250
-    if (next !== height.value) height.value = next
+    const next = resolveFixedHeight(h)
+    if (next != null) {
+      if (next !== height.value) height.value = next
+    } else if (!isResizing.value) {
+      height.value = 0
+    }
   },
 )
+
+const contentWrapStyle = computed(() => {
+  const fixed = resolveFixedHeight(nodeAttrs.value.height)
+  const live = isResizing.value && height.value > 0 ? height.value : fixed
+  if (live != null) {
+    return { height: `${live}px` }
+  }
+  return {
+    height: 'auto',
+    maxHeight: `${MAX_AUTO_HEIGHT}px`,
+  }
+})
+
+const handleStartResize = (edge: Edge, e: PointerEvent) => {
+  isResizing.value = true
+  startResize(edge, e)
+}
 
 const copyCode = () => {
   copy(props.node.textContent)
@@ -163,10 +205,12 @@ const copyCode = () => {
   margin-bottom: 10px;
 
   .code-block-wrapper {
+    position: relative;
     border: 1px solid var(--speed-color-border-gray);
   }
 
-  &.is-hover, &.has-focus {
+  &.is-hover,
+  &.has-focus {
     .code-block-wrapper {
       border-color: var(--ant-color-primary);
     }
@@ -178,7 +222,8 @@ const copyCode = () => {
       border-color: transparent;
     }
 
-    .code-block-toolbar {
+    .code-block-toolbar,
+    .content-wrap {
       background: var(--speed-color-bg-dark-1);
       color: var(--speed-color-text-white-1);
     }
@@ -189,6 +234,15 @@ const copyCode = () => {
 
 .content-wrap {
   position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  background-color: #fafafa;
+}
+
+.code-block-content {
+  margin: 0;
 }
 
 .resize-bottom {
@@ -199,7 +253,8 @@ const copyCode = () => {
   position: absolute;
   bottom: -4px;
   left: 50%;
-  margin-left: -28px;
+  transform: translateX(-50%);
+  z-index: 1;
   cursor: ns-resize;
 }
 </style>

@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { Space, Tooltip } from 'ant-design-vue'
-import { inject, PropType, computed, Ref, ref } from "vue";
+import { PropType, computed } from "vue";
 import BubbleContainer from "../BubbleContainer.vue";
 import align from "@kb/menus/align";
 import SizeSetting from "./SizeSetting.vue";
@@ -87,9 +87,11 @@ const equalProportion = useAttributes(
   { equalProportion: true },
   (attrs) => attrs.equalProportion
 );
-const {previewInstance} = useSpeedEditor();
+
+const { previewInstance } = useSpeedEditor();
 const handlePreivew = () => {
   if (previewInstance.value) {
+    // token 由 EditorPreviewImage 内部拼接
     previewInstance.value.previewImage(src.value);
   }
 };
