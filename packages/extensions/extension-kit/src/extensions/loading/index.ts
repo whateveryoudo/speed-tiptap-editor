@@ -1,22 +1,12 @@
-import { Node } from '@tiptap/core';
-import { VueNodeViewRenderer } from '@tiptap/vue-3';
-import Wrapper from './Wrapper.vue';
+/*
+ * 编辑器侧 Loading：schema 契约 + Vue NodeView
+ */
+import { Loading as SchemaLoading } from '@speed-tiptap-editor/schema'
+import { VueNodeViewRenderer } from '@tiptap/vue-3'
+import Wrapper from './Wrapper.vue'
 
-export const Loading = Node.create({
-  name: 'loading',
-  inline: true,
-  group: 'inline',
-  atom: true,
-
-  addAttributes() {
-    return {
-      text: {
-        default: null,
-      },
-    };
-  },
-
+export const Loading = SchemaLoading.extend({
   addNodeView() {
-    return VueNodeViewRenderer(Wrapper);
+    return VueNodeViewRenderer(Wrapper)
   },
-});
+})

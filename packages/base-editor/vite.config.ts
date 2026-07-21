@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from '@unocss/vite'
 import nodePolyfills from 'vite-plugin-node-stdlib-browser'
+import dts from 'unplugin-dts/vite'
 import { defineConfig } from 'vite'
 
 const dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -14,6 +15,15 @@ export default defineConfig({
     vueJsx(),
     UnoCSS(),
     nodePolyfills(),
+    // unplugin-dts：vite-plugin-dts 同作者后继（import 'unplugin-dts/vite'）
+    dts({
+      tsconfigPath: resolve(dirname, 'tsconfig.build.json'),
+      processor: 'vue',
+      entryRoot: 'src',
+      outDirs: ['dist'],
+      include: ['src'],
+      exclude: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+    }),
   ],
   build: {
     lib: {

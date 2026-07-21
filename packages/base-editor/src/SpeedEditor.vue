@@ -198,7 +198,7 @@ const cptTheme = computed(() => {
 
 const { previewInstance } = useSpeedEditorProvider(props)
 
-const { updateTheme } = useAntdCssVars()
+const { updateTheme, cleanup: cleanupAntdCssVars } = useAntdCssVars()
 
 const debouncedEmitTitle = debounce((titleText: string) => {
   if (!titleText || titleText === props.title) {
@@ -357,6 +357,7 @@ watch(
 
 onUnmounted(() => {
   editor.value?.destroy()
+  cleanupAntdCssVars?.()
 })
 
 </script>

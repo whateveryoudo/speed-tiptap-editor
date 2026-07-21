@@ -1,6 +1,5 @@
 import type { CodeBlockOptions } from './basicExtension'
-import { CodeBlock } from './basicExtension'
-
+import { CodeBlock } from '@speed-tiptap-editor/schema'
 import { LowlightPlugin } from './lowlightPlugin'
 
 export interface CodeBlockLowlightOptions extends CodeBlockOptions {
@@ -12,6 +11,7 @@ export interface CodeBlockLowlightOptions extends CodeBlockOptions {
 
 /**
  * This extension allows you to highlight code blocks with lowlight.
+ * 契约节点来自 schema，此处只挂 lowlight 插件。
  * @see https://tiptap.dev/api/nodes/code-block-lowlight
  */
 export const CodeBlockLowlight = CodeBlock.extend<CodeBlockLowlightOptions>({

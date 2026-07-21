@@ -1,15 +1,12 @@
-import { IUser } from '@speed-tiptap-editor/shareds/user'
-import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core'
+/*
+ * 编辑器侧 Mind：schema 契约 + 命令 / Vue NodeView / 输入规则
+ */
+import { Mind as SchemaMind, DEFAULT_MIND_DATA } from '@speed-tiptap-editor/schema'
+import { nodeInputRule } from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 import Wrapper from './Wrapper.vue'
-import { getDatasetAttribute, nodeAttrsToDataset } from '@ek/prose-utils'
 
-export const DEFAULT_MIND_DATA = {
-  root: { data: { text: '中心节点' }, children: [] },
-  template: 'default',
-  theme: 'fresh-purple',
-  version: '1.4.43',
-}
+export { DEFAULT_MIND_DATA }
 
 export interface IMindAttrs {
   defaultShowPicker?: boolean
@@ -35,39 +32,10 @@ declare module '@tiptap/core' {
   }
 }
 
-export const Mind = Node.create<IMindOptions>({
-  name: 'mind',
-  group: 'block',
-  selectable: true,
-  atom: true,
-  draggable: true,
-  inline: false,
-
-  addAttributes() {
-    return {
-      defaultShowPicker: {
-        default: false,
-      },
-      createUser: {
-        default: null,
-      },
-      width: {
-        default: '100%',
-        parseHTML: getDatasetAttribute('width'),
-      },
-      height: {
-        default: 240,
-        parseHTML: getDatasetAttribute('height'),
-      },
-      data: {
-        default: DEFAULT_MIND_DATA,
-        parseHTML: getDatasetAttribute('data', true),
-      },
-    }
-  },
-
+export const Mind = SchemaMind.extend<IMindOptions>({
   addOptions() {
     return {
+      ...this.parent?.(),
       HTMLAttributes: {
         class: 'mind',
       },
@@ -75,25 +43,10 @@ export const Mind = Node.create<IMindOptions>({
     }
   },
 
-  parseHTML() {
-    return [
-      {
-        tag: 'div[class=mind]',
-      },
-    ]
-  },
-
-  renderHTML({ HTMLAttributes, node }) {
-    return [
-      'div',
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, nodeAttrsToDataset(node)),
-    ]
-  },
-
   addCommands() {
     return {
       setMind:
-        options =>
+        (options) =>
         ({ tr, commands, chain, editor }) => {
           options = options || {}
           options.data = options.data || DEFAULT_MIND_DATA
@@ -102,8 +55,6 @@ export const Mind = Node.create<IMindOptions>({
           if (tr.selection?.node?.type?.name == this.name) {
             return commands.updateAttributes(this.name, options)
           }
-
-          const { selection } = editor.state
 
           return chain()
             .insertContent({

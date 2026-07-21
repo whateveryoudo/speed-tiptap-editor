@@ -4,7 +4,11 @@
  * @LastEditTime: 2023-01-09 10:05:11
  * @LastEditors: your name
  * @Description: Tiptap 3.0 扩展配置
- * @FilePath: \we-knowledge-base\src\tiptap\editor\collaboration\kit.ts
+ *
+ * 分层约定：
+ * - 会进文档 JSON、服务端 generateHTML 需要的 Node/Mark attrs → @speed-tiptap-editor/schema
+ * - 有 Vue NodeView 的：schema 无 UI 版 + 本包 extend 挂 View/命令/快捷键
+ * - 纯交互（搜索、格式刷、QuickInsert、FileHandler 等）→ 仅本包
  */
 
 // 基础扩展
@@ -86,7 +90,7 @@ export const getDefaultKit = (props: any) => [
     // bold, italic, strike, underline, link, heading, hardBreak, text
     // bulletList, orderedList, listItem, dropcursor, gapcursor, undoRedo, listKeymap, trailingNode
   }),
-  // 自定义扩展
+  // 自定义扩展（带 NodeView 的已从 schema extend）
   Paragraph,
   Link,
   Placeholder.configure({

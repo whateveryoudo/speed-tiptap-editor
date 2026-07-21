@@ -52,12 +52,17 @@ export function LanguageDetectPlugin({
 
         const detected = detectCodeLanguage(lowlight, text)
         if (!detected) continue
-        if (detected === language && detected === languageAlias) continue
+        if (
+          detected.language === language &&
+          detected.languageAlias === languageAlias
+        ) {
+          continue
+        }
 
         tr = tr.setNodeMarkup(pos, undefined, {
           ...node.attrs,
-          language: detected,
-          languageAlias: detected,
+          language: detected.language,
+          languageAlias: detected.languageAlias,
         })
         modified = true
       }
