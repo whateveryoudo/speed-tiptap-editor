@@ -1,5 +1,11 @@
 # @speed-tiptap-editor/knowledge-editor
 
+## 2.0.3
+
+### Patch Changes
+
+- 45e2f4c: 添加style导出,重新打包knowledge-editor
+
 ## 2.0.2
 
 ### Patch Changes
