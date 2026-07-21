@@ -1,5 +1,11 @@
 # @speed-tiptap-editor/schema
 
+## 2.0.2
+
+### Patch Changes
+
+- fc69859: 修复一些样式问题,提取一些公共扩展到schema包
+
 ## 2.0.1
 
 ### Patch Changes
